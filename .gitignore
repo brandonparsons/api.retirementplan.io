@@ -14,3 +14,12 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+#####
+
+/public/assets
+/config/application.yml
+/.vagrant
+/brakeman.html
+/coverage
+/doc

@@ -5,15 +5,19 @@ gem 'rails', '4.1.1'
 gem 'rails-api'
 
 
-gem 'foreman' # Used to export upstart in production
-
-
 gem 'pg'
 gem 'hstore_accessor'
 
 
-gem 'oj'
-gem 'active_model_serializers'
+gem 'foreman' # Used to export upstart in production
+gem 'figaro'
+
+
+gem 'rserve-client', require: 'rserve'          #, require: false
+gem 'statsample'                                #, require: false
+gem 'statistics2'                               #, require: false # It kept telling me to install this (probably statsample)
+gem 'yahoo-finance', require: 'yahoo_finance'   #, require: false
+gem 'recurrence'                                #, require: false # Calculates timelines/schedules
 
 
 gem 'sidekiq'
@@ -22,9 +26,13 @@ gem 'sidekiq-limit_fetch'
 gem 'sidetiq', require: false # Manually required so you have ability to turn it off
 
 
-gem 'devise'
-gem 'devise_marketable'
-gem 'devise-async'
+gem 'oj'
+gem 'active_model_serializers'
+gem 'bcrypt'
+gem 'airbrake' # Only really using in production, but referencing in a class (causes errors if not required)
+gem 'maildown'
+
+
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
@@ -32,19 +40,6 @@ gem 'omniauth-amazon'
 gem 'omniauth-linkedin'
 # gem 'omniauth-twitter'
 # gem 'omniauth-dropbox'
-
-
-gem 'rserve-client', require: 'rserve'          #, require: false
-gem 'statsample'                                #, require: false
-gem 'statistics2'                               #, require: false # It kept telling me to install this (probably statsample)
-gem 'yahoo-finance', require: 'yahoo_finance'   #, require: false
-gem 'recurrence'                                #, require: false
-
-
-gem 'airbrake' # Only really using in production, but referencing in a class (causes errors if not required)
-
-
-gem 'maildown'
 
 
 group :production do
@@ -99,7 +94,6 @@ group :development do
   gem 'google_drive',             require: false # In dev - don't load new data from prod.
   gem 'brakeman',                 require: false
 
-  gem 'bullet'
   gem 'letter_opener'
 end
 
@@ -122,12 +116,11 @@ gem 'rb-fsevent', group: [:development, :test], require: darwin_only('rb-fsevent
 # gem 'launchy'
 # gem 'roadie'
 # gem 'gibberish'
-
+# gem 'bullet'
 
 ## Old gems ##
 
 # gem 'redis-objects'
-# gem 'actionview-encoded_mail_to' # For obfuscating email addresses
 # gem 'rack-rewrite'
 # gem 'attrio'
 # gem 'whenever', :require => false # Do actually need whenever on server

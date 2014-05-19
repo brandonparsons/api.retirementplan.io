@@ -37,7 +37,7 @@ Rails.application.configure do
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
-  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
+  config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -80,4 +80,37 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+
+  ###############
+
+  # dalli_client = Dalli::Client.new(
+  #   (ENV["MEMCACHIER_SERVERS"] || "").split(","),
+  #   {
+  #     username:              ENV["MEMCACHIER_USERNAME"],
+  #     password:              ENV["MEMCACHIER_PASSWORD"],
+  #     failover:              true,
+  #     socket_timeout:        1.5,
+  #     socket_failure_delay:  0.2,
+  #     value_max_bytes:       10485760
+  #   }
+  # )
+  # config.cache_store = :mem_cache_store, dalli_client # :redis_store
+  # config.action_dispatch.rack_cache = {
+  #   metastore:    dalli_client,
+  #   entitystore:  dalli_client, # 'file:tmp/cache/rack/body'
+  #   allow_reload: false
+  # }
+  # config.static_cache_control = "public, max-age=2592000"
+
+  config.action_mailer.smtp_settings = {
+    :address   => "smtp.mandrillapp.com",
+    :port      => 25, # ports 587 and 2525 are also supported with STARTTLS
+    :enable_starttls_auto => true, # detects and uses STARTTLS
+    :user_name => ENV['MANDRILL_USERNAME'],
+    :password  => ENV["MANDRILL_API_KEY"], # SMTP password is any valid API key
+    :authentication => 'login', # Mandrill supports 'plain' or 'login'
+    :domain => ENV['MAILER_HOST'], # your domain to identify your server when connecting
+  }
+
 end

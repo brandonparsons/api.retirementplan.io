@@ -1,0 +1,376 @@
+---
+- - etf_ticker
+  - description
+  - asset_type
+  - asset_class
+  - security_ticker
+- - XRE.TO
+  - iShares Capped Canadian REIT ETF
+  - alternative
+  - Canadian Real Estate
+  - XRE
+- - ZRE.TO
+  - BMO Equal Weight REIT's Index ETF
+  - alternative
+  - Canadian Real Estate
+  - XRE
+- - DBC
+  - PowerShares DB Commodity Index
+  - alternative
+  - Commodities
+  - GSG
+- - GSG
+  - iShares S&P GSCI Commodity-Indexed ETF
+  - alternative
+  - Commodities
+  - GSG
+- - USCI
+  - United States Commodity Index
+  - alternative
+  - Commodities
+  - GSG
+- - IFGL
+  - iShares FTSE EPRA/NAREIT Developed Real Estate
+  - alternative
+  - International Real Estate
+  - RWX
+- - RWO
+  - SPDR Down Jones Global Real Estate
+  - alternative
+  - International Real Estate
+  - RWX
+- - RWX
+  - SPDR Dow Jones International Real Estate
+  - alternative
+  - International Real Estate
+  - RWX
+- - WPS
+  - iShares S&P Developed (ex-U.S.) Propery
+  - alternative
+  - International Real Estate
+  - RWX
+- - ICF
+  - iShares Cohen & Steers Realty
+  - alternative
+  - U.S. Real Estate
+  - IYR
+- - IYR
+  - iShares Dow Jones US Real Estate
+  - alternative
+  - U.S. Real Estate
+  - IYR
+- - RWR
+  - SPDR Dow Jones REIT
+  - alternative
+  - U.S. Real Estate
+  - IYR
+- - VNQ
+  - Vanguard REIT Index ETF
+  - alternative
+  - U.S. Real Estate
+  - IYR
+- - XLB
+  - iShares DEX Long Term Bond ETF
+  - bond
+  - Canadian Long-term Bonds
+  - XLB
+- - ZLC
+  - BMO Long-term Corporate Bond Index ETF
+  - bond
+  - Canadian Long-term Bonds
+  - XLB
+- - VSB
+  - Vanguard Canadian Short term bond index
+  - bond
+  - Canadian Short-term Bonds
+  - XSB
+- - XSB.TO
+  - iShares DEX Short Term Bond ETF
+  - bond
+  - Canadian Short-term Bonds
+  - XSB
+- - ZCS.TO
+  - BMO Short Term Corporate Bond Index ETF
+  - bond
+  - Canadian Short-term Bonds
+  - XSB
+- - BWX
+  - SPDR Barclays Capital International Treasury Bond ETF
+  - bond
+  - International Bonds
+  - BWX
+- - BWZ
+  - SPDR Barclays Capital Short-term International Treasury Bond ETF
+  - bond
+  - International Bonds
+  - BWX
+- - IGOV
+  - iShares S&P/Citi International Treasury Bond ETF
+  - bond
+  - International Bonds
+  - BWX
+- - ISHG
+  - iShares S&P/Citi 1-3 Yr International Treasury Bond ETF
+  - bond
+  - International Bonds
+  - BWX
+- - CFT
+  - iShares Barclays Credit Bond ETF
+  - bond
+  - U.S. Intermediate-term Corporate Bonds
+  - CIU
+- - CIU
+  - iShares Barclays Intermediate Credit Bond Fund ETF
+  - bond
+  - U.S. Intermediate-term Corporate Bonds
+  - CIU
+- - CORP
+  - PIMCO Investment Grade Corporate Bond ETF
+  - bond
+  - U.S. Intermediate-term Corporate Bonds
+  - CIU
+- - ITR
+  - SPDR Barclays Cap Intermediate Term Bond ETF
+  - bond
+  - U.S. Intermediate-term Corporate Bonds
+  - CIU
+- - VCIT
+  - Vanguard Intermediate Term Corporate Bond Index ETF
+  - bond
+  - U.S. Intermediate-term Corporate Bonds
+  - CIU
+- - FIVZ
+  - PIMCO 3-7 Year Treasury Index Fund
+  - bond
+  - U.S. Intermediate-term Government Bonds
+  - VFITX
+- - IEF
+  - iShares Barclays 7-10 Year Treasury Bond Fund
+  - bond
+  - U.S. Intermediate-term Government Bonds
+  - VFITX
+- - IEI
+  - iShares Barclays 3-7 Year Treasury Bond Fund
+  - bond
+  - U.S. Intermediate-term Government Bonds
+  - VFITX
+- - ITE
+  - SPDR Barclays Capital Intermediate-term Treasury ETF
+  - bond
+  - U.S. Intermediate-term Government Bonds
+  - VFITX
+- - VFITX
+  - Vanguard Intermediate-Term Treasury ETF
+  - bond
+  - U.S. Intermediate-term Government Bonds
+  - VFITX
+- - VGIT
+  - Vangaurd Intermediate Term Government Bond ETF
+  - bond
+  - U.S. Intermediate-term Government Bonds
+  - VFITX
+- - LQD
+  - iShares IBoxx U.S. Investment Grade Corporate Bond ETF
+  - bond
+  - U.S. Long-term Corporate Bonds
+  - LQD
+- - LWC
+  - SPDR Barclays Capital Long Term Corporate Bond ETF
+  - bond
+  - U.S. Long-term Corporate Bonds
+  - LQD
+- - VCLT
+  - Vanguard Long-Term Corporate Bond ETF
+  - bond
+  - U.S. Long-term Corporate Bonds
+  - LQD
+- - EDV
+  - Vanguard Extended Duration Bond ETF
+  - bond
+  - U.S. Long-term Government Bonds
+  - VUSTX
+- - TLH
+  - iShares Lehman 10-20 Year Treasury Bond ETF
+  - bond
+  - U.S. Long-term Government Bonds
+  - VUSTX
+- - TLO
+  - SPDR Lehman Long-term Treasury Bond ETF
+  - bond
+  - U.S. Long-term Government Bonds
+  - VUSTX
+- - TLT
+  - iShares Barclays 20+ Year Treasury Bond ETF
+  - bond
+  - U.S. Long-term Government Bonds
+  - VUSTX
+- - VGLT
+  - Vanguard Long-term Government Bond ETF
+  - bond
+  - U.S. Long-term Government Bonds
+  - VUSTX
+- - VUSTX
+  - Vanguard Long-Term Treasury ETF
+  - bond
+  - U.S. Long-term Government Bonds
+  - VUSTX
+- - CSJ
+  - iShares Barclays 1-3 Year Credit Bond ETF
+  - bond
+  - U.S. Short-term Corporate Bonds
+  - CSJ
+- - SCPB
+  - SPDR Barclays Capital Short Term Bond ETF
+  - bond
+  - U.S. Short-term Corporate Bonds
+  - CSJ
+- - VCSH
+  - Vanguard Short-Term Corporate Bond Index
+  - bond
+  - U.S. Short-term Corporate Bonds
+  - CSJ
+- - BIL
+  - SPDR Lehman 1-3 Month T-Bill ETF
+  - bond
+  - U.S. Short-term Government Bonds
+  - VFISX
+- - SHV
+  - iShares Barclays Short-term Treasury Bond Fund
+  - bond
+  - U.S. Short-term Government Bonds
+  - VFISX
+- - SHY
+  - iShares Barclays 1-3 Year Treasury Bond Fund
+  - bond
+  - U.S. Short-term Government Bonds
+  - VFISX
+- - VFISX
+  - Vanguard Short-Term Treasury ETF
+  - bond
+  - U.S. Short-term Government Bonds
+  - VFISX
+- - VGSH
+  - Vanguard Short-term Government Bond ETF
+  - bond
+  - U.S. Short-term Government Bonds
+  - VFISX
+- - EWC
+  - iShares MSCI Canada ETF
+  - stock
+  - Canadian Equities
+  - EWC
+- - HXT.TO
+  - Horizons S&P TSX60 Index ETF
+  - stock
+  - Canadian Equities
+  - EWC
+- - VCE.TO
+  - Vanguard MSCI Canada Index ETF
+  - stock
+  - Canadian Equities
+  - EWC
+- - XIU.TO
+  - iShares S&P/TSX 60 Index
+  - stock
+  - Canadian Equities
+  - EWC
+- - EEM
+  - iShares Emerging Markets ETF
+  - stock
+  - Emerging Markets Equities
+  - EEM
+- - SCHE
+  - Schwab Emerging Markets
+  - stock
+  - Emerging Markets Equities
+  - EEM
+- - VEE.TO
+  - Vanguard Emerging Markets Index
+  - stock
+  - Emerging Markets Equities
+  - EEM
+- - VWO
+  - Vanguard MSCI Emerging Markets
+  - stock
+  - Emerging Markets Equities
+  - EEM
+- - EFA
+  - iShares MSCI EAFE Index ETF
+  - stock
+  - International Developed Equities (EAFE)
+  - VDMIX
+- - SCHF
+  - Schwab International Equity
+  - stock
+  - International Developed Equities (EAFE)
+  - VDMIX
+- - VDMIX
+  - Vanguard Developed Markets Index ETF
+  - stock
+  - International Developed Equities (EAFE)
+  - VDMIX
+- - VEA
+  - Vanguard MSCI EAFE Index
+  - stock
+  - International Developed Equities (EAFE)
+  - VDMIX
+- - VEF.TO
+  - Vanguard MSCI EAFE Index (CAD hedged)
+  - stock
+  - International Developed Equities (EAFE)
+  - VDMIX
+- - IVV
+  - iShares S&P 500 Index ETF
+  - stock
+  - U.S. Large-cap Equities
+  - VFINX
+- - IWB
+  - iShares Russell 1000 Index ETF
+  - stock
+  - U.S. Large-cap Equities
+  - VFINX
+- - SCHX
+  - Schwab U.S. Large Cap
+  - stock
+  - U.S. Large-cap Equities
+  - VFINX
+- - SPY
+  - SPDR S&P 500 Index ETF
+  - stock
+  - U.S. Large-cap Equities
+  - VFINX
+- - VFINX
+  - Vanguard S&P 500 Index ETF
+  - stock
+  - U.S. Large-cap Equities
+  - VFINX
+- - VUS.TO
+  - Vanguard MSCI U.S. Broad Market Index
+  - stock
+  - U.S. Large-cap Equities
+  - VFINX
+- - IJR
+  - iShares S&P SmallCap 600 Index
+  - stock
+  - U.S. Small-cap Equities
+  - NAESX
+- - IWM
+  - iShares Russell 2000 Index ETF
+  - stock
+  - U.S. Small-cap Equities
+  - NAESX
+- - NAESX
+  - Vanguard Small Cap Index ETF
+  - stock
+  - U.S. Small-cap Equities
+  - NAESX
+- - SCHA
+  - Schwab U.S. Small Cap ETF
+  - stock
+  - U.S. Small-cap Equities
+  - NAESX
+- - VB
+  - Vanguard Small-Cap ETF
+  - stock
+  - U.S. Small-cap Equities
+  - NAESX
