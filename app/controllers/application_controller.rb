@@ -33,7 +33,7 @@ class ApplicationController < ActionController::API
   # Generic fallback - this has to be FIRST
   rescue_from(Exception) do |exception|
     logger.warn "[500 ERROR]: #{exception.message}"
-    render json: {errors: "Sorry - something went wrong."}, status: 500
+    render json: {error: "Sorry - something went wrong."}, status: 500
   end
 
   # Postgres will error if calling find without a valid UUID string. Could
@@ -49,11 +49,10 @@ class ApplicationController < ActionController::API
   rescue_from ActionController::UnpermittedParameters, with: :invalid_parameters
 
 
-
   protected
 
   def authenticate_user!
-    current_user.present? ? true : access_denied
+    user_signed_in? ? true : access_denied
   end
 
   def current_user

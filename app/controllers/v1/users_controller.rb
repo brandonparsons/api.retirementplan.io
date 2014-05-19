@@ -1,7 +1,6 @@
 module V1
 
   class UsersController < ApplicationController
-
     before_filter :authenticate_user!, except: [:create]
 
     def create

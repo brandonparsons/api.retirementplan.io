@@ -4,16 +4,19 @@ module V1
     before_action :authenticate_user!
 
     def index
-      if params[:ids].present?
-        @securities = Security.where(id: params[:ids]) if params[:ids]
-      else
-        @securities = Security.all
+      if params[:ids] && params[:ids].present? # Ember data will apparently hit index action with ids array
+        @securities = Security.where(id: params[:ids])
+        render json: @securities if stale?(etag: @securities)
+      else # Standard index action (no IDS array parameter)
+        last_modified = Security.maximum(:updated_at)
+        render json: Security.all if stale?(etag: last_modified, last_modified: last_modified)
       end
-      render json: @securities
     end
 
     def show
-      render json: Security.find(params[:id])
+      # expires_in 3.minutes, public: true
+      security = Security.find(params[:id])
+      render json: security if stale?(security)
     end
 
   end

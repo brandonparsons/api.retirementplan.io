@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   get  'auth/:action/callback', to: 'omniauth_callbacks'
 
-  namespace :v1, defaults: { format: 'json' } do
+  scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true), defaults: { format: 'json' } do
 
     get 'simulation_count',  to: 'misc#simulation_count'
 

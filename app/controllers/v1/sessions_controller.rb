@@ -1,17 +1,13 @@
 module V1
 
   class SessionsController < ApplicationController
-
     before_action :authenticate_user!, only: [:destroy]
 
     def create
-      submitted_email     = params[:user][:email]
-      submitted_password  = params[:user][:password]
-      return missing_parameters unless (submitted_email.present? && submitted_password.present?)
+      return missing_parameters unless (params[:email].present? && params[:password].present?)
+      user = RegularUser.find_by(email: params[:email])
 
-      user = RegularUser.find_by(email: submitted_email)
-
-      if user && user.authenticate(submitted_password)
+      if user && user.authenticate(params[:password])
         user.sign_in!
         data = {
           user_token: user.authentication_token,

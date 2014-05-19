@@ -87,8 +87,9 @@ class Security < ActiveRecord::Base
   end
 
   def self.last_updated_time
-    # Use this instead of updated_at times on securities. Because you load these
-    # in as seed data, they won't change very often. This way you don't even have
+    # Use this instead of updated_at times for cache keys on securities (better
+    # to use a number rather than a date string). Because you load these in as
+    # seed data, they won't change very often. This way you don't even have
     # to load individual securities.
     maximum(:updated_at).try(:utc).try(:to_i)
   end
