@@ -11,17 +11,18 @@ module V1
         user.sign_in!
         data = {
           user_token: user.authentication_token,
-          user_email: user.email
+          user_email: user.email,
+          user_id:    user.id
         }
         render json: data, status: 201
       else
-        render json: {error: "Email or password is invalid"}, status: :unauthorized
+        render json: {success: false, message: "Email/password combination is invalid."}, status: :unauthorized
       end
     end
 
     def destroy
       current_user.sign_out!
-      render json: {status: :success, message: 'Signed out successfully.'}
+      render json: {success: true, message: 'Signed out successfully.'}
     end
 
   end
