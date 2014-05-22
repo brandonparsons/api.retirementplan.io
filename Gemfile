@@ -33,15 +33,6 @@ gem 'airbrake' # Only really using in production, but referencing in a class (ca
 gem 'maildown'
 
 
-gem 'omniauth'
-gem 'omniauth-facebook'
-gem 'omniauth-google-oauth2'
-gem 'omniauth-amazon'
-gem 'omniauth-linkedin'
-# gem 'omniauth-twitter'
-# gem 'omniauth-dropbox'
-
-
 group :production do
   gem 'puma'
 

@@ -1,12 +1,11 @@
 Rails.application.routes.draw do
 
   # CORS requests will send a pre-flight OPTIONS request that we need to handle
-  match '*path', to: 'application#CORS', via: [:options]
+  match '*path',  to: 'application#CORS', via: [:options]
 
-  get  'health',     to: 'application#health'
-  post 'error',      to: 'application#error'
+  get  'health',  to: 'application#health'
+  post 'error',   to: 'application#error'
 
-  get  'auth/:action/callback', to: 'omniauth_callbacks'
 
   scope module: :v1, constraints: ApiConstraints.new(version: 1, default: :true), defaults: { format: 'json' } do
 

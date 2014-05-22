@@ -10,9 +10,10 @@ module V1
       if user && user.authenticate(params[:password])
         user.sign_in!
         data = {
-          user_token: user.authentication_token,
-          user_email: user.email,
-          user_id:    user.id
+          user_token: user.authentication_token,  # Used to log in ember-simple-auth
+          user_email: user.email,                 # Used to log in ember-simple-auth
+          user_id:    user.id,                    # Used to set google analytics userId
+          user_name:  user.name                   # Used for navbar name
         }
         render json: data, status: 201
       else
