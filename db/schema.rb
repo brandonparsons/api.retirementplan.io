@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.string   "provider",      null: false
     t.string   "username"
     t.text     "oauth_token"
-    t.text     "oauth_secret"
     t.datetime "oauth_expires"
     t.uuid     "user_id",       null: false
     t.datetime "created_at"
@@ -153,7 +152,8 @@ ActiveRecord::Schema.define(version: 20140413042005) do
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.string   "name",                                 null: false
     t.string   "email",                                null: false
-    t.string   "password_digest",                      null: false
+    t.string   "image_url"
+    t.string   "password_digest"
     t.string   "authentication_token"
     t.boolean  "admin",                default: false, null: false
     t.boolean  "from_oauth",           default: false, null: false

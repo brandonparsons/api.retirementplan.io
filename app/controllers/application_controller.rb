@@ -48,6 +48,12 @@ class ApplicationController < ActionController::API
 
   rescue_from ActionController::UnpermittedParameters, with: :invalid_parameters
 
+  rescue_from CustomExceptions::InvalidOauthCredentials, with: :invalid_parameters
+
+  rescue_from CustomExceptions::MissingParameters, with: :missing_parameters
+
+  rescue_from CustomExceptions::InvalidParameters, with: :invalid_parameters
+
 
   protected
 
@@ -64,19 +70,17 @@ class ApplicationController < ActionController::API
   end
 
   def get_user
-    email       = request.headers['X-Auth-Email'] || params[:email]
+    email       = request.headers['X-Auth-Email'] || params[:auth_email]
     auth_token  = request.headers['X-Auth-Token'] || params[:auth_token]
     User.authenticate_from_email_and_token(email, auth_token)
   end
 
   def cors_set_access_control_headers
-    headers['Access-Control-Allow-Origin'] = valid_http_origin?(request.headers["HTTP_ORIGIN"]) ?
-      request.headers["HTTP_ORIGIN"] : ENV['FRONTEND']
-
+    headers['Access-Control-Allow-Origin']    = Rails.env.production? ? ENV['FRONTEND'] : '*'
     headers['Access-Control-Request-Method']  = '*'
     headers['Access-Control-Max-Age']         = "1728000"
 
-    headers['Access-Control-Allow-Methods'] = %w{
+    headers['Access-Control-Allow-Methods']   = %w{
       POST
       PUT
       PATCH
@@ -85,24 +89,14 @@ class ApplicationController < ActionController::API
       OPTIONS
     }.join(', ')
 
-    headers['Access-Control-Allow-Headers'] = %w{
+    headers['Access-Control-Allow-Headers']   = %w{
       Origin
       X-Requested-With
       Content-Type
       Accept
-      Authorization
       X-Auth-Email
       X-Auth-Token
     }.join(', ')
-  end
-
-  def valid_http_origin?(origin)
-    return false unless origin.present?
-
-    return true if /^(http|https):\/\/localhost.*$/.match(origin)
-    return true if /^(http|https):\/\/127\.0\.0\.1.*$/.match(origin)
-
-    return false
   end
 
   def access_denied(message = "Error with your login credentials")

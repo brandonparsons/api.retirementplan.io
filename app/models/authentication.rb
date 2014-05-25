@@ -5,10 +5,6 @@ class Authentication < ActiveRecord::Base
 
   validates :uid, presence: true, uniqueness: { scope: :provider }
 
-  def self.available_providers
-    [:facebook, :google, :linkedin] # :amazon
-  end
-
   def self.pretty_provider(provider)
     provider = provider.to_s
     provider == 'linkedin' ? "LinkedIn" : provider.titleize

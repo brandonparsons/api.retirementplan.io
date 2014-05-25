@@ -4,8 +4,7 @@ class CreateAuthentications < ActiveRecord::Migration
       t.string    :uid,           null: false
       t.string    :provider,      null: false
       t.string    :username
-      t.text      :oauth_token  # Amazon incredibly long tokens
-      t.text      :oauth_secret
+      t.text      :oauth_token    # Some services (e.g. Amazon) incredibly long tokens
       t.datetime  :oauth_expires
 
       t.uuid      :user_id,       null: false

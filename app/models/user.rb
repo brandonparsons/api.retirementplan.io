@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
     allowable_drift:          :integer,
     simulations_ran:          :integer
 
+
   ################
   # ASSOCIATIONS #
   ################

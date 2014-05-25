@@ -50,7 +50,7 @@ group :development, :test do
 
   gem 'spring'
 
-  gem 'faraday', require: false  # Post to Slack on deploy.
+  gem 'faraday'
 
   gem 'pry-rails'
   gem 'hirb',           require: false

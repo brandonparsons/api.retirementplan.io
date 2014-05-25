@@ -70,7 +70,7 @@ module TokenAuthenticatable
   end
 
   def friendly_token
-    # From Devise.friendly_token
-    SecureRandom.urlsafe_base64(15).tr('lIO0', 'sxyz')
+    # From Devise.friendly_token, changed to 15 long
+    SecureRandom.urlsafe_base64(20).tr('lIO0', 'sxyz')
   end
 end

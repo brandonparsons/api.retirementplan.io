@@ -3,7 +3,8 @@ class CreateUsers < ActiveRecord::Migration
     create_table :users, id: :uuid do |t|
       t.string    :name,                    null: false
       t.string    :email,                   null: false
-      t.string    :password_digest,         null: false
+      t.string    :image_url
+      t.string    :password_digest
       t.string    :authentication_token
       t.boolean   :admin,                   null: false, default: false
       t.boolean   :from_oauth,              null: false, default: false
