@@ -13,15 +13,19 @@ Rails.application.routes.draw do
 
     resources :users, only: [:create] do
       collection do
-        post    'sign_in',       to: 'sessions#create'
-        delete  'sign_out',      to: 'sessions#destroy'
-        post    'check_oauth',   to: 'sessions#check_oauth'
-        post    'accept_terms',  to: 'users#details'
+        post 'accept_terms',  to: 'users#details'
+        post 'add_oauth',     to: 'users#add_oauth'
+      end
+    end
+
+    resource :session, only: [:create, :destroy] do
+      collection do
+        post 'check_oauth', to: 'sessions#check_oauth'
       end
     end
 
     resources :securities, only: [:index, :show]
 
-  end
+  end # v1
 
 end

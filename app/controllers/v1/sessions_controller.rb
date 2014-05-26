@@ -18,7 +18,7 @@ module V1
           user_email:   user.email,                 # Used to log in ember-simple-auth
           user_name:    user.name,                  # Used for navbar name
           user_image:   user.image_url,             # Used for navbar image
-          has_password: 'yes'                       # Can't save the boolean value in localStorage || Used to differentiate localStorage response for user/pass
+          has_password: 'yes'                       # Can't save a boolean value in localStorage || Used to differentiate localStorage response for user/pass
         }
 
         render json: session_data, status: 201
@@ -45,7 +45,7 @@ module V1
       uid, provider = ::OAuthValidator.new(oauth_user_data).call
 
       begin
-        user, user_is_new = OAuthUser.new({
+        user, user_was_created = OAuthUser.new({
           'provider'  => provider,
           'uid'       => uid,
           'email'     => oauth_user_data[:email],
@@ -56,17 +56,19 @@ module V1
         provider = e.message
         render json: {
           success: false,
-          message: "An account already exists for that email (try #{provider}). You need to log in before you can add additional providers."
+          message: "That e-mail is already attached to a different provider (try #{provider})."
         }, status: :unauthorized and return
       rescue CustomExceptions::UserExistsWithPassword
         render json: {
           success: false,
-          message: "An account already exists for that email using password registration. Please log in first."
+          message: "An account already exists for that email using password registration. Please sign in with your email/password."
         }, status: :unauthorized and return
       end
 
-      user.notify_admin_of_signup! if user_is_new
       user.sign_in!
+
+      # For brand-new users, send admin notification email
+      user.notify_admin_of_signup! if user_was_created
 
       session_data = {
         user_id:      user.id,
@@ -74,7 +76,7 @@ module V1
         user_email:   user.email,
         user_name:    oauth_user_data[:name],
         user_image:   oauth_user_data[:image],
-        has_password: 'no' # Can't save the boolean value in localStorage
+        has_password: 'no' # Can't save a boolean value in localStorage
       }
 
       render json: session_data

@@ -18,6 +18,33 @@ module V1
       end
     end
 
+    def add_oauth
+      # This is similar to the check_oauth route, except that we don't send back
+      # email, auth token etc. as we are already logged in. Just create and
+      # associate the OAuth authentication.
+
+      oauth_user_data = params[:user]
+      return missing_parameters unless oauth_user_data.present?
+
+      # This will throw:
+      # - CustomExceptions::MissingParameters unless all required params are present
+      # - CustomExceptions::InvalidOauthCredentials if invalid access token, etc.
+      # These are rescued in application_controller.rb and return error JSON
+      uid, provider = ::OAuthValidator.new(oauth_user_data).call
+
+      # No need to rescue CustomExceptions::UserExistsFromOauth or
+      # CustomExceptions::UserExistsWithPassword as this will always be called
+      # with a current_user present.
+      user, user_was_created = OAuthUser.new({
+        'provider'  => provider,
+        'uid'       => uid,
+        'email'     => oauth_user_data[:email],
+        'name'      => oauth_user_data[:name],
+        'image'     => oauth_user_data[:image]
+      }, current_user).login_or_create
+
+      render json: {success: true, message: 'Successfully added OAuth registration.'}
+    end
 
     private
 

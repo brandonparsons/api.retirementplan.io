@@ -9,8 +9,10 @@ gem 'pg'
 gem 'hstore_accessor'
 
 
-gem 'foreman' # Used to export upstart in production
-gem 'figaro'
+gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
+gem 'sidekiq-limit_fetch'
+gem 'sidetiq', require: false # Manually required so you have ability to turn it off
 
 
 gem 'rserve-client', require: 'rserve'          #, require: false
@@ -20,12 +22,8 @@ gem 'yahoo-finance', require: 'yahoo_finance'   #, require: false
 gem 'recurrence'                                #, require: false # Calculates timelines/schedules
 
 
-gem 'sidekiq'
-gem 'sidekiq-unique-jobs'
-gem 'sidekiq-limit_fetch'
-gem 'sidetiq', require: false # Manually required so you have ability to turn it off
-
-
+gem 'foreman' # Used to export upstart in production
+gem 'figaro'
 gem 'oj'
 gem 'active_model_serializers'
 gem 'bcrypt'

@@ -9,7 +9,7 @@ class OAuthUser
     @name             = auth_data['name']
     @image            = auth_data['image']
 
-    @user_was_created = false
+    @user_was_created           = false
   end
 
   def login_or_create

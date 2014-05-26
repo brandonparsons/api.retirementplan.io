@@ -15,22 +15,15 @@ class OAuthValidator
   private
 
   def validate_and_store(params)
-    email         = params[:email].to_s
     access_token  = params[:access_token].to_s
     provider      = params[:provider].to_s
-    uid           = params[:uid].to_s
     raise CustomExceptions::MissingParameters unless (
-      email.present?        &&
-      access_token.present? &&
-      provider.present?     &&
-      uid.present?
+      access_token.present? && provider.present?
     )
     raise CustomExceptions::InvalidParameters unless VALID_PROVIDERS.include?(provider)
 
-    @email        = email
     @access_token = access_token
     @provider     = provider
-    @uid          = uid
   end
 
   def check_oauth_for_facebook
@@ -47,13 +40,25 @@ class OAuthValidator
 
     raise CustomExceptions::InvalidOauthCredentials, "Returned not valid" unless facebook_response['data']['is_valid'].present? && facebook_response['data']['is_valid']
     raise CustomExceptions::InvalidOauthCredentials, "Wrong App ID"       unless facebook_response['data']['app_id']  == ENV['FACEBOOK_KEY']
-    raise CustomExceptions::InvalidOauthCredentials, "Wrong user ID"      unless facebook_response['data']['user_id'] == @uid
 
-    return @uid, @provider
+    return facebook_response['data']['user_id'], @provider
   end
 
   def check_oauth_for_google
-    raise "NEEDS IMPLEMENTING!"
+    # Validate the token to ensure it is valid from Google, and created by
+    # our app.
+
+    token_validation_url  = "https://www.googleapis.com/oauth2/v1/tokeninfo"
+    conn                  = get_faraday_connection(token_validation_url)
+
+    google_response = JSON.parse(conn.get do |req|
+      req.params['access_token'] = @access_token
+    end.body)
+
+    raise CustomExceptions::InvalidOauthCredentials, "Returned not valid" unless google_response['issued_to'].present?
+    raise CustomExceptions::InvalidOauthCredentials, "Wrong App ID"       unless google_response['issued_to']  == ENV['GOOGLE_CLIENT_ID']
+
+    return google_response['user_id'], @provider
   end
 
   def get_faraday_connection(url)
