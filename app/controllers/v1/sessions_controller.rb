@@ -74,7 +74,7 @@ module V1
         user_id:      user.id,
         user_token:   user.authentication_token,
         user_email:   user.email,
-        user_name:    oauth_user_data[:name],
+        user_name:    oauth_user_data[:name], # user.name
         user_image:   oauth_user_data[:image],
         has_password: 'no' # Can't save a boolean value in localStorage
       }

@@ -35,15 +35,25 @@ module V1
       # No need to rescue CustomExceptions::UserExistsFromOauth or
       # CustomExceptions::UserExistsWithPassword as this will always be called
       # with a current_user present.
-      user, user_was_created = OAuthUser.new({
+      o = OAuthUser.new({
         'provider'  => provider,
         'uid'       => uid,
         'email'     => oauth_user_data[:email],
         'name'      => oauth_user_data[:name],
         'image'     => oauth_user_data[:image]
-      }, current_user).login_or_create
+      }, current_user)
 
-      render json: {success: true, message: 'Successfully added OAuth registration.'}
+      o.login_or_create
+      authentication = o.authentication
+
+      render json: authentication, status: :created
+    end
+
+    def show
+      if params[:id] != current_user.id
+        logger.warn "[SECURITY]: Someone trying to look at someone else's profile... USERID: #{current_user.id}"
+      end
+      render json: current_user
     end
 
     private

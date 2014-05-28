@@ -1,5 +1,7 @@
 class OAuthUser
 
+  attr_reader :authentication
+
   def initialize(auth_data, user = nil)
     @user             = user
 
