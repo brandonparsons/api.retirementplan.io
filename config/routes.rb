@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
     resources :securities, only: [:index, :show]
 
-    resources :authentications, only: [:index, :show]
+    resources :authentications, only: [:index, :create, :show, :destroy]
 
   end # v1
 
