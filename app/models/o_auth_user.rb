@@ -9,7 +9,6 @@ class OAuthUser
     @uid              = auth_data['uid']
     @email            = auth_data['email']
     @name             = auth_data['name']
-    @image            = auth_data['image']
 
     @user_was_created           = false
   end
@@ -48,13 +47,17 @@ class OAuthUser
   def create_new_authentication
     create_new_user if @user.nil?
 
-    unless authentication_already_exists?
+    if authentication_already_exists?
+      @authentication = @user.authentications.find_by(provider: @provider, uid: @uid)
+    else
       @authentication = @user.authentications.create!(
         provider:   @provider,
         uid:        @uid,
         username:   @name
       )
     end
+
+    return true
   end
 
   def create_new_user
@@ -71,7 +74,6 @@ class OAuthUser
     @user = User.create!(
       email:        @email,
       name:         @name,
-      image_url:    @image,
       from_oauth:   true
       # Not setting confirmed_at, still need to confirm OAuth user's email
     )

@@ -11,10 +11,9 @@ Rails.application.routes.draw do
 
     get 'simulation_count',  to: 'misc#simulation_count'
 
-    resources :users, only: [:create, :show] do
+    resources :users, only: [:create, :show, :update] do
       collection do
         post 'accept_terms',  to: 'users#details'
-        post 'add_oauth',     to: 'users#add_oauth'
       end
     end
 

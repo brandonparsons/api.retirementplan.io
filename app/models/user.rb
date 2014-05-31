@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class User < ActiveRecord::Base
 
   include TokenAuthenticatable
@@ -39,6 +41,10 @@ class User < ActiveRecord::Base
   ###############
   # VALIDATIONS #
   ###############
+
+  validates_presence_of :name, :email
+  validates :email, uniqueness: { case_sensitive: false }
+  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
 
   validates :from_oauth,            inclusion: { in: [true, false] }
   validates :min_rebalance_spacing, presence: true, numericality: {greater_than_or_equal_to: 1.day, message: "must be at least one day"}
@@ -152,11 +158,20 @@ class User < ActiveRecord::Base
   #   accounts.where(provider: 'twitter').any?
   # end
 
-  def sign_in!
+  def sign_in!(image_url: nil)
+    set_image(image_url)
     self.last_sign_in_at = Time.zone.now
     increment(:sign_in_count)
     reset_authentication_token
     save!
+  end
+
+  def session_data
+    return {
+      user_id:      id,
+      user_token:   authentication_token,
+      user_email:   email
+    }
   end
 
   def sign_out!
@@ -169,6 +184,15 @@ class User < ActiveRecord::Base
 
 
   private
+
+  def set_image(image_url)
+    if image_url.present?
+      self.image_url = image_url
+    else
+      email_hash = Digest::MD5.hexdigest(email.strip.downcase)
+      self.image_url = "https://www.gravatar.com/avatar/#{email_hash}?d=identicon"
+    end
+  end
 
   def portfolio_out_of_balance?
     decimal_allowable_drift = allowable_drift.to_f / 100

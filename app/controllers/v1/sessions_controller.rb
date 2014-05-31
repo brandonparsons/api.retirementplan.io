@@ -9,21 +9,11 @@ module V1
       return missing_parameters unless (params[:email].present? && params[:password].present?)
       user = RegularUser.find_by(email: params[:email])
 
-      if user && user.authenticate(params[:password])
+      if user && authenticate_user(user, params[:password])
         user.sign_in!
-
-        session_data = {
-          user_id:      user.id,                    # Used to set google analytics userId
-          user_token:   user.authentication_token,  # Used to log in ember-simple-auth
-          user_email:   user.email,                 # Used to log in ember-simple-auth
-          user_name:    user.name,                  # Used for navbar name
-          user_image:   user.image_url,             # Used for navbar image
-          has_password: 'yes'                       # Can't save a boolean value in localStorage || Used to differentiate localStorage response for user/pass
-        }
-
-        render json: session_data, status: 201
+        render json: user.session_data, status: 201
       else
-        render json: {success: false, message: "Email/password combination is invalid."}, status: :unauthorized
+        return invalid_email_login
       end
     end
 
@@ -32,12 +22,40 @@ module V1
       # user identity before giving them an access token (i.e. their OAuth
       # access token is real).
 
-      oauth_user_data = params[:user]
+      oauth_user_data         = validate_params(params[:user])
+      user, user_was_created  = validate_oauth_and_login(oauth_user_data)
 
+      user.sign_in!(image_url: oauth_user_data[:image])
+      user.notify_admin_of_signup! if user_was_created # For brand-new users, send admin notification email
+      render json: user.session_data
+    end
+
+    def destroy
+      current_user.sign_out!
+      render json: {success: true, message: 'Signed out successfully.'}
+    end
+
+
+    private
+
+    def authenticate_user(user, password)
+      begin
+        user.authenticate(params[:password])
+      rescue
+        return invalid_email_login
+      end
+      return true
+    end
+
+    def validate_params(oauth_user_data)
       return missing_parameters unless oauth_user_data.present?
       return missing_parameters unless oauth_user_data[:name].present?
       return missing_parameters unless oauth_user_data[:image].present?
 
+      return oauth_user_data
+    end
+
+    def validate_oauth_and_login(oauth_user_data)
       # This will throw:
       # - CustomExceptions::MissingParameters unless all required params are present
       # - CustomExceptions::InvalidOauthCredentials if invalid access token, etc.
@@ -49,42 +67,24 @@ module V1
           'provider'  => provider,
           'uid'       => uid,
           'email'     => oauth_user_data[:email],
-          'name'      => oauth_user_data[:name],
-          'image'     => oauth_user_data[:image]
+          'name'      => oauth_user_data[:name]
         }, current_user).login_or_create
       rescue CustomExceptions::UserExistsFromOauth => e
         provider = e.message
-        render json: {
-          success: false,
-          message: "That e-mail is already attached to a different provider (try #{provider})."
-        }, status: :unauthorized and return
+        return oauth_login_error "That e-mail is already attached to a different provider (try #{provider})."
       rescue CustomExceptions::UserExistsWithPassword
-        render json: {
-          success: false,
-          message: "An account already exists for that email using password registration. Please sign in with your email/password."
-        }, status: :unauthorized and return
+        return oauth_login_error "An account already exists for that email using password registration. Please sign in with your email/password, and then you can add that Authentication provider from your profile page."
       end
 
-      user.sign_in!
-
-      # For brand-new users, send admin notification email
-      user.notify_admin_of_signup! if user_was_created
-
-      session_data = {
-        user_id:      user.id,
-        user_token:   user.authentication_token,
-        user_email:   user.email,
-        user_name:    oauth_user_data[:name], # user.name
-        user_image:   oauth_user_data[:image],
-        has_password: 'no' # Can't save a boolean value in localStorage
-      }
-
-      render json: session_data
+      return user, user_was_created
     end
 
-    def destroy
-      current_user.sign_out!
-      render json: {success: true, message: 'Signed out successfully.'}
+    def oauth_login_error(message)
+      render json: { success: false, message: message, sticky: true }, status: :invalid_parameters
+    end
+
+    def invalid_email_login
+      render json: {success: false, message: "Email/password combination is invalid."}, status: 422
     end
 
   end # SessionsController
