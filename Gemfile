@@ -28,7 +28,8 @@ gem 'oj'
 gem 'active_model_serializers'
 gem 'bcrypt'
 gem 'airbrake' # Only really using in production, but referencing in a class (causes errors if not required)
-gem 'maildown'
+gem 'markerb'
+gem 'redcarpet' # for markerb
 
 
 group :production do

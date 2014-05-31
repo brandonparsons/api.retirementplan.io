@@ -179,7 +179,7 @@ class User < ActiveRecord::Base
   end
 
   def notify_admin_of_signup!
-    ::AdminMailer.delay.user_sign_up(user.id)
+    ::AdminMailer.delay.user_sign_up(id)
   end
 
 
