@@ -1,4 +1,4 @@
-class EtfSerializer < ApiSerializer
+class EtfSerializer < ActiveModel::Serializer
   attributes :id, :ticker, :description
 
   has_one :security
