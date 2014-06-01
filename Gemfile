@@ -85,6 +85,8 @@ group :development do
   gem 'brakeman',                 require: false
 
   gem 'letter_opener'
+
+  gem 'sinatra', require: false # For sidekiq web UI - see sidekiq.rake
 end
 
 
