@@ -9,7 +9,7 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   def has_password
-    object.password_digest.present?
+    object.has_password?
   end
 
 end

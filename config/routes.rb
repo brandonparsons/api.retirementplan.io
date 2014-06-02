@@ -13,13 +13,14 @@ Rails.application.routes.draw do
 
     resources :users, only: [:create, :show, :update] do
       collection do
-        post 'accept_terms',  to: 'users#details'
+        post :change_password
+        post :accept_terms
       end
     end
 
     resource :session, only: [:create, :destroy] do
       collection do
-        post 'check_oauth', to: 'sessions#check_oauth'
+        post :check_oauth
       end
     end
 

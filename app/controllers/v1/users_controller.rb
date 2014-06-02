@@ -28,6 +28,36 @@ module V1
       end
     end
 
+    def change_password
+      return missing_parameters unless params[:user].present?
+      return invalid_parameters unless current_user.has_password?
+
+      current_password      = params[:user][:current_password]
+      password              = params[:user][:password]
+      password_confirmation = params[:user][:password_confirmation]
+
+      return missing_parameters unless (
+        current_password.present? &&
+        password.present? &&
+        password_confirmation.present?
+      )
+
+      user = RegularUser.find_by email: current_user.email # current_user is a `User` not a `RegularUser`
+      return invalid_parameters unless user.present?
+
+      if user.authenticate(current_password)
+        user.password               = password
+        user.password_confirmation  = password_confirmation
+        if user.save
+          render json: current_user # Render the current_user (uses UserSerializer)
+        else
+          render json: user.errors, status: :unprocessable_entity
+        end
+      else
+        return invalid_parameters("Current password is incorrect.")
+      end
+    end
+
 
     private
 
@@ -42,7 +72,8 @@ module V1
     end
 
     def user_update_params
-      params[:user].try(:delete, :image) # Ember will send the image back on save
+      params[:user].try(:delete, :image) # Ember will pass back on save
+      params[:user].try(:delete, :has_password) # Ember will pass back on save
       params.require(:user).permit(:name, :email)
     end
 

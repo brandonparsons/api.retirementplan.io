@@ -33,7 +33,7 @@ class ApplicationController < ActionController::API
   # Generic fallback - this has to be FIRST
   rescue_from(Exception) do |exception|
     logger.warn "[500 ERROR]: #{exception.message}"
-    render json: {error: "Sorry - something went wrong."}, status: 500 and return
+    render json: {error: "Sorry - something went wrong."}, status: 500
   end
 
   # Postgres will error if calling find without a valid UUID string. Could
@@ -46,7 +46,10 @@ class ApplicationController < ActionController::API
 
   rescue_from ActionController::ParameterMissing, with: :missing_parameters
 
-  rescue_from ActionController::UnpermittedParameters, with: :invalid_parameters
+  rescue_from ActionController::UnpermittedParameters do |exception|
+    logger.warn "[ERROR]: Unpermitted parameters passed to the controller (#{current_user && current_user.email})"
+    invalid_parameters
+  end
 
   rescue_from CustomExceptions::InvalidOauthCredentials, with: :invalid_parameters
 
@@ -117,11 +120,11 @@ class ApplicationController < ActionController::API
   end
 
   def missing_parameters
-    render json: {success: false, message: "400 - Missing parameters"}, status: 400
+    render json: {success: false, message: "422 - Missing parameters"}, status: 422
   end
 
-  def invalid_parameters
-    render json: {success: false, message: "422 - Invalid parameters"}, status: 422
+  def invalid_parameters(message="422 - Invalid parameters")
+    render json: {success: false, message: message}, status: 422
   end
 
   def oauth_login_error(message)

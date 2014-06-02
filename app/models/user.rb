@@ -179,6 +179,10 @@ class User < ActiveRecord::Base
     clear_authentication_token!
   end
 
+  def has_password?
+    password_digest.present?
+  end
+
   def notify_admin_of_signup!
     ::AdminMailer.delay.user_sign_up(id)
   end

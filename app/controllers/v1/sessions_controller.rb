@@ -9,11 +9,11 @@ module V1
       return missing_parameters unless (params[:email].present? && params[:password].present?)
       user = RegularUser.find_by(email: params[:email])
 
-      if user && authenticate_user(user, params[:password])
+      if user && user.authenticate(params[:password])
         user.sign_in!
         render json: user.session_data, status: 201
       else
-        return invalid_email_login
+        return invalid_parameters("Email/password combination is invalid.")
       end
     end
 
@@ -37,15 +37,6 @@ module V1
 
 
     private
-
-    def authenticate_user(user, password)
-      begin
-        user.authenticate(password)
-      rescue
-        return invalid_email_login
-      end
-      return true
-    end
 
     def validate_params(oauth_user_data)
       return missing_parameters unless oauth_user_data.present?
@@ -74,10 +65,6 @@ module V1
       }, current_user).login_or_create
 
       return user, user_was_created
-    end
-
-    def invalid_email_login
-      render json: {success: false, message: "Email/password combination is invalid."}, status: 422
     end
 
   end # SessionsController
