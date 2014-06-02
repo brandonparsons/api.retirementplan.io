@@ -8,7 +8,7 @@ module V1
       if @user.save
         @user.sign_in!
         @user.notify_admin_of_signup!
-        render json: @user.session_data, status: 201
+        render json: UserSerializer.new(@user).as_json, status: 201
       else
         render json: @user.errors, status: :unprocessable_entity
       end

@@ -40,7 +40,7 @@ module V1
 
     def authenticate_user(user, password)
       begin
-        user.authenticate(params[:password])
+        user.authenticate(password)
       rescue
         return invalid_email_login
       end
@@ -62,25 +62,18 @@ module V1
       # These are rescued in application_controller.rb and return error JSON
       uid, provider = ::OAuthValidator.new(oauth_user_data).call
 
-      begin
-        user, user_was_created = OAuthUser.new({
-          'provider'  => provider,
-          'uid'       => uid,
-          'email'     => oauth_user_data[:email],
-          'name'      => oauth_user_data[:name]
-        }, current_user).login_or_create
-      rescue CustomExceptions::UserExistsFromOauth => e
-        provider = e.message
-        return oauth_login_error "That e-mail is already attached to a different provider (try #{provider})."
-      rescue CustomExceptions::UserExistsWithPassword
-        return oauth_login_error "An account already exists for that email using password registration. Please sign in with your email/password, and then you can add that Authentication provider from your profile page."
-      end
+      # This will throw:
+      # - CustomExceptions::UserExistsFromOauth if that email already has a different OAuth service attached
+      # - CustomExceptions::UserExistsWithPassword if user has been created with email/password
+      # These are rescued in application_controller.rb and return error JSON
+      user, user_was_created = OAuthUser.new({
+        'provider'  => provider,
+        'uid'       => uid,
+        'email'     => oauth_user_data[:email],
+        'name'      => oauth_user_data[:name]
+      }, current_user).login_or_create
 
       return user, user_was_created
-    end
-
-    def oauth_login_error(message)
-      render json: { success: false, message: message, sticky: true }, status: :invalid_parameters
     end
 
     def invalid_email_login

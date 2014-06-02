@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   #############
 
   before_validation on: :create do
+    self.name                   = 'Me' unless name.present?
     self.min_rebalance_spacing  = 90.days
     self.max_contact_frequency  = 7.days
     self.allowable_drift        = 5

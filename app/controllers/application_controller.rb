@@ -33,7 +33,7 @@ class ApplicationController < ActionController::API
   # Generic fallback - this has to be FIRST
   rescue_from(Exception) do |exception|
     logger.warn "[500 ERROR]: #{exception.message}"
-    render json: {error: "Sorry - something went wrong."}, status: 500
+    render json: {error: "Sorry - something went wrong."}, status: 500 and return
   end
 
   # Postgres will error if calling find without a valid UUID string. Could
@@ -53,6 +53,15 @@ class ApplicationController < ActionController::API
   rescue_from CustomExceptions::MissingParameters, with: :missing_parameters
 
   rescue_from CustomExceptions::InvalidParameters, with: :invalid_parameters
+
+  rescue_from CustomExceptions::UserExistsFromOauth do |exception|
+    provider = exception.message
+    oauth_login_error "That e-mail is already attached to a different provider (try #{provider})."
+  end
+
+  rescue_from CustomExceptions::UserExistsWithPassword do |exception|
+    oauth_login_error "An account already exists for that email using password registration. Please sign in with your email/password, and then you can add that authentication provider from your profile page."
+  end
 
 
   protected
@@ -113,6 +122,10 @@ class ApplicationController < ActionController::API
 
   def invalid_parameters
     render json: {success: false, message: "422 - Invalid parameters"}, status: 422
+  end
+
+  def oauth_login_error(message)
+    render json: { success: false, message: message, sticky: true }, status: 422
   end
 
   # def confirm_user_accepted_terms
