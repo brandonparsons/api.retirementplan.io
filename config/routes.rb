@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       collection do
         post  'password_resets/new',      to: :new_password_reset
         post  'password_resets/request',  to: :request_password_reset
+        post  :create_password
         post  :accept_terms
       end
     end

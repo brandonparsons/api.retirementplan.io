@@ -33,7 +33,7 @@ class ApplicationController < ActionController::API
   # Generic fallback - this has to be FIRST
   rescue_from(Exception) do |exception|
     logger.warn "[500 ERROR]: #{exception.message}"
-    render json: {error: "Sorry - something went wrong."}, status: 500
+    render json: {success: false, message: "Sorry - something went wrong."}, status: 500
   end
 
   # Postgres will error if calling find without a valid UUID string. Could

@@ -66,6 +66,11 @@ module V1
     end
 
     def update
+      ## This update method will only work if the user has a password - i.e. if
+      ## the user was created from OAuth, they will need to set a password before
+      ## they can change their name/email.
+      return invalid_parameters unless current_user.has_password?
+
       # Validate the current password
       return missing_parameters unless params[:user][:current_password].present?
       user = RegularUser.find_from_all_users_with_id current_user.id # current_user is a `User` not a `RegularUser`
@@ -81,6 +86,12 @@ module V1
       else
         render json: user.errors, status: :unprocessable_entity
       end
+    end
+
+    def create_password
+      email = current_user.email
+      UserMailer.delay.reset_password_instructions(email, set_password_request: true)
+      render json: {success: true, message: "Email being sent to #{email} with instructions on how to set a password."}
     end
 
 
