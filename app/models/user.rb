@@ -62,6 +62,10 @@ class User < ActiveRecord::Base
     Portfolio.all.select { |portfolio| portfolio.tracking? }.map(&:user)
   end
 
+  def self.verifier_for(purpose)
+    Rails.application.message_verifier("user-#{purpose}")
+  end
+
 
   ####################
   # INSTANCE METHODS #
@@ -151,14 +155,6 @@ class User < ActiveRecord::Base
     save!
   end
 
-  # def has_facebook?
-  #   accounts.where(provider: 'facebook').any?
-  # end
-
-  # def has_twitter?
-  #   accounts.where(provider: 'twitter').any?
-  # end
-
   def sign_in!(image_url: nil)
     set_image(image_url)
     self.last_sign_in_at = Time.zone.now
@@ -168,7 +164,7 @@ class User < ActiveRecord::Base
   end
 
   def session_data
-    return {
+    {
       user_id:      id,
       user_token:   authentication_token,
       user_email:   email

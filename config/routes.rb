@@ -13,8 +13,10 @@ Rails.application.routes.draw do
 
     resources :users, only: [:create, :show, :update] do
       collection do
-        post :change_password
-        post :accept_terms
+        post  'password_resets/new',      to: :new_password_reset
+        post  'password_resets/request',  to: :request_password_reset
+        post  :change_password
+        post  :accept_terms
       end
     end
 

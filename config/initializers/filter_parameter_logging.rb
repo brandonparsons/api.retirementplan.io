@@ -5,5 +5,6 @@ Rails.application.config.filter_parameters += [
   :password,
   :password_confirmation,
   :authentication_token,
-  :credit_card
+  :credit_card,
+  :password_reset_token
 ]

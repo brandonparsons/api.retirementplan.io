@@ -45,7 +45,9 @@ module RailsApi
     # Autoload all folders/subdirectories under app/models
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**/}')]
 
-    config.action_mailer.default_url_options = { host: ENV['MAILER_HOST'] }
+    config.action_mailer.default_url_options  = { host: ENV['MAILER_HOST'] }
+    config.action_mailer.default_options      = { from: "Admin [RetirementPlan.io] <admin@#{ENV['MAILER_HOST']}>" }
+
 
     config.action_controller.action_on_unpermitted_parameters = :raise
 
