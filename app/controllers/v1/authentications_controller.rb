@@ -48,9 +48,13 @@ module V1
     end
 
     def destroy
-      auth = current_user.authentications.find(params[:id])
-      auth.destroy
-      render json: nil, status: :ok
+      authentications = current_user.authentications
+      if authentications.count > 1 || current_user.has_password?
+        authentications.find(params[:id]).destroy
+        render json: nil, status: :ok
+      else
+        render json: {success: false, message: "Can't delete provider - last one, and no user password."}, status: 422
+      end
     end
 
   end
