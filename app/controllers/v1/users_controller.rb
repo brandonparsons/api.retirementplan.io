@@ -44,7 +44,7 @@ module V1
         return render json: {success: false, message: "That token has expired. Request another token and start over."}, status: 422
       end
 
-      user = RegularUser.find_by_id_for_password_reset(user_id)
+      user = RegularUser.find_from_all_users_with_id(user_id)
       return invalid_parameters unless user.present?
 
       user.password               = params[:password]
@@ -62,66 +62,36 @@ module V1
     ##################
 
     def show
-      log_if_attempted_improper_access
       render json: current_user
     end
 
     def update
-      log_if_attempted_improper_access
-      if current_user.update_attributes(user_update_params)
-        render json: current_user, status: :ok
-      else
-        render json: current_user.errors, status: :unprocessable_entity
-      end
-    end
-
-    def change_password
-      return missing_parameters unless params[:user].present?
-      return invalid_parameters unless current_user.has_password?
-
-      current_password      = params[:user][:current_password]
-      password              = params[:user][:password]
-      password_confirmation = params[:user][:password_confirmation]
-
-      return missing_parameters unless (
-        current_password.present? &&
-        password.present? &&
-        password_confirmation.present?
-      )
-
-      user = RegularUser.find_by email: current_user.email # current_user is a `User` not a `RegularUser`
+      # Validate the current password
+      return missing_parameters unless params[:user][:current_password].present?
+      user = RegularUser.find_from_all_users_with_id current_user.id # current_user is a `User` not a `RegularUser`
       return invalid_parameters unless user.present?
+      return invalid_parameters("Current password is incorrect.") unless user.authenticate(params[:user][:current_password])
 
-      if user.authenticate(current_password)
-        user.password               = password
-        user.password_confirmation  = password_confirmation
-        if user.save
-          render json: current_user # Render the current_user (uses UserSerializer)
-        else
-          render json: user.errors, status: :unprocessable_entity
-        end
+      # After validation, don't want this in the params
+      params[:user].delete(:current_password)
+
+      # Update the user. This will work with pass/pass_conf
+      if user.update_attributes(user_update_params)
+        render json: UserSerializer.new(user).as_json, status: :ok
       else
-        return invalid_parameters("Current password is incorrect.")
+        render json: user.errors, status: :unprocessable_entity
       end
     end
 
 
     private
 
-    def log_if_attempted_improper_access
-      if params[:id] != current_user.id
-        logger.warn "[SECURITY]: Someone trying to look at someone else's profile... USERID: #{current_user.id}"
-      end
-    end
-
     def user_create_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 
     def user_update_params
-      params[:user].try(:delete, :image) # Ember will pass back on save
-      params[:user].try(:delete, :has_password) # Ember will pass back on save
-      params.require(:user).permit(:name, :email)
+      params.require(:user).permit(:name, :email, :current_password, :password, :password_confirmation)
     end
 
   end

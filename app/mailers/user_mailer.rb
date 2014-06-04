@@ -1,7 +1,7 @@
 class UserMailer < ActionMailer::Base
 
   def reset_password_instructions(email)
-    user = RegularUser.find_by_email_for_password_reset(email)
+    user = RegularUser.find_from_all_users_with_email(email)
 
     if user.present?
       token = CGI.escape(user.password_reset_token)

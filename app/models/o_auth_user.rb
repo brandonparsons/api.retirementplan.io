@@ -50,11 +50,16 @@ class OAuthUser
     if authentication_already_exists?
       @authentication = @user.authentications.find_by(provider: @provider, uid: @uid)
     else
-      @authentication = @user.authentications.create!(
+      @authentication = @user.authentications.build(
         provider:   @provider,
         uid:        @uid,
         username:   @name
       )
+      if @authentication.valid?
+        @authentication.save
+      else
+        raise CustomExceptions::ErrorSavingAuthentication, JSON.dump(@authentication.errors.messages)
+      end
     end
 
     return true

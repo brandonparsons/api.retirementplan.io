@@ -31,8 +31,12 @@ module V1
       # CustomExceptions::UserExistsWithPassword as this will always be called
       # with a current_user present.
       o = OAuthUser.new({'provider' => provider, 'uid' => uid}, current_user)
-      o.login_or_create # This will create an authentication on the logged-in user
-      authentication = o.authentication
+      begin
+        o.login_or_create # This will create an authentication on the logged-in user
+        authentication = o.authentication
+      rescue CustomExceptions::ErrorSavingAuthentication => error_messages
+        render json: JSON.parse(error_messages.to_s), status: 422 and return
+      end
 
       render json: authentication, status: :created
     end

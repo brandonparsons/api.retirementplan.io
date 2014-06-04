@@ -24,17 +24,15 @@ class RegularUser < User
     Time.now.utc.to_i
   end
 
-  def self.find_by_email_for_password_reset(email)
+  def self.find_from_all_users_with_email(email)
     # Unscoped as default scope searches for users *with* a password digest.
-    # If a person from OAuth wants to reset their password, let's allow them
-    # to create one.
+    # If a person from OAuth wants to reset/set a password, allow them (therefore
+    # need to list them in find results.)
     unscoped.find_by(email: email)
   end
 
-  def self.find_by_id_for_password_reset(id)
-    # Unscoped as default scope searches for users *with* a password digest.
-    # If a person from OAuth wants to reset their password, let's allow them
-    # to create one.
+  def self.find_from_all_users_with_id(id)
+    # See comment in ::find_from_all_users_with_email
     unscoped.find_by(id: id)
   end
 
