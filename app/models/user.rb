@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
   end
 
   def confirmed?
-    confirmed_at.nil? ? false : ( Time.zone.now > confirmed_at )
+    confirmed_at.present? || has_temporary_confirmation_requirement_exclusion?
   end
 
   def sign_in!(image_url: nil)
@@ -228,6 +228,10 @@ class User < ActiveRecord::Base
 
   def exceeded_max_rebalance_frequency
     (Time.zone.now.to_i - last_contact) > min_rebalance_spacing
+  end
+
+  def has_temporary_confirmation_requirement_exclusion?
+    (Time.zone.now - created_at) < 2.days
   end
 
   def send_out_of_balance_email

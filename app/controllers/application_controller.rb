@@ -4,9 +4,12 @@ class ApplicationController < ActionController::API
   include ActionController::ImplicitRender
   include ActionController::StrongParameters
 
-  # before_action :confirm_user_accepted_terms, except: [:error, :health]
-
   before_action :cors_set_access_control_headers
+
+  before_action :confirm_user_email_confirmation, except: [:error, :health, :CORS]
+
+  # before_action :confirm_user_accepted_terms, except: [:error, :health, :CORS]
+
 
 
   ###################
@@ -129,6 +132,12 @@ class ApplicationController < ActionController::API
 
   def oauth_login_error(message)
     render json: { success: false, message: message, sticky: true }, status: 422
+  end
+
+  def confirm_user_email_confirmation
+    if defined?(current_user) && current_user && !current_user.confirmed?
+      render json: {success: false, message: 'You must confirm your email address.', reason: :email_confirmation}, status: 403 and return
+    end
   end
 
   # def confirm_user_accepted_terms
