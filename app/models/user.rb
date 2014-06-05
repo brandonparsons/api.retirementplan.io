@@ -57,6 +57,10 @@ class User < ActiveRecord::Base
   # CLASS METHODS #
   #################
 
+  def self.normalized_timestamp
+    Time.now.utc.to_i
+  end
+
   def self.with_tracked_portfolios
     # Returns all users who have a tracked portfolio.
     Portfolio.all.select { |portfolio| portfolio.tracking? }.map(&:user)
@@ -150,9 +154,17 @@ class User < ActiveRecord::Base
     end
   end
 
-  def confirm!
+  def confirm
     self.confirmed_at = Time.zone.now
+  end
+
+  def confirm!
+    confirm
     save!
+  end
+
+  def confirmed?
+    confirmed_at.nil? ? false : ( Time.zone.now > confirmed_at )
   end
 
   def sign_in!(image_url: nil)
@@ -177,6 +189,11 @@ class User < ActiveRecord::Base
 
   def has_password?
     password_digest.present?
+  end
+
+  def confirm_email_token
+    verifier = self.class.verifier_for('email-confirmation')
+    verifier.generate([id, self.class.normalized_timestamp])
   end
 
   def notify_admin_of_signup!

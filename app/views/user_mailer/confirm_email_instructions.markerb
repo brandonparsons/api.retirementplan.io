@@ -1,0 +1,5 @@
+Hi there,
+
+In order to confirm your email address, simply visit the link below.  We need to ensure we have the correct address on file so we can reach you with important portfolio notices.
+
+[Confirm my email](<%= @url %>)

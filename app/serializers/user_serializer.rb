@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :has_password, :image
+  attributes :id, :name, :email, :image, :has_password, :confirmed
 
   has_many :authentications
   embed :ids, include: true
@@ -10,6 +10,10 @@ class UserSerializer < ActiveModel::Serializer
 
   def has_password
     object.has_password?
+  end
+
+  def confirmed
+    object.confirmed?
   end
 
 end

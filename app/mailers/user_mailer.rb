@@ -8,8 +8,20 @@ class UserMailer < ActionMailer::Base
 
     if user.present?
       token = CGI.escape(user.password_reset_token)
-      @url  = "#{ENV['FRONTEND']}/password_resets/request/#{token}"
+      @url  = "#{ENV['FRONTEND']}/password_reset/reset/#{token}"
       mail(to: email, subject: subject) do |format|
+        format.text
+        format.html
+      end
+    end
+  end
+
+  def confirm_email_instructions(email)
+    user    = User.find_by email: email
+    if user.present?
+      token = CGI.escape(user.confirm_email_token)
+      @url  = "#{ENV['FRONTEND']}/email_confirmation/confirm/#{token}"
+      mail(to: email, subject: 'Email Confirmation Instructions') do |format|
         format.text
         format.html
       end

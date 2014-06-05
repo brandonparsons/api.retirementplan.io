@@ -20,10 +20,6 @@ class RegularUser < User
   # CLASS METHODS #
   #################
 
-  def self.normalized_timestamp
-    Time.now.utc.to_i
-  end
-
   def self.find_from_all_users_with_email(email)
     # Unscoped as default scope searches for users *with* a password digest.
     # If a person from OAuth wants to reset/set a password, allow them (therefore

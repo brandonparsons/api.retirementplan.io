@@ -13,10 +13,20 @@ Rails.application.routes.draw do
 
     resources :users, only: [:create, :show, :update] do
       collection do
-        post  'password_resets/new',      to: :new_password_reset
-        post  'password_resets/request',  to: :request_password_reset
         post  :create_password
         post  :accept_terms
+      end
+    end
+
+    resources :password_resets, only: [:create] do
+      collection do
+        post :reset
+      end
+    end
+
+    resources :email_confirmations, only: [:create] do
+      collection do
+        post :confirm
       end
     end
 
@@ -26,9 +36,9 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :securities, only: [:index, :show]
-
     resources :authentications, only: [:index, :create, :show, :destroy]
+
+    resources :securities, only: [:index, :show]
 
   end # v1
 
