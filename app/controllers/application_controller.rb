@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
 
   before_action :cors_set_access_control_headers
 
-  before_action :confirm_user_email_confirmation, except: [:error, :health, :CORS]
+  before_action :verify_user_email_confirmation, except: [:error, :health, :CORS]
 
   # before_action :confirm_user_accepted_terms, except: [:error, :health, :CORS]
 
@@ -87,6 +87,7 @@ class ApplicationController < ActionController::API
   def get_user
     email       = request.headers['X-Auth-Email'] || params[:auth_email]
     auth_token  = request.headers['X-Auth-Token'] || params[:auth_token]
+    logger.debug( (email.present? && auth_token.present?) ? "[AUTH_INFO]: #{email} || #{auth_token}" : "[AUTH INFO]: NONE" ) if Rails.env.development?
     User.authenticate_from_email_and_token(email, auth_token)
   end
 
@@ -134,8 +135,8 @@ class ApplicationController < ActionController::API
     render json: { success: false, message: message, sticky: true }, status: 422
   end
 
-  def confirm_user_email_confirmation
-    if defined?(current_user) && current_user && !current_user.confirmed?
+  def verify_user_email_confirmation
+    if current_user && !current_user.is_confirmed_or_temporarily_allowed?
       render json: {success: false, message: 'You must confirm your email address.', reason: :email_confirmation}, status: 403 and return
     end
   end

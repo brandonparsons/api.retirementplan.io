@@ -6,7 +6,7 @@ module V1
 
     def create
       return missing_parameters unless params[:email].present?
-      UserMailer.delay.confirm_email_instructions(params[:email])
+      UserMailer.delay.confirm_email_instructions(email: params[:email], user_id: current_user.try(:id))
       render json: {success: true, message: "Email being sent to #{params[:email]}"}
     end
 
@@ -18,7 +18,7 @@ module V1
       ## every time
       begin
         # This raises an exception if the message is modified
-        user_id, timestamp = RegularUser.verifier_for('email-confirmation').verify(token)
+        user_id, for_email, timestamp = User.verifier_for('email-confirmation').verify(token)
       rescue
         return render json: {success: false, message: "Invalid email confirmation token."}, status: 422
       end
@@ -31,15 +31,28 @@ module V1
       user = User.find(user_id)
       return invalid_parameters unless user.present?
 
-      if user.confirmed?
-        render json: {success: true, message: 'Your email was already confirmed.'}
-      else
-        user.confirm
+      if user.confirmed? && (user.email == for_email)
+        # This was not a change email confirmation, and they are already
+        # confirmed. Can short-circuit out without touching DB.
+        return render json: {success: true, message: 'Your email was already confirmed.'}
+      end
+
+      if !user.confirmed?
+        user.confirm!
+        render json: {success: true, message: "Email confirmed."} and return
+      elsif user.email != for_email
+        user.email = for_email
         if user.save
-          render json: {success: true, message: 'Email confirmed.'}
+          render json: {
+            success: true,
+            message: "Your email address on file has been updated to #{for_email}.",
+            updated_email: user.email
+          } and return
         else
-          render json: user.errors, status: 422
+          render json: user.errors, status: 422 and return
         end
+      else
+        raise "Invalid logic branching point."
       end
     end
 

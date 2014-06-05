@@ -12,7 +12,7 @@ module V1
       @user = RegularUser.new(user_create_params)
       if @user.save
         @user.sign_in!
-        @user.notify_admin_of_signup!
+        ::CreateUserService.new(@user).call
         render json: UserSerializer.new(@user).as_json, status: 201
       else
         render json: @user.errors, status: :unprocessable_entity
@@ -25,7 +25,7 @@ module V1
     ##################
 
     def show
-      render json: current_user
+      render json: current_user if stale?(current_user)
     end
 
     def update
@@ -37,15 +37,23 @@ module V1
       # Validate the current password
       return missing_parameters unless params[:user][:current_password].present?
       user = RegularUser.find_from_all_users_with_id current_user.id # current_user is a `User` not a `RegularUser`
-      return invalid_parameters unless user.present?
       return invalid_parameters("Current password is incorrect.") unless user.authenticate(params[:user][:current_password])
 
       # After validation, don't want this in the params
       params[:user].delete(:current_password)
 
+      # If the email has changed, kick off 'reconfirmable' flow
+      if params[:user][:email].present? && (params[:user][:email] != user.email)
+        unconfirmed_email = params[:user][:email]
+        UserMailer.delay.confirm_email_instructions(email: unconfirmed_email, user_id: current_user.id)
+        params[:user].delete(:email) # Remove because we are not updating at this time
+      end
+
       # Update the user. This will work with pass/pass_conf
       if user.update_attributes(user_update_params)
-        render json: UserSerializer.new(user).as_json, status: :ok
+        user_data = UserSerializer.new(user).as_json
+        user_data.merge!({unconfirmed_email: unconfirmed_email}) if unconfirmed_email
+        render json: user_data, status: :ok
       else
         render json: user.errors, status: :unprocessable_entity
       end

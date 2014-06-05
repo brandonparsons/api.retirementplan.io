@@ -16,10 +16,17 @@ class UserMailer < ActionMailer::Base
     end
   end
 
-  def confirm_email_instructions(email)
-    user    = User.find_by email: email
+  def confirm_email_instructions(email: nil, user_id: nil)
+    raise "Email required." unless email.present?
+
+    if user_id.present?
+      user = User.find user_id
+    else
+      user = User.find_by email: email
+    end
+
     if user.present?
-      token = CGI.escape(user.confirm_email_token)
+      token = CGI.escape(user.confirm_email_token for_email: email)
       @url  = "#{ENV['FRONTEND']}/email_confirmation/confirm/#{token}"
       mail(to: email, subject: 'Email Confirmation Instructions') do |format|
         format.text

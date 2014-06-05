@@ -26,7 +26,7 @@ module V1
       user, user_was_created  = validate_oauth_and_login(oauth_user_data)
 
       user.sign_in!(image_url: oauth_user_data[:image])
-      user.notify_admin_of_signup! if user_was_created # For brand-new users, send admin notification email
+      ::CreateUserService.new(user).call if user_was_created
       render json: user.session_data
     end
 

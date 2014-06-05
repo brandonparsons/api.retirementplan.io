@@ -164,7 +164,11 @@ class User < ActiveRecord::Base
   end
 
   def confirmed?
-    confirmed_at.present? || has_temporary_confirmation_requirement_exclusion?
+    confirmed_at.present?
+  end
+
+  def is_confirmed_or_temporarily_allowed?
+    confirmed? || has_temporary_confirmation_requirement_exclusion?
   end
 
   def sign_in!(image_url: nil)
@@ -191,13 +195,9 @@ class User < ActiveRecord::Base
     password_digest.present?
   end
 
-  def confirm_email_token
+  def confirm_email_token(for_email: nil)
     verifier = self.class.verifier_for('email-confirmation')
-    verifier.generate([id, self.class.normalized_timestamp])
-  end
-
-  def notify_admin_of_signup!
-    ::AdminMailer.delay.user_sign_up(id)
+    verifier.generate([id, for_email, self.class.normalized_timestamp])
   end
 
 
