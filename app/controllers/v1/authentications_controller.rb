@@ -18,7 +18,7 @@ module V1
       # send back email, auth token etc. as we are already logged in. Just
       # create and associate the OAuth authentication.
 
-      oauth_user_data = params[:user]
+      oauth_user_data = params[:user].slice(:access_token, :provider, :email)
       return missing_parameters unless oauth_user_data.present?
 
       # This will throw:

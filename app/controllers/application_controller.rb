@@ -6,10 +6,11 @@ class ApplicationController < ActionController::API
 
   before_action :cors_set_access_control_headers
 
+  ## ## ##
+  ## Careful with the names of these before_actions. Skipping in various controllers ##
   before_action :verify_user_email_confirmation, except: [:error, :health, :CORS]
-
   # before_action :confirm_user_accepted_terms, except: [:error, :health, :CORS]
-
+  ## ## ##
 
 
   ###################
@@ -132,7 +133,7 @@ class ApplicationController < ActionController::API
   end
 
   def oauth_login_error(message)
-    render json: { success: false, message: message, sticky: true }, status: 422
+    render json: { success: false, message: message, sticky: 10000 }, status: 422
   end
 
   def verify_user_email_confirmation

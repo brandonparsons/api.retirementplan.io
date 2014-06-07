@@ -10,20 +10,22 @@ module V1
     end
 
     def reset
-      token = unescape_token(params)
+      return missing_parameters unless params[:password_reset_token].present?
+      return missing_parameters unless params[:password].present?
+      return missing_parameters unless params[:password_confirmation].present?
 
       ###
       ## For some reason, this can't be pulled into the model.... it fails
       ## every time
       begin
         # This raises an exception if the message is modified
-        user_id, timestamp = RegularUser.verifier_for('password-reset').verify(token)
+        user_id, timestamp = RegularUser.verifier_for('password-reset').verify(CGI.unescape(params[:password_reset_token]))
       rescue
         return render json: {success: false, message: "Invalid password reset token."}, status: 422
       end
       ###
 
-      if timestamp_valid?(timestamp)
+      if (RegularUser.normalized_timestamp - timestamp) > 1.day
         return render json: {success: false, message: "That token has expired. Request another token and start over."}, status: 422
       end
 
@@ -37,21 +39,6 @@ module V1
       else
         render json: user.errors, status: 422
       end
-    end
-
-
-    private
-
-    def timestamp_valid?(timestamp)
-      (RegularUser.normalized_timestamp - timestamp) > 1.day
-    end
-
-    def unescape_token(params)
-      return missing_parameters unless params[:password_reset_token].present?
-      return missing_parameters unless params[:password].present?
-      return missing_parameters unless params[:password_confirmation].present?
-
-      return CGI.unescape(params[:password_reset_token])
     end
 
   end

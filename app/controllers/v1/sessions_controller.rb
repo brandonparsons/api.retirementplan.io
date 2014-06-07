@@ -21,8 +21,11 @@ module V1
       # After logging in via OAuth (hello.js), this route is used to confirm
       # user identity before giving them an access token (i.e. their OAuth
       # access token is real).
+      oauth_user_data = params[:user]
+      return missing_parameters unless oauth_user_data.present?
+      return missing_parameters unless oauth_user_data[:name].present?
+      return missing_parameters unless oauth_user_data[:image].present?
 
-      oauth_user_data         = validate_params(params[:user])
       user, user_was_created  = validate_oauth_and_login(oauth_user_data)
 
       user.sign_in!(image_url: oauth_user_data[:image])
@@ -37,14 +40,6 @@ module V1
 
 
     private
-
-    def validate_params(oauth_user_data)
-      return missing_parameters unless oauth_user_data.present?
-      return missing_parameters unless oauth_user_data[:name].present?
-      return missing_parameters unless oauth_user_data[:image].present?
-
-      return oauth_user_data
-    end
 
     def validate_oauth_and_login(oauth_user_data)
       # This will throw:
@@ -67,6 +62,6 @@ module V1
       return user, user_was_created
     end
 
-  end # SessionsController
+  end
 
 end # module

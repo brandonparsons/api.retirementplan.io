@@ -2,7 +2,7 @@ module V1
 
   class EmailConfirmationsController < ApplicationController
     # No auth required
-    skip_before_action :confirm_user_email_confirmation
+    skip_before_action :verify_user_email_confirmation
 
     def create
       return missing_parameters unless params[:email].present?
@@ -11,20 +11,20 @@ module V1
     end
 
     def confirm
-      token = unescape_token(params)
+      return missing_parameters unless params[:email_confirmation_token].present?
 
       ###
       ## For some reason, this can't be pulled into the model.... it fails
       ## every time
       begin
         # This raises an exception if the message is modified
-        user_id, for_email, timestamp = User.verifier_for('email-confirmation').verify(token)
+        user_id, for_email, timestamp = User.verifier_for('email-confirmation').verify(CGI.unescape(params[:email_confirmation_token]))
       rescue
         return render json: {success: false, message: "Invalid email confirmation token."}, status: 422
       end
       ###
 
-      if timestamp_valid?(timestamp)
+      if (RegularUser.normalized_timestamp - timestamp) > 1.day
         return render json: {success: false, message: "That token has expired. Request another token and start over."}, status: 422
       end
 
@@ -34,7 +34,7 @@ module V1
       if user.confirmed? && (user.email == for_email)
         # This was not a change email confirmation, and they are already
         # confirmed. Can short-circuit out without touching DB.
-        return render json: {success: true, message: 'Your email was already confirmed.'}
+        render json: {success: true, message: 'Your email was already confirmed.'} and return
       end
 
       if !user.confirmed?
@@ -54,18 +54,6 @@ module V1
       else
         raise "Invalid logic branching point."
       end
-    end
-
-
-    private
-
-    def timestamp_valid?(timestamp)
-      (RegularUser.normalized_timestamp - timestamp) > 1.day
-    end
-
-    def unescape_token(params)
-      return missing_parameters unless params[:email_confirmation_token].present?
-      return CGI.unescape(params[:email_confirmation_token])
     end
 
   end
