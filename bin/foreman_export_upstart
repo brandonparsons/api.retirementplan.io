@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Called from deploy scripts, and permitted passwordless sudo by deploy user
+
+echo Updating foreman upstart scripts....
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARENTDIR="$(dirname "$DIR")"
+
+$DIR/foreman export upstart /etc/init -a retirementplan -u appuser -l /var/log/retirementplan

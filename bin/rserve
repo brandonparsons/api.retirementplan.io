@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo Booting Rserve....
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARENTDIR="$(dirname "$DIR")"
+RBIN=$(which R)
+
+#  --RS-conf $PARENTDIR/RServe/rserve.conf
+$RBIN CMD ${PRE}Rserve$PX --RS-set source="$PARENTDIR/config/efficient_frontiers.R" --RS-set daemon=disable --RS-set remote=disable --vanilla --no-save
