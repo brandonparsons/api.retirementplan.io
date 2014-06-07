@@ -14,7 +14,9 @@ Rails.application.routes.draw do
     resources :users, only: [:create, :show, :update] do
       collection do
         post  :create_password
-        post  :accept_terms
+        get   :preferences
+        put  '/preferences(/:id)', to: :set_preferences
+        # post  :accept_terms
       end
     end
 

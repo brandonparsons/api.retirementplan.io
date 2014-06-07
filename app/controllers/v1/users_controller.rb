@@ -65,6 +65,28 @@ module V1
       render json: {success: true, message: "Email being sent to #{email} with instructions on how to set a password."}
     end
 
+    def preferences
+      # Returns the user's preferences for the edit page
+      render json: {
+        user_preferences: [
+          current_user.slice(:allowable_drift, :max_contact_frequency, :min_rebalance_spacing).merge({id: 'singleton'})
+        ]
+      }
+    end
+
+    def set_preferences
+      # Sets the user's preferences from a save on the edit page
+      if current_user.update_attributes(user_preference_params)
+        render json: {
+          user_preferences: [
+            current_user.slice(:allowable_drift, :max_contact_frequency, :min_rebalance_spacing).merge({id: 'singleton'})
+          ]
+        }
+      else
+        render json: current_user.errors, status: :unprocessable_entity
+      end
+    end
+
 
     private
 
@@ -74,6 +96,10 @@ module V1
 
     def user_update_params
       params.require(:user).permit(:name, :email, :current_password, :password, :password_confirmation)
+    end
+
+    def user_preference_params
+      params.require(:user_preference).permit(:allowable_drift, :max_contact_frequency, :min_rebalance_spacing)
     end
 
   end
