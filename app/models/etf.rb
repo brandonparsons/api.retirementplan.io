@@ -4,7 +4,7 @@ class Etf < ActiveRecord::Base
   # ASSOCIATIONS #
   ################
 
-  belongs_to :security
+  belongs_to :security, touch: true
 
 
   #############

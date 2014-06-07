@@ -4,7 +4,7 @@ class RetirementSimulationParameters < ActiveRecord::Base
   # ASSOCIATIONS #
   ################
 
-  belongs_to :user
+  belongs_to :user, touch: true
 
 
   #############
