@@ -79,8 +79,8 @@ class OAuthUser
     @user = User.create!(
       email:        @email,
       name:         @name,
-      from_oauth:   true,
-      confirmed_at: Time.zone.now
+      from_oauth:   true#,
+      # confirmed_at: Time.zone.now ## Still force confirmation of OAuth email
     )
 
     @user_was_created = true
