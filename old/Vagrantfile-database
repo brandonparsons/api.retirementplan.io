@@ -1,0 +1,63 @@
+  database_setup = %q{
+
+    if [ ! -f /var/.database-config ]; then
+
+      DEBIAN_FRONTEND=noninteractive
+      echo Installing PostgreSQL....
+
+      sudo echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/pgdg.list
+      sudo wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+      sudo apt-get update && sudo apt-get -y install postgresql-9.3 postgresql-contrib-9.3
+
+      sudo service postgresql stop
+      sudo mv /etc/init.d/postgresql /etc/init.old.postgresql
+
+
+      ##############
+      #MULTILINE#
+
+      sudo echo 'description "PostgreSQL 9.1 Server"
+      author "PostgreSQL"
+
+      start on runlevel [2345]
+      stop on runlevel [016]
+
+      respawn
+
+      # setuid postgres
+      # setgid postgres
+
+      pre-start script
+          if [ -d /var/run/postgresql ]; then
+              chmod 2775 /var/run/postgresql
+          else
+              install -d -m 2775 -o postgres -g postgres /var/run/postgresql
+          fi
+      end script
+
+      exec su -c "/usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql -c config_file=/etc/postgresql/9.3/main/postgresql.conf" postgres' >> /etc/init/postgresql.conf
+
+      ######
+
+
+      sudo service postgresql start
+
+      DEPLOY_DB_PASSWORD=asdf
+
+      sudo su -c "psql -U postgres -c \"CREATE ROLE deploy WITH CREATEDB login password '$DEPLOY_DB_PASSWORD';\"" postgres # Need to have createdb for rake db:create
+      sudo echo 'host all all all md5' >> /etc/postgresql/9.3/main/pg_hba.conf
+      sudo echo 'local all deploy md5' >> /etc/postgresql/9.3/main/pg_hba.conf
+
+      # Create uuid & hstore extensions on template1 so that all databases get it
+      PG_COMMAND="CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+      sudo su -c "psql -U postgres -d template1 -c '$PG_COMMAND'" postgres
+      PG_COMMAND="CREATE EXTENSION IF NOT EXISTS \"hstore\";"
+      sudo su -c "psql -U postgres -d template1 -c '$PG_COMMAND'" postgres
+
+      sudo service postgresql restart
+
+      sudo touch /var/.database-config
+    fi
+  }
+
+  config.vm.provision :shell, inline: database_setup

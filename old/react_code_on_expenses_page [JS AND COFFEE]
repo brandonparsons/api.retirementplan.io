@@ -1,0 +1,451 @@
+/** @jsx React.DOM */
+
+// http://jsbin.com/eGocaZa/7/edit
+
+// Simple pure-React component so we don't have to remember
+// Bootstrap's classes
+var BootstrapButton = React.createClass({
+  render: function() {
+    // transferPropsTo() is smart enough to merge classes provided
+    // to this component.
+    return this.transferPropsTo(
+      <a href="javascript:;" role="button" className="btn">
+        {this.props.children}
+      </a>
+    );
+  }
+});
+
+var BootstrapModal = React.createClass({
+  // The following two methods are the only places we need to
+  // integrate with Bootstrap or jQuery!
+  componentDidMount: function() {
+    // When the component is added, turn it into a modal
+    $(this.getDOMNode())
+      .modal({backdrop: 'static', keyboard: false, show: false})
+  },
+  componentWillUnmount: function() {
+    $(this.getDOMNode()).off('hidden', this.handleHidden);
+  },
+  close: function() {
+    $(this.getDOMNode()).modal('hide');
+  },
+  open: function() {
+    $(this.getDOMNode()).modal('show');
+  },
+  render: function() {
+    var confirmButton = null;
+    var cancelButton = null;
+
+    if (this.props.confirm) {
+      confirmButton = (
+        <BootstrapButton
+          onClick={this.handleConfirm}
+          className="btn-success">
+          {this.props.confirm}
+        </BootstrapButton>
+      );
+    }
+    if (this.props.cancel) {
+      cancelButton = (
+        <BootstrapButton
+          onClick={this.handleCancel}
+          className="btn-default"
+        >
+          {this.props.cancel}
+        </BootstrapButton>
+      );
+    }
+
+    return (
+      <div className="modal fade" tabIndex='-1'>
+        <div className='modal-dialog'>
+          <div className='modal-content'>
+            <div className="modal-header">
+              <button
+                type="button"
+                className="close"
+                onClick={this.handleCancel}
+                dangerouslySetInnerHTML={{__html: '&times'}}
+              />
+              <h3>{this.props.title}</h3>
+            </div>
+            <div className="modal-body">
+              {this.props.children}
+            </div>
+            <div className="modal-footer">
+              {cancelButton}
+              {confirmButton}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+  handleCancel: function() {
+    if (this.props.onCancel) {
+      this.props.onCancel();
+    }
+  },
+  handleConfirm: function() {
+    if (this.props.onConfirm) {
+      this.props.onConfirm();
+    }
+  }
+});
+
+
+
+
+
+###* @jsx React.DOM ###
+
+$ ->
+
+  $page = $("#simulation-expenses-page")
+
+  if $page.length > 0
+    # On the right page
+
+
+    # Disable nav tabs as appropriate
+    ERP.disableAnchorsInDisabledListItems()
+
+
+    ##                       ##
+    # Set up React components #
+    ##                       ##
+
+    {div, hr, br, p, button, i, span, a, ul, li, form, label, input, select, textarea} = React.DOM
+
+
+    #######################
+    # MAIN PAGE COMPONENT #
+    #######################
+
+    ExpenseComponent = React.createClass
+
+      #####
+      # Business logic
+
+      createExpense: ->
+        console.log "Creating an expense"
+        @setState
+          modalTitle: "Create an Expense"
+          modalExpense: {}
+        @openModal()
+
+      editExpense: (expense) ->
+        console.log "Edit expense:"
+        console.log expense
+        @setState
+          modalTitle: "Edit Expense"
+          modalExpense: expense
+        @openModal()
+
+      resetModal: ->
+        @setState
+          modalTitle: ""
+          modalExpense: @emptyExpense()
+
+      emptyExpense: ->
+        id: ""
+        description: ""
+        amount: ""
+        frequency: ""
+        notes: ""
+
+
+      # (Bootstrap modal actions)
+      openModal: ->
+        @refs.modal.open()
+      handleCancel: ->
+        console.log "CANCELLED"
+        @refs.modal.close() # if confirm('Are you sure you want to cancel?')
+        @resetModal()
+      handleSubmit: ->
+        console.log "SUBMTITED"
+        formData = $(".expense-form").serialize()
+        console.log formData
+        @refs.modal.close()
+        @resetModal()
+
+      ######
+
+      ######
+      # React functions
+
+      getInitialState: ->
+        expenses: gon.expenses
+        modalTitle: ""
+        modalExpense:
+          @emptyExpense()
+
+      componentDidMount: ->
+        # Handle a click on an expense edit button.  No event handler needed for
+        # create button - in this level of the react tree, calling directly.
+        editHandler = this.editExpense
+        $(window).on 'editExpense', (e, expenseId) ->
+          editHandler(expenseId)
+
+      componentWillUnmount: ->
+        $(window).off 'editExpense'
+
+      render: ->
+        createModal = (
+          BootstrapModal {
+            ref:        "modal"
+            confirm:    "Submit"
+            cancel:     "Cancel"
+            onCancel:   @handleCancel
+            onConfirm:  @handleSubmit
+            title:      @state.modalTitle
+          },
+          (BootstrapModalForm {expense: @state.modalExpense})
+        )
+
+        availableExpenses = []
+        addedExpenses     = []
+        _.forEach @state.expenses, (expense) ->
+          if expense.is_added
+            addedExpenses.push expense
+          else
+            availableExpenses.push expense
+
+        (div {className: 'row main-component-row'},
+          createModal
+          (div {className: 'col-md-6'},
+            (p {className: 'lead text-muted text-center'}, 'Available Expenses')
+            (hr)
+            (div {className: 'row'},
+              (div {className: 'col-md-12'},
+                (div {className: 'well text-center'},
+                  (button {className: 'btn btn-success', onClick: @createExpense},
+                    (i {className: 'fa fa-plus-square-o'}, " Create an expense")
+                  )
+                )
+              )
+            )
+            (div {className: 'row'},
+              (div {className: 'col-md-12'},
+                (ExpensePanel {expenses: availableExpenses})
+              )
+            )
+          )
+
+          (div {className: 'col-md-6'},
+            (p {className: 'lead text-muted text-center'}, 'Added Expenses')
+            (hr)
+            (div {className: 'row'},
+              (div {className: 'col-md-12'},
+                (div {className: 'expense-drop-target'},
+                  (p {className: 'text-center'},
+                    (i {className: 'fa fa-share'}, " Drag/drop or double click an expense to add/remove")
+                  )
+                  (p {className: 'text-center text-muted'}, "DROP HELP TEXT")
+                )
+              )
+            )
+            (br)
+            (div {className: 'row'},
+              (div {className: 'col-md-12'},
+                (ExpensePanel {expenses: addedExpenses})
+              )
+            )
+          )
+        )
+
+
+    ###########################
+    # MAIN HALF-PAGE SECTIONS #
+    ###########################
+
+    ExpensePanel = React.createClass
+
+      render: ->
+        expenses = this.props.expenses
+
+        types =
+          "onetime": "One-time Expenses"
+          "annual": "Annual Expenses"
+          "monthly": "Monthly Expenses"
+          "weekly": "Weekly Expenses"
+
+        lists = []
+
+        index = -1
+        for own frequencyProp, description of types
+          index   += 1
+          key     = "#{frequencyProp}-#{index}"
+
+          associatedExpenses = _.filter expenses, (expense) ->
+            expense.frequency == frequencyProp
+
+          if associatedExpenses.length > 0
+            lists.push `
+              <p key={key}>
+                <strong>{description}</strong>
+                <ExpenseItemList expenses={associatedExpenses} />
+              </p>
+            `
+          else
+            lists.push `
+              <p key={key}>
+                <p><strong>{description}</strong></p>
+                <small>None present</small>
+              </p>
+            `
+
+        (div {}, lists)
+
+
+    ####################
+    # LIST OF EXPENSES #
+    ####################
+
+    ExpenseItemList = React.createClass
+      render: ->
+        items = _.map this.props.expenses, (expense) ->
+          (span {key: expense.id},
+            (div {className: 'expense inline-block'},
+              (ExpenseItem {expense: expense})
+            )
+          )
+
+        (p {}, items)
+
+
+    #######################
+    # INDIVIDUAL EXPENSES #
+    #######################
+
+    ExpenseItem = React.createClass
+
+      editExpense: ->
+        $(window).trigger('editExpense', @props.expense)
+
+      render: ->
+        expense = @props.expense
+
+        humanizedFrequencies =
+          "onetime": "One-time"
+          "annual": "Annual"
+          "monthly": "Monthly"
+          "weekly": "Weekly"
+
+        dateInformation = ->
+          if expense.frequency == 'onetime'
+            prettyDate = moment(expense.onetime_on).format("D-MMM-YY")
+            "Occurs #{prettyDate}"
+          else
+            if expense.ends
+              prettyDate = moment(expense.ends).format("D-MMM-YY")
+              "Ends: #{prettyDate}"
+            else
+              "Ends: (never)"
+
+        (div {},
+          (div {className: 'description'},
+            (p {},
+              expense.description
+              " "
+              (a {className: 'expense-action-link float-right', href: '#', onClick: @editExpense},
+                (i {className: 'fa fa-edit'})
+              )
+            )
+          )
+
+          (div {className: 'details'},
+            (ul {className: 'list-unstyled'},
+              (li {}, "Frequency: #{humanizedFrequencies[expense.frequency]}")
+              (li {}, dateInformation())
+              (li {}, "Amount: $#{expense.amount}")
+              (li {}, "Notes: #{expense.notes}") if (expense.notes)
+            )
+          )
+        )
+
+
+    #########
+    # MODAL #
+    #########
+
+    BootstrapModalForm = React.createClass
+      componentDidMount: ->
+        # Execute on modal shown
+        $('.main-component-row').on 'shown.bs.modal', (e) ->
+          console.log "Modal shown"
+
+          $('input.datepicker').datepicker
+            format: "dd-M-yyyy"
+            autoclose: true
+            todayHighlight: true
+
+        # Execute on modal hidden
+        $('.main-component-row').on 'hidden.bs.modal', (e) ->
+          console.log "Modal hidden"
+
+      render: ->
+        options = []
+        for option in gon.allowable_expenses
+          options.push `(<option>{option}</option>)`
+
+        timingInputLabel = if @props.expense.frequency == 'onetime' then "Expense Occurs:" else "Expense Ends:"
+        if @props.expense? and !$.isEmptyObject(@props.expense)
+          if @props.expense.frequency == 'onetime'
+            timingInputValue = moment(@props.expense.onetime_on).format("D-MMM-YY")
+          else
+            timingInputValue = moment(@props.expense.ends).format("D-MMM-YY")
+        else
+          timingInputValue = ""
+
+
+        (div {className: 'row', style: {'padding-left': '15px'}},
+          (form {className: 'form-horizontal expense-form'},
+
+            (div {className: 'form-group'},
+              (label {className: 'col-md-2 control-label'}, "Description")
+              (div {className: 'col-md-6'},
+                (input {value: @props.expense.description, className: 'form-control', name: 'description', type: 'text', placeholder: 'fuel'})
+              )
+            )
+
+            (div {className: 'form-group'},
+              (label {className: 'col-md-2 control-label'}, "Frequency")
+              (div {className: 'col-md-6'},
+                (select {value: @props.expense.frequency, className: 'form-control', name: 'frequency'}, options)
+              )
+            )
+
+            (div {className: 'form-group'},
+              (label {className: 'col-md-2 control-label'}, timingInputLabel)
+              (div {className: 'col-md-6'},
+                (input {value: timingInputValue, className: 'form-control datepicker', name: 'timing_info'})
+              )
+            )
+
+            (div {className: 'form-group'},
+              (label {className: 'col-md-2 control-label'}, "Amount ($):")
+              (div {className: 'col-md-6'},
+                (input {value: @props.expense.amount, className: 'form-control', name: 'amount', type: 'number', placeholder: 150})
+              )
+            )
+
+            (div {className: 'form-group'},
+              (label {className: 'col-md-2 control-label'}, "Notes")
+              (div {className: 'col-md-6'},
+                (textarea {value: @props.expense.notes, className: 'form-control', name: 'notes', placeholder: "Optional notes"})
+              )
+            )
+
+          )
+        )
+
+
+
+    ##################
+    # RENDER TO PAGE #
+    ##################
+
+    $expensesDOMElement = $("#expenses")[0]
+    React.renderComponent( ( ExpenseComponent {} ), $expensesDOMElement)

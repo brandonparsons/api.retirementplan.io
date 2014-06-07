@@ -1,0 +1,50 @@
+Vagrant.configure("2") do |config|
+
+  ## BOX CONFIG ##
+
+  config.vm.box             = 'ubuntu-12.04'
+  config.vm.box_url         = 'http://files.vagrantup.com/precise64.box'
+
+  config.ssh.forward_agent  = true
+
+  config.vm.network "private_network", ip: "192.168.1.150"
+  config.vm.network :forwarded_port, host: 8080, guest: 80
+
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", 1024]
+    vb.customize ["modifyvm", :id, "--cpus", "2"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
+  end
+
+  config.vm.synced_folder "../../", "/projects"
+
+  config.vm.hostname = 'vagrant'
+
+
+  ########################
+  # PROVISIONING SCRIPTS #
+  ########################
+
+  [
+    "config/server_setup/SERVER_BASE.sh",
+    "config/server_setup/SERVER_DATABASE.sh",
+    "config/server_setup/SERVER_MEMCACHED.sh",
+    "config/server_setup/SERVER_REDIS.sh",
+    "config/server_setup/SERVER_RAILS.sh"
+  ].each do |config_file|
+    config.vm.provision :shell do |s|
+      s.path = config_file
+      s.args = ["IS_VAGRANT"]
+    end
+  end
+
+
+  vagrant_only = <<-EOF
+    if [ ! -f /var/.vagrant-only ]; then
+      echo 'alias app="cd /projects/erp/app.retirementplan.io"' >> /etc/bash.bashrc
+      touch /var/.vagrant-only
+    fi
+  EOF
+  config.vm.provision :shell, inline: vagrant_only
+
+end

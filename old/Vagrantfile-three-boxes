@@ -1,0 +1,86 @@
+  # ##########
+  # # LB BOX #
+  # ##########
+
+  # config.vm.define "lb" do |lb|
+  #   lb.vm.hostname  = "rp-vagrant-lb"
+
+  #   lb.vm.provision "shell" do |s|
+  #     s.path = "script/install_docker.sh"
+  #     s.args = ["vagrant"]
+  #   end
+
+  #   lb.vm.box             = 'ubuntu-12.04'
+  #   lb.vm.box_url         = 'http://files.vagrantup.com/precise64.box'
+
+  #   lb.ssh.forward_agent  = true
+
+  #   lb.vm.network "private_network", ip: "192.168.1.149"
+  #   lb.vm.network :forwarded_port, host: 8080, guest: 80
+
+  #   lb.vm.provider :virtualbox do |vb|
+  #     vb.customize ["modifyvm", :id, "--memory", 512]
+  #     vb.customize ["modifyvm", :id, "--cpus", "1"]
+  #     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
+  #   end
+  # end # lb box
+
+
+  # ###########
+  # # WEB BOX #
+  # ###########
+
+  # config.vm.define "web" do |web|
+  #   web.vm.hostname  = "rp-vagrant-web"
+
+  #   # web.vm.provision "shell", path: "script/server_vagrant_setup.sh"
+
+  #   web.vm.provision "shell" do |s|
+  #     s.path = "script/install_docker.sh"
+  #     s.args = ["vagrant"]
+  #   end
+
+  #   web.vm.box             = 'ubuntu-12.04'
+  #   web.vm.box_url         = 'http://files.vagrantup.com/precise64.box'
+
+  #   web.ssh.forward_agent  = true
+
+  #   web.vm.network "private_network", ip: "192.168.1.150"
+
+  #   web.vm.synced_folder ".", "/rails_app"
+
+  #   web.vm.provider :virtualbox do |vb|
+  #     vb.customize ["modifyvm", :id, "--memory", 2048]
+  #     vb.customize ["modifyvm", :id, "--cpus", "2"]
+  #     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
+  #   end
+  # end # web box
+
+
+  # ###########
+  # # DB BOX #
+  # ###########
+
+  # config.vm.define "db" do |db|
+  #   db.vm.hostname  = "rp-vagrant-db"
+
+  #   db.vm.provision "shell", inline: <<-EOF
+  #     sudo echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+  #     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  #     sudo apt-get update
+  #     sudo apt-get -y install postgresql-9.3 postgresql-contrib-9.3
+  #   EOF
+
+  #   db.vm.box             = 'ubuntu-12.04'
+  #   db.vm.box_url         = 'http://files.vagrantup.com/precise64.box'
+
+  #   db.ssh.forward_agent  = true
+
+  #   db.vm.network "private_network", ip: "192.168.1.151"
+
+  #   db.vm.provider :virtualbox do |vb|
+  #     vb.customize ["modifyvm", :id, "--memory", 1024]
+  #     vb.customize ["modifyvm", :id, "--cpus", "1"]
+  #     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
+  #   end
+  # end # db box

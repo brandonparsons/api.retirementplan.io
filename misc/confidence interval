@@ -1,0 +1,17 @@
+def calculate_confidence_interval(array, mean, confidence)
+n = array.size
+stdev = array.to_scale.sd
+
+degrees_of_freedom = n-1
+two_tail_lookup = 1- (1 - confidence)/2
+
+t_crit = Statistics2.ptdist(degrees_of_freedom,two_tail_lookup)
+
+err = t_crit * stdev / Math.sqrt(n)
+
+low_interval = mean - err
+high_interval = mean + err
+
+return low_interval, high_interval
+
+end

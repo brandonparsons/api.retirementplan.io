@@ -1,0 +1,54 @@
+  config.vm.define "rp" do |rp|
+    rp.vm.hostname  = "rp-vagrant"
+
+    alias_commands = %q[
+      alias cleandocker="docker rm $(docker ps -a -q); docker rmi $(docker images | grep "^<none>" | awk "{print $3}")"
+      alias dc="docker ps"
+      alias dca="docker ps -a"
+      alias di="docker images"
+      alias dockerip="docker inspect --format '{{ .NetworkSettings.IPAddress }}' "
+    ]
+    rp.vm.provision :shell, inline: "echo '#{alias_commands}' >> /etc/bash.bashrc"
+
+    # Original instructions were to put this in /etc/profile.d/lang.sh, but this
+    # did not appear to work. Other instructions said /etc/default/locale...
+    # Doing both.
+    lang_commands = %q{
+      export LANGUAGE="en_US.UTF-8"
+      export LANG="en_US.UTF-8"
+      export LC_ALL="en_US.UTF-8"
+    }
+
+    rp.vm.provision :shell, inline: "echo '#{lang_commands}' > /etc/profile.d/lang.sh"
+    rp.vm.provision :shell, inline: "echo '#{lang_commands}' > /etc/default/locale"
+    rp.vm.provision :shell, inline: "locale-gen en_US.UTF-8 && dpkg-reconfigure locales"
+
+
+    [
+      "server_config/install_docker.sh",
+      "server_config/SERVER_BASE.sh",
+      "server_config/SERVER_DATABASE.sh",
+      "server_config/SERVER_MEMCACHED.sh",
+      "server_config/SERVER_REDIS.sh",
+      "server_config/SERVER_RAILS.sh"
+    ].each do |config_file|
+      rp.vm.provision :shell do |s|
+        s.path = config_file
+        s.args = ["IS_VAGRANT"]
+      end
+    end
+
+    rp.vm.box             = 'ubuntu-12.04'
+    rp.vm.box_url         = 'http://files.vagrantup.com/precise64.box'
+
+    rp.ssh.forward_agent    = true
+
+    rp.vm.network "private_network", ip: "192.168.1.150"
+    rp.vm.network :forwarded_port, host: 8080, guest: 80
+
+    rp.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", 2048]
+      vb.customize ["modifyvm", :id, "--cpus", "2"]
+      vb.customize ["modifyvm", :id, "--cpuexecutioncap", "75"]
+    end
+  end
