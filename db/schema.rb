@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 20140413042005) do
   create_table "authentications", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.string   "uid",           null: false
     t.string   "provider",      null: false
-    t.string   "username"
     t.text     "oauth_token"
     t.datetime "oauth_expires"
     t.uuid     "user_id",       null: false

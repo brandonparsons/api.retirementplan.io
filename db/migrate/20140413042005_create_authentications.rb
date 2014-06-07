@@ -3,7 +3,6 @@ class CreateAuthentications < ActiveRecord::Migration
     create_table :authentications, id: :uuid do |t|
       t.string    :uid,           null: false
       t.string    :provider,      null: false
-      t.string    :username
       t.text      :oauth_token    # Some services (e.g. Amazon) incredibly long tokens
       t.datetime  :oauth_expires
 

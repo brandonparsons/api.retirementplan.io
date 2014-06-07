@@ -52,8 +52,7 @@ class OAuthUser
     else
       @authentication = @user.authentications.build(
         provider:   @provider,
-        uid:        @uid,
-        username:   @name
+        uid:        @uid
       )
       if @authentication.valid?
         @authentication.save
