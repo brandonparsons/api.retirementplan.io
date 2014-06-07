@@ -32,12 +32,15 @@ gem 'markerb'
 gem 'redcarpet' # for markerb
 
 
-group :production do
+group :production, :staging do
   gem 'puma'
-
   gem 'kgio' # Speeds up dalli
   gem 'dalli'
+  gem 'rack-cache'
+end
 
+
+group :production do
   gem 'mandrill-rails'
   gem 'rails_stdout_logging'
   gem 'newrelic_rpm'

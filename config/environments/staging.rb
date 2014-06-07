@@ -40,7 +40,7 @@ Rails.application.configure do
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = ENV['NO_FORCE_SSL'].present? ? false : true
 
   # Set to :debug to see everything in the log.
   config.log_level = :info
@@ -86,18 +86,15 @@ Rails.application.configure do
 
   config.assets.initialize_on_precompile = false
 
-  raise "Missing MANDRILL_USERNAME" unless ENV['MANDRILL_USERNAME']
-  raise "Missing MANDRILL_API_KEY"  unless ENV['MANDRILL_API_KEY']
-  raise "Missing MAILER_HOST"       unless ENV['MAILER_HOST']
+  raise "Missing MAILTRAP_USERNAME" unless ENV['MAILTRAP_USERNAME']
+  raise "Missing MAILTRAP_PASSWORD" unless ENV['MAILTRAP_PASSWORD']
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              "smtp.mandrillapp.com",
-    port:                 25,                           # ports 587 and 2525 are also supported with STARTTLS
-    enable_starttls_auto: true,                         # detects and uses STARTTLS
-    user_name:            ENV['MANDRILL_USERNAME'],
-    password:             ENV["MANDRILL_API_KEY"],      # SMTP password is any valid API key
-    authentication:       'login',                      # Mandrill supports 'plain' or 'login'
-    domain:               ENV['MAILER_HOST'],           # your domain to identify your server when connecting
+    user_name:      ENV['MAILTRAP_USERNAME'],
+    password:       ENV['MAILTRAP_PASSWORD'],
+    address:        'mailtrap.io',
+    port:           '2525',
+    authentication: :plain
   }
 
   raise "Missing MEMCACHE_SERVERS" unless ENV['MEMCACHE_SERVERS']

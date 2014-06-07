@@ -177,6 +177,8 @@ GEM
     puma (2.8.2)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
+    rack-cache (1.2)
+      rack (>= 0.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.2)
@@ -351,6 +353,7 @@ DEPENDENCIES
   pg
   pry-rails
   puma
+  rack-cache
   railroady
   rails (= 4.1.1)
   rails-api

@@ -38,5 +38,14 @@ Rails.application.configure do
 
   ##########
 
+  # config.after_initialize do
+  #   Bullet.enable = true
+  #   Bullet.bullet_logger = true
+  #   Bullet.console = true
+  #   Bullet.rails_logger = true
+  #   Bullet.add_footer = true
+  # end
+
   config.action_mailer.delivery_method = :letter_opener
+  config.cache_store = :memory_store # SCSS compilation cache gets angry if you dont have a cache present
 end
