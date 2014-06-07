@@ -137,7 +137,7 @@ class ApplicationController < ActionController::API
 
   def verify_user_email_confirmation
     if current_user && !current_user.is_confirmed_or_temporarily_allowed?
-      render json: {success: false, message: 'You must confirm your email address.', reason: :email_confirmation}, status: 403 and return
+      render json: {success: false, message: "You must confirm your email address (#{current_user.email}).", reason: :email_confirmation}, status: 403 and return
     end
   end
 
