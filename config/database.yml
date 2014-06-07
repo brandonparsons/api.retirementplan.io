@@ -1,27 +1,39 @@
 common: &COMMON
   adapter: postgresql
-  encoding: utf8
   pool: 100
+  encoding: utf8
   reconnect: true
   timeout: 15
 
-
 test:
   <<: *COMMON
-  database: rp_api_test
+  database: rp_test
   username: brandon
-
+  host:     localhost
+  port:     5432
 
 development:
   <<: *COMMON
-  database: rp_api_development
+  database: rp_development
   username: brandon
+  host:     localhost
+  port:     5432
 
+staging:
+  <<: *COMMON
+  database: rp_staging
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASS'] %>
+  host:     <%= ENV['DB_HOST'] %>
+  port:     <%= ENV['DB_PORT'] %>
 
 production:
   <<: *COMMON
-  database: rp_api_production
-  username: brandon
+  database: rp_production
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASS'] %>
+  host:     <%= ENV['DB_HOST'] %>
+  port:     <%= ENV['DB_PORT'] %>
 
 
 # production:

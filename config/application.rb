@@ -35,9 +35,8 @@ module RailsApi
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
 
-    # Precompile additional assets.
-    # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-    # config.assets.precompile += %w( vendor.js vendor.css )
+    config.action_mailer.default_url_options  = { host: ENV['MAILER_HOST'] }
+    config.action_mailer.default_options      = { from: "Admin [RetirementPlan.io] <admin@#{ENV['MAILER_HOST']}>" }
 
     # Autoload lib
     config.autoload_paths += Dir[Rails.root.join('lib', '{**/}')]
@@ -45,14 +44,10 @@ module RailsApi
     # Autoload all folders/subdirectories under app/models
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**/}')]
 
-    config.action_mailer.default_url_options  = { host: ENV['MAILER_HOST'] }
-    config.action_mailer.default_options      = { from: "Admin [RetirementPlan.io] <admin@#{ENV['MAILER_HOST']}>" }
-
-
-    config.action_controller.action_on_unpermitted_parameters = :raise
-
     # Autoload all folders under app - rails didn't want to autoload Finance::
     # namespace stuff under app/finance/* otherwise.
     config.autoload_paths << "#{config.root}/app"
+
+    config.action_controller.action_on_unpermitted_parameters = :raise
   end
 end

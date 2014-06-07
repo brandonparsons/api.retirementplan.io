@@ -7,6 +7,8 @@ gem 'rails-api'
 
 gem 'pg'
 gem 'hstore_accessor'
+gem 'redis'
+gem 'redis-namespace'
 
 
 gem 'sidekiq'

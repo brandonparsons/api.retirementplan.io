@@ -4,37 +4,35 @@
 
 if Rails.env.test?
   redis_server  = ENV.fetch('REDIS_SERVER', 'localhost:6379')
-  redis_url     = "redis://#{redis_server}/4"
+  redis_url     = "redis://#{redis_server}/2"
 
 elsif Rails.env.development?
   redis_server  = ENV.fetch('REDIS_SERVER', 'localhost:6379')
-  redis_url     = "redis://#{redis_server}/3"
+  redis_url     = "redis://#{redis_server}/1"
 
 else # production / staging
   raise "MISSING REDIS_SERVER" unless ENV['REDIS_SERVER'].present?
   redis_url     = "redis://#{ENV['REDIS_SERVER']}/0"
 end
 
-$redis = Redis.new url: redis_url
+raw_redis = Redis.new url: redis_url
+$redis    = Redis::Namespace.new('rp', redis: raw_redis)
 
 
 #####################
 # Configure Sidekiq #
 #####################
 
-unless ENV['SIDEKIQ_NAMESPACE']
-  puts "Environment variable SIDEKIQ_NAMESPACE was blank - forcing to rp-sidekiq"
-  ENV['SIDEKIQ_NAMESPACE'] = 'rp-sidekiq'
-end
+SIDEKIQ_NAMESPACE = 'rp-sidekiq'
 
 server_redis_config = {
-  namespace:  ENV['SIDEKIQ_NAMESPACE'],
+  namespace:  SIDEKIQ_NAMESPACE,
   url:        redis_url
 }
 
 client_redis_config = {
   size:       1,
-  namespace:  ENV['SIDEKIQ_NAMESPACE'],
+  namespace:  SIDEKIQ_NAMESPACE,
   url:        redis_url
 }
 

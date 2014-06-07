@@ -361,6 +361,8 @@ DEPENDENCIES
   rb-fsevent
   recurrence
   redcarpet
+  redis
+  redis-namespace
   rserve-client
   rspec-nc
   rspec-rails
