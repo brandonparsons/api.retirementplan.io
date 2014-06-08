@@ -62,9 +62,10 @@ group :development, :test do
 
   gem 'railroady' # Generates model relation graphs in doc/
 
+  gem 'rb-fsevent', require: RbConfig::CONFIG['host_os'] =~ /darwin/
+
   #########
   # Brought all to dev/test as some are picky about location
-
   gem 'guard'
   gem 'spring-commands-rspec'
   gem 'guard-rspec'
@@ -95,29 +96,12 @@ group :development do
 end
 
 
-def windows_only(require_as)
-  RbConfig::CONFIG['host_os'] =~ /mingw|mswin/i ? require_as : false
-end
-def linux_only(require_as)
-  RbConfig::CONFIG['host_os'] =~ /linux/ ? require_as : false
-end
-# Mac OS X
-def darwin_only(require_as)
-  RbConfig::CONFIG['host_os'] =~ /darwin/ ? require_as : false
-end
-gem 'rb-fsevent', group: [:development, :test], require: darwin_only('rb-fsevent') # Faster OSX file change notification
+## Other/Old Gems ##
 
-
-## Will likely need ##
-
-# gem 'launchy'
 # gem 'roadie'
 # gem 'gibberish'
 # gem 'bullet'
-
-## Old gems ##
-
 # gem 'redis-objects'
 # gem 'rack-rewrite'
 # gem 'attrio'
-# gem 'whenever', :require => false # Do actually need whenever on server
+# gem 'whenever', require: false
