@@ -24,7 +24,8 @@ if Rails.env.development?
              forseeable_expenses: 0,
                          married: 1,
                   emergency_fund: 2,
-                       job_title: 1
+                       job_title: 1,
+           investment_experience: 3
   })
 end
 

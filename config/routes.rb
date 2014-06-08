@@ -40,6 +40,8 @@ Rails.application.routes.draw do
 
     resources :authentications, only: [:index, :create, :show, :destroy]
 
+    resources :questionnaires, only: [:index, :create, :show, :update]
+
     resources :securities, only: [:index, :show]
 
   end # v1
