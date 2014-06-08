@@ -51,7 +51,6 @@
       end # thread
 
 
-      # FIXME: is there a way to create the EfficientFrontier before the loop, add portfolios (e << port) and then save at the end, similar to what you've done above?
 
       puts "SKIPPING 4+ EFFICIENT FRONTIERS UNTIL YOU GET SORTED OUT."
       # 3+ asset portfolios

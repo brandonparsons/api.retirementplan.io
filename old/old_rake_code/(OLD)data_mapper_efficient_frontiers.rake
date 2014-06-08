@@ -125,7 +125,6 @@ namespace :data_mapper do
 
         portfolios_to_consider = []
 
-        # FIXME: Sometimes the algorithm comes back with no portfolios....
         if results["portfolios"].length > 0
           results["portfolios"].each {|port| portfolios_to_consider << port}
         else
