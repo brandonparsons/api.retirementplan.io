@@ -15,14 +15,13 @@ class TBill
 
   def self.mean
     Rails.cache.fetch("tbill/mean", expires_in: 10.minutes) do
-      float_values.reduce(&:+) / sample_size
+      Finance::Statistics.mean(values)
     end
   end
 
   def self.std_dev
     Rails.cache.fetch("tbill/std_dev", expires_in: 10.minutes) do
-      sum_sqr           = float_values.map {|x| x * x}.reduce(&:+)
-      Math.sqrt((sum_sqr - sample_size * mean * mean)/(sample_size-1))
+      Finance::Statistics.standard_deviation(values)
     end
   end
 
@@ -32,14 +31,6 @@ class TBill
     # Has a different name than other similar classes (RealEstate / Inflation).
     # Convenience method so you can use the same helper methods.
     returns
-  end
-
-  def self.sample_size
-    values.size
-  end
-
-  def self.float_values
-    values.map(&:to_f)
   end
 
 end

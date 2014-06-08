@@ -10,7 +10,7 @@ class OAuthUser
     @email            = auth_data['email']
     @name             = auth_data['name']
 
-    @user_was_created           = false
+    @user_was_created = false
   end
 
   def login_or_create
@@ -69,7 +69,7 @@ class OAuthUser
       user = User.find_by email: @email
       if user.from_oauth
         provider = user.authentications.first.provider
-        raise CustomExceptions::UserExistsFromOauth, Authentication.pretty_provider(provider)
+        raise CustomExceptions::UserExistsFromOauth, provider.titleize
       else
         raise CustomExceptions::UserExistsWithPassword
       end

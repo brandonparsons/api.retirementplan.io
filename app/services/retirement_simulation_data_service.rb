@@ -1,9 +1,4 @@
-# require 'matrix'
-# require 'recurrence'
-
-class RetirementSimulation
-  # This class is not currently persisted in the database. On initialization it
-  # sets up the data required for javascript simulations.
+class RetirementSimulationDataService
 
   #################
   # CLASS METHODS #
@@ -24,6 +19,7 @@ class RetirementSimulation
     @user = user
   end
 
+  # FIXME: Is this required after going to Ember / Go sim?
   def simulation_data(number_of_periods=1440)
     # Key names depended on by Javascript
 

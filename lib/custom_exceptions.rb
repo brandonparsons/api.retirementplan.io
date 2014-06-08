@@ -5,4 +5,5 @@ module CustomExceptions
   class UserExistsFromOauth       < StandardError; end
   class UserExistsWithPassword    < StandardError; end
   class ErrorSavingAuthentication < StandardError; end
+  class NoTrackedPortfolioValue   < StandardError; end
 end

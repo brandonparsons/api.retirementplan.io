@@ -122,7 +122,7 @@ class Portfolio < ActiveRecord::Base
     final_portfolio_value = current_market_value.to_f + amount_extra.to_f
 
     if final_portfolio_value == 0
-      raise CustomExceptions::NoTrackedPortfolioValue.new("You tried to rebalance your portfolio (with no additional funds) when you haven't yet provided us with the number of shares of each security that you hold.  Please complete your tracked portfolio setup.")
+      raise CustomExceptions::NoTrackedPortfolioValue, "You tried to rebalance your portfolio (with no additional funds) when you haven't yet provided us with the number of shares of each security that you hold.  Please complete your tracked portfolio setup."
     end
 
     tickers_to_check = (current_shares.keys).concat(target_etf_weights.keys).uniq
