@@ -2,6 +2,8 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :image, :has_password, :confirmed
 
   has_many :authentications
+  has_many :expenses
+
   embed :ids, include: true
 
   def image
