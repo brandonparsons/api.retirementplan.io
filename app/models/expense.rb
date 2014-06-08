@@ -26,6 +26,7 @@ class Expense < ActiveRecord::Base
   # CLASS METHODS #
   #################
 
+  # FIXME: Is this required after going to Ember?
   def self.formatted_for_user(user_id)
     user_expenses = where(user_id: user_id)
     expenses      = user_expenses.any? ? user_expenses.to_a : self.create_default_expenses_for(user_id)
@@ -49,6 +50,7 @@ class Expense < ActiveRecord::Base
 
   private
 
+  # FIXME: Find a different place to do this, especially if removing ::formatted_for_user
   def self.create_default_expenses_for(user_id)
     expenses = []
     default_expenses.each do |expense_details|

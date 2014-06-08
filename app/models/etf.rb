@@ -18,15 +18,16 @@ class Etf < ActiveRecord::Base
   # VALIDATIONS #
   ###############
 
-  validates :ticker       , presence: true, uniqueness: true
-  validates :description  , presence: true
-  validates :security_id  , presence: true
+  validates :ticker,      presence: true, uniqueness: true
+  validates :description, presence: true
+  validates :security_id, presence: true
 
 
   #################
   # CLASS METHODS #
   #################
 
+  # FIXME: Is this required after going to Ember?
   def self.info_lookup_table(tickers=[])
     raise ArgumentError unless tickers.any?
 
@@ -39,16 +40,12 @@ class Etf < ActiveRecord::Base
     end
   end
 
+  # FIXME: Is this required after going to Ember?
   def self.security_ticker_for_etf(ticker)
     etf = find_by(ticker: ticker)
     return nil unless etf
     etf.security.ticker
   end
-
-
-  ####################
-  # INSTANCE METHODS #
-  ####################
 
 
   private

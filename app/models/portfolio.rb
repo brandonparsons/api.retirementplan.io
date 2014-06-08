@@ -5,6 +5,7 @@ class Portfolio < ActiveRecord::Base
     current_shares:           :hash,
     tracking:                 :boolean
 
+
   ################
   # ASSOCIATIONS #
   ################
@@ -33,6 +34,7 @@ class Portfolio < ActiveRecord::Base
   # CLASS METHODS #
   #################
 
+  # FIXME: Is this required after going to Ember?
   def self.warnings_for(allocation)
     warning_messages = []
 

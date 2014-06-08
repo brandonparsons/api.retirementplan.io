@@ -13,8 +13,7 @@ module Finance
     extend self
 
 
-    # FIXME: Some way to remember these need updating periodically?
-    # FIXME: Updated Dec 17th - 2013. Need to update occasionally (along with returns).
+    # FIXME: Updated Dec 17th - 2013. Need to update occasionally (along with returns). Some way to remember these need updating periodically?
     LONG_TERM_INFLATION         = 0.0175 # Cleveland Federal Reserve - http://www.clevelandfed.org/research/data/inflation_expectations/
     ANNUAL_RISKLESS_RATE        = 0.0013 # 12-month U.S. T-Bill - http://www.bloomberg.com/markets/rates-bonds/government-bonds/us/
     ANNUAL_MARKET_RISK_PREMIUM  = 0.0532 # http://pages.stern.nyu.edu/~%20adamodar/
