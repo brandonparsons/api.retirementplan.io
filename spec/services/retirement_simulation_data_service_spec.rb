@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe RetirementSimulation do
+describe RetirementSimulationDataService do
 
   context 'all tough work stubbed out' do
     before(:each) do
       u = build_stubbed(:user)
-      r = RetirementSimulation.new(u)
+      r = RetirementSimulationDataService.new(u)
 
       # Leave as should_receive instead of stub so you can be sure these are all
       # getting called (testing the private methods directly below).
@@ -43,7 +43,7 @@ describe RetirementSimulation do
       u = build_stubbed(:user)
       p = create(:portfolio, user_id: u.id)
 
-      results = RetirementSimulation.new(u).send(:sorted_weights)
+      results = RetirementSimulationDataService.new(u).send(:sorted_weights)
       expect(results).to eql({
         "BWX"   => p.weights["BWX"],
         "EEM"   => p.weights["EEM"],
@@ -57,7 +57,7 @@ describe RetirementSimulation do
       u = create(:user)
       p = create(:retirement_simulation_parameters, user: u)
 
-      results = RetirementSimulation.new(u).send(:simulation_parameters)
+      results = RetirementSimulationDataService.new(u).send(:simulation_parameters)
 
       expect(results).to include(:married)
       expect(results).to include(:user_is_male)
@@ -70,7 +70,7 @@ describe RetirementSimulation do
       e1  = create(:expense)
       e2  = create(:expense, :added, description: "Food", user: u)
 
-      results = RetirementSimulation.new(u).send(:expenses)
+      results = RetirementSimulationDataService.new(u).send(:expenses)
 
       expect(results.length).to eql(1)
       expect(results.first).to include(:amount)
@@ -83,7 +83,7 @@ describe RetirementSimulation do
       u = create(:user)
       p = create(:retirement_simulation_parameters, user: u, male_age: 34, female_age: 36)
 
-      results = RetirementSimulation.new(u).send(:time_steps)
+      results = RetirementSimulationDataService.new(u).send(:time_steps)
 
       expect(results).to include(:weekly)
       expect(results).to include(:monthly)
@@ -112,7 +112,7 @@ describe RetirementSimulation do
       Finance::MatrixMethods.should_receive(:correlation).and_return([[1,2], [3,4]])
       Finance::MatrixMethods.should_receive(:cholesky_decomposition).and_return([[1,2], [3,4]])
 
-      results = RetirementSimulation.new(u).send(:asset_return_data)
+      results = RetirementSimulationDataService.new(u).send(:asset_return_data)
 
       expect(results[:tickers]).to eql(["BWX", "EEM", "VDMIX"])
 

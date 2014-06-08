@@ -44,9 +44,10 @@ describe User do
   describe "default preferences" do
     it "is created with default preferences" do
       Timecop.freeze do
-        u = create(:user)
+        u = create(:user, name: nil)
         now = Time.zone.now
 
+        expect(u.name).to eql('Me')
         expect(u.min_rebalance_spacing).to eql(90.days.to_i)
         expect(u.max_contact_frequency).to eql(7.days.to_i)
         expect(u.allowable_drift).to eql(5)
@@ -81,10 +82,24 @@ describe User do
     end
 
     it 'is not admin by default' do
-      # This is extremely slow because it's failing a java lookup as it's run
-      # outside of the torquebox server.
-      u = User.create! name: "joebob", email: 'superdude@what.com', password: 'asdfasdf', password_confirmation: 'asdfasdf'
+      u = User.create! email: 'superdude@what.com'
       u.admin.should be_false
+    end
+
+    it "checks email for presence" do
+      u = build(:user, email: nil)
+        u.should_not be_valid
+    end
+
+    it "checks email for format" do
+      u = build(:user, email: 'bob')
+      u.should_not be_valid
+    end
+
+    it "checks email for uniqueness" do
+      u = create(:user)
+      u2 = build(:user, email: u.email)
+      u2.should_not be_valid
     end
 
     it "checks min_rebalance_spacing" do
@@ -129,10 +144,12 @@ describe User do
     end
   end
 
-  describe "#send_admin_email" do
-    it "adds a job" do
-      u = build_stubbed(:user)
-      expect{u.send :send_admin_email}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
+  describe "::normalized_timestamp" do
+    it "looks correct" do
+      value = User.normalized_timestamp
+      expect(value.is_a?(Integer)).to be_true
+      expect(value).to be > 1402197669
+      expect(value).to be < 2000000000
     end
   end
 
@@ -162,15 +179,22 @@ describe User do
     end
   end
 
-  describe "#has_accepted_terms?" do
-    it "needs tests" do
-      pending
+  describe "::verifier_for" do
+    it "returns a proper object" do
+      expect( User.verifier_for('password-reset').is_a?(ActiveSupport::MessageVerifier) ).to be_true
     end
   end
 
-  describe "#has_accepted_terms?" do
-    it "#accept_terms!" do
-      pending
+  describe "#has_accepted_terms? && #accept_terms!" do
+    it "is false to begin with" do
+      u = create(:user)
+      expect(u.has_accepted_terms?).to be_false
+    end
+
+    it "becomes true after accepting" do
+      u = create(:user)
+      u.accept_terms!
+      expect(u.has_accepted_terms?).to be_true
     end
   end
 
@@ -330,8 +354,11 @@ describe User do
 
   describe '#send_etf_purchase_instructions' do
     it "delivers an email" do
+      ActionMailer::Base.deliveries = []
       u = build_stubbed(:user)
       expect{u.send_etf_purchase_instructions(10000)}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
+      Sidekiq::Extensions::DelayedMailer.drain
+      expect(ActionMailer::Base.deliveries.length).to eql(1)
     end
   end
 
@@ -354,6 +381,7 @@ describe User do
         @u.should_receive(:send_out_of_balance_email)
         @u.should_not_receive(:send_min_rebalance_spacing_email)
         @u.check_portfolio_balance
+        # Actual email send is tested below (private method)
       end
 
       it "doesnt send email if too short between contacts" do
@@ -374,6 +402,7 @@ describe User do
         @u.should_receive(:send_min_rebalance_spacing_email)
         @u.should_not_receive(:send_out_of_balance_email)
         @u.check_portfolio_balance
+        # Actual email send is tested below (private method)
       end
 
       it "doesnt send email if too short between contacts" do
@@ -414,6 +443,81 @@ describe User do
     it "returns false if invalid value passed" do
       u = create(:user)
       expect(u.ran_simulations!("x20")).to be_false
+    end
+  end
+
+  describe "#confirm && #confirm! && #confirmed?" do
+    it "is not confirmed by default" do
+      u = create(:user)
+      expect(u.confirmed?).to be_false
+    end
+
+    it "becomes confirmed once confirmed!" do
+      # This also tests #confirm
+      u = create(:user)
+      u.confirm!
+      expect(u.confirmed?).to be_true
+    end
+  end
+
+  describe "#is_confirmed_or_temporarily_allowed?" do
+    it "returns true if the user is confirmed" do
+      u = create(:user, :confirmed)
+      expect(u.is_confirmed_or_temporarily_allowed?).to be_true
+    end
+
+    it "returns true if the user is not confirmed, but fresh" do
+      u = create(:user)
+      expect(u.is_confirmed_or_temporarily_allowed?).to be_true
+    end
+
+    it "returns false if hte user is not confirmed, and not fresh" do
+      u = create(:user)
+      Timecop.freeze(Date.today + 30) do
+        expect(u.is_confirmed_or_temporarily_allowed?).to be_false
+      end
+    end
+  end
+
+  describe "#sign_in!" do
+    it "needs tests" do
+      pending
+    end
+    it "tests for image set if provided" do
+      pending
+    end
+    it "tests for image gravatar if nil" do
+      pending
+    end
+  end
+
+  describe "#session_data" do
+    it "needs tests" do
+      pending
+    end
+  end
+
+  describe "#sign_out!" do
+    it "needs tests" do
+      pending
+    end
+  end
+
+  describe "#has_password?" do
+    it "needs tests" do
+      pending
+    end
+  end
+
+  describe "#confirm_email_token" do
+    it "needs tests" do
+      pending
+    end
+  end
+
+  describe "TokenAuthenticable" do
+    it "needs tests" do
+      pending
     end
   end
 
@@ -535,8 +639,11 @@ describe User do
 
     describe "send_out_of_balance_email" do
       it "creates a job" do
+        ActionMailer::Base.deliveries = []
         u = build_stubbed(:user)
         expect{u.send(:send_out_of_balance_email)}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
+        Sidekiq::Extensions::DelayedMailer.drain
+        expect(ActionMailer::Base.deliveries.length).to eql(1)
       end
 
       it "resets contact time" do
@@ -551,8 +658,11 @@ describe User do
 
     describe "send_min_rebalance_spacing_email" do
       it "creates a job" do
+        ActionMailer::Base.deliveries = []
         u = build_stubbed(:user)
         expect{u.send(:send_min_rebalance_spacing_email)}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
+        Sidekiq::Extensions::DelayedMailer.drain
+        expect(ActionMailer::Base.deliveries.length).to eql(1)
       end
 
       it "resets contact time" do
@@ -562,6 +672,16 @@ describe User do
           u.send(:send_min_rebalance_spacing_email)
           expect(u.last_contact).to eql(Time.zone.now.to_i)
         end
+      end
+    end
+
+    describe "#etf_purchase_instructions email" do
+      it "needs tests" do
+        pending
+        # ActionMailer::Base.deliveries = []
+        # # Stuff
+        # Sidekiq::Extensions::DelayedMailer.drain
+        # expect(ActionMailer::Base.deliveries.length).to eql(1)
       end
     end
 

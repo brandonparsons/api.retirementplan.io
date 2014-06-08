@@ -37,21 +37,20 @@ FactoryGirl.define do
       from_oauth true
     end
 
-  end
-
-
-  factory :user_with_facebook_authentication do
-    after(:create) do |instance|
-      authentication = create(:authentication, :facebook)
-      instance.authentications << authentication
+    factory :user_with_facebook_authentication do
+      after(:create) do |instance|
+        authentication = create(:authentication, :facebook)
+        instance.authentications << authentication
+      end
     end
-  end
 
-  factory :user_with_google_authentication do
-    after(:create) do |instance|
-      authentication = create(:authentication, :google)
-      instance.authentications << authentication
+    factory :user_with_google_authentication do
+      after(:create) do |instance|
+        authentication = create(:authentication, :google)
+        instance.authentications << authentication
+      end
     end
+
   end
 
 end # Define block
