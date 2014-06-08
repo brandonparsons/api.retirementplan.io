@@ -62,7 +62,7 @@ group :development, :test do
 
   gem 'railroady' # Generates model relation graphs in doc/
 
-  gem 'rb-fsevent', require: RbConfig::CONFIG['host_os'] =~ /darwin/
+  gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
 
   #########
   # Brought all to dev/test as some are picky about location
