@@ -1,0 +1,11 @@
+Portfolio Checkup
+---------
+
+As set in your preferences, we promised to check in with you every so often with the status of your portfolio, even if it wasn't currently out of balance.  Our records show that while your portfolio is currently in balance (or within the allowable drift set in your preferences), it's been a while since we sent you an email.
+
+Some options:
+
+- To confirm that we have the correct information on file regarding your holdings, [view your tracked portfolio](<%= @tracked_portfolio_url %>)
+- If you'd like to re-evaluate your retirement simulation, change preferences, or update your personal information, [visit your Dashboard](<%= @dashboard_url %>)
+- If you'd like to invest some additional funds and rebalance at the same time, [we can show you how to do that](<%= @new_funds_url %>)
+- Don't want to be contacted as often about your portfolio balance? [Edit your profile](<%= @edit_account_url %>)
