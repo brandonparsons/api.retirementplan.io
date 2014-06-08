@@ -1,14 +1,12 @@
-
 # memcached:    ## already running
 # redis:        ## already running
 # postgres:     ## already running
 
 
-# web:          bin/server
 rserve:         bin/rserve
-web:            bin/rails server
 worker:         bin/worker
+web:            bin/rails server  # bin/server in production
 
 
-log:            tail -f -n 100 log/development.log
+# log:            tail -f -n 100 log/development.log
 # guard:        bundle exec guard ## Do manually

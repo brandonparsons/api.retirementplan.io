@@ -38,6 +38,9 @@ Rails.application.configure do
 
   ##########
 
+  # Forces rails server to not buffer logs
+  $stdout.sync = true
+
   # config.after_initialize do
   #   Bullet.enable = true
   #   Bullet.bullet_logger = true
