@@ -5,6 +5,7 @@ module Api
       before_action :authenticate_user!, except: [:index, :create]
 
       def index
+        return render json: {}, status: 403
         if user_signed_in?
           render json: [current_user]
         else
