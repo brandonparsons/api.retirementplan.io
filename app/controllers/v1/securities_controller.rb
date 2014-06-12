@@ -1,7 +1,6 @@
 module V1
 
-  class SecuritiesController < ApplicationController
-    before_action :authenticate_user!
+  class SecuritiesController < SecuredController
 
     def index
       if params[:ids] && params[:ids].present? # Ember data will apparently hit index action with ids array

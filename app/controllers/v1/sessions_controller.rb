@@ -3,6 +3,14 @@ module V1
   class SessionsController < ApplicationController
     before_action :authenticate_user!, except: [:create, :check_oauth]
 
+    ## REQUIRES LOGIN! ##
+    def destroy
+      # Logout
+      current_user.sign_out!
+      render json: {success: true, message: 'Signed out successfully.'}
+    end
+    ##                 ##
+
     def create
       # This route is used to validate a user via POST request with email/password
 
@@ -31,11 +39,6 @@ module V1
       user.sign_in!(image_url: oauth_user_data[:image])
       ::CreateUserService.new(user).call if user_was_created
       render json: user.session_data
-    end
-
-    def destroy
-      current_user.sign_out!
-      render json: {success: true, message: 'Signed out successfully.'}
     end
 
 

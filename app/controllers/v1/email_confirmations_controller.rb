@@ -2,7 +2,6 @@ module V1
 
   class EmailConfirmationsController < ApplicationController
     # No auth required
-    skip_before_action :verify_user_email_confirmation
 
     def create
       return missing_parameters unless params[:email].present?

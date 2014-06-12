@@ -1,12 +1,10 @@
 module V1
 
-  class UsersController < ApplicationController
-    before_filter :authenticate_user!, except: [:create]
+  class UsersController < SecuredController
+    skip_before_action :authenticate_user!, only: [:create]
+    skip_before_action :confirm_user_accepted_terms!, only: [:create, :show]
+    skip_before_action :verify_user_email_confirmation!, only: [:create, :show]
 
-
-    #####################
-    # No login required #
-    #####################
 
     def create
       @user = RegularUser.new(user_create_params)
@@ -18,11 +16,6 @@ module V1
         render json: @user.errors, status: :unprocessable_entity
       end
     end
-
-
-    ##################
-    # Login required #
-    ##################
 
     def show
       render json: current_user if stale?(current_user)

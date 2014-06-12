@@ -6,12 +6,6 @@ class ApplicationController < ActionController::API
 
   before_action :cors_set_access_control_headers
 
-  ## ## ##
-  ## Careful with the names of these before_actions. Skipping in various controllers ##
-  before_action :verify_user_email_confirmation, except: [:error, :health, :CORS]
-  # before_action :confirm_user_accepted_terms, except: [:error, :health, :CORS]
-  ## ## ##
-
 
   ###################
   # GENERIC ACTIONS #
@@ -135,30 +129,5 @@ class ApplicationController < ActionController::API
   def oauth_login_error(message)
     render json: { success: false, message: message, sticky: 10000 }, status: 422
   end
-
-  def verify_user_email_confirmation
-    if current_user && !current_user.is_confirmed_or_temporarily_allowed?
-      render json: {success: false, message: "You must confirm your email address (#{current_user.email}).", reason: :email_confirmation}, status: 403 and return
-    end
-  end
-
-  # def confirm_user_accepted_terms
-  #   if defined?(current_user) && current_user && !current_user.has_accepted_terms?
-  #     session[:return_to] = request.url
-  #     redirect_to users_terms_path
-  #   end
-  # end
-
-  # def ensure_user_completed_questionnaire
-  #   redirect_to new_questionnaire_path, alert: "You must complete the questionnaire first." unless current_user.has_completed_questionnaire?
-  # end
-
-  # def ensure_user_selected_portfolio
-  #   redirect_to select_portfolio_path, alert: "You must select a portfolio first." unless current_user.has_selected_portfolio?
-  # end
-
-  # def ensure_user_completed_simulation
-  #   redirect_to simulate_retirement_simulation_path, alert: "You must complete a retirement simulation first." unless current_user.has_completed_simulation?
-  # end
 
 end

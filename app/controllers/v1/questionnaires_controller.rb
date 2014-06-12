@@ -1,7 +1,6 @@
 module V1
 
-  class QuestionnairesController < ApplicationController
-    before_action :authenticate_user!
+  class QuestionnairesController < SecuredController
 
     def index
       if params[:ids] && params[:ids].present?
