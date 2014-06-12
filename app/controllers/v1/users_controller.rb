@@ -77,6 +77,11 @@ module V1
       end
     end
 
+    def accept_terms
+      current_user.accept_terms!
+      render json: {success: true, message: "Term acceptance saved."}
+    end
+
 
     private
 

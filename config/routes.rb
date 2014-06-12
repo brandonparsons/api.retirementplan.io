@@ -16,7 +16,7 @@ Rails.application.routes.draw do
         post  :create_password
         get   :preferences
         put  '/preferences(/:id)', to: :set_preferences
-        # post  :accept_terms
+        post  :accept_terms
       end
     end
 
