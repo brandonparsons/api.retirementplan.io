@@ -1,15 +1,13 @@
 module V1
 
   class SessionsController < ApplicationController
-    before_action :authenticate_user!, except: [:create, :check_oauth]
+    before_action :authenticate_user!, only: [:destroy]
 
-    ## REQUIRES LOGIN! ##
     def destroy
-      # Logout
+      # LOGOUT - requires authenticated user
       current_user.sign_out!
       render json: {success: true, message: 'Signed out successfully.'}
     end
-    ##                 ##
 
     def create
       # This route is used to validate a user via POST request with email/password

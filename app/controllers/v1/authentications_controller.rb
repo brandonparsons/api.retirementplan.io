@@ -1,19 +1,10 @@
 module V1
 
-  class AuthenticationsController < SecuredController
-
-    def index
-      if params[:ids] && params[:ids].present?
-        @authentications = current_user.authentications.where(id: params[:ids])
-        render json: @authentications if stale?(etag: @authentications)
-      else # Standard index action (no IDS array parameter)
-        last_modified = current_user.authentications.maximum(:updated_at)
-        render json: current_user.authentications.all if stale?(etag: last_modified, last_modified: last_modified)
-      end
-    end
+  class AuthenticationsController < ApplicationController
+    before_action :authenticate_user!, except: [:create]
 
     def create
-      # This is similar to the usere#check_oauth route, except that we don't
+      # This is similar to the user#check_oauth route, except that we don't
       # send back email, auth token etc. as we are already logged in. Just
       # create and associate the OAuth authentication.
 
@@ -38,6 +29,16 @@ module V1
       end
 
       render json: authentication, status: :created
+    end
+
+    def index
+      if params[:ids] && params[:ids].present?
+        @authentications = current_user.authentications.where(id: params[:ids])
+        render json: @authentications if stale?(etag: @authentications)
+      else # Standard index action (no IDS array parameter)
+        last_modified = current_user.authentications.maximum(:updated_at)
+        render json: current_user.authentications.all if stale?(etag: last_modified, last_modified: last_modified)
+      end
     end
 
     def show

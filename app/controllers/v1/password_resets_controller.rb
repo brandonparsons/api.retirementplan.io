@@ -1,7 +1,6 @@
 module V1
 
   class PasswordResetsController < ApplicationController
-    # No auth required
 
     def create
       return missing_parameters unless params[:email].present?

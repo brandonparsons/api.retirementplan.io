@@ -1,10 +1,7 @@
 module V1
 
-  class UsersController < SecuredController
-    skip_before_action :authenticate_user!, only: [:create]
-    skip_before_action :confirm_user_accepted_terms!, only: [:create, :show]
-    skip_before_action :verify_user_email_confirmation!, only: [:create, :show]
-
+  class UsersController < ApplicationController
+    before_action :authenticate_user!, except: [:create]
 
     def create
       @user = RegularUser.new(user_create_params)
