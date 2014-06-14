@@ -1,4 +1,4 @@
-class CreateUserService
+class UserCreator
 
   def initialize(user)
     @user = user

@@ -35,7 +35,7 @@ module V1
       user, user_was_created  = validate_oauth_and_login(oauth_user_data)
 
       user.sign_in!(image_url: oauth_user_data[:image])
-      ::CreateUserService.new(user).call if user_was_created
+      ::UserCreator.new(user).call if user_was_created
       render json: user.session_data
     end
 

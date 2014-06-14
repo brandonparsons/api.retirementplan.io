@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CreateUserService do
+describe UserCreator do
   it "needs tests" do
     pending
   end
