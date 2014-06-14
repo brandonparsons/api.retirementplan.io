@@ -17,7 +17,7 @@ class Portfolio < ActiveRecord::Base
   # CALLBACKS #
   #############
 
-  before_validation :normalize_weights, :prettify_weights
+  before_validation :normalize_weights
   before_save       :set_statistics
 
 
@@ -170,15 +170,17 @@ class Portfolio < ActiveRecord::Base
   ## Instance-level private ##
 
   def normalize_weights
-    self.weights = Finance::PortfolioBuilder.normalize_allocation(weights)
+    normalized_weights = Hash[weights.sort].inject({}) do |h, (k,v)|
+      h[k.upcase] = v.to_f
+      h
+    end
+    self.weights = normalized_weights
   end
 
-  def prettify_weights
-    self.prettified_weights = Finance::PortfolioBuilder.prettify_weights(weights)
-  end
-
+  # FIXME: Is this required after going to Ember? Or if moving all sim stuff
+  # to Go/
   def set_statistics
-    stats = Finance::PortfolioBuilder.statistics_for_allocation(weights)
+    stats = Finance::PortfolioStatisticsGenerator.statistics_for_allocation(weights)
     self.expected_return  = stats[:expected_return]
     self.expected_std_dev = stats[:expected_std_dev]
   end

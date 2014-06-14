@@ -12,7 +12,6 @@ gem 'redis-namespace'
 
 
 gem 'sidekiq'
-gem 'sidekiq-unique-jobs'
 gem 'sidekiq-limit_fetch'
 gem 'sidetiq', require: false # Manually required so you have ability to turn it off
 
@@ -102,6 +101,7 @@ end
 
 ## Other/Old Gems ##
 
+# gem 'sidekiq-unique-jobs'
 # gem 'roadie'
 # gem 'gibberish'
 # gem 'bullet'

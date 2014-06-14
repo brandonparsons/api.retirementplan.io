@@ -4,7 +4,6 @@ class CreatePortfolios < ActiveRecord::Migration
       t.decimal :expected_return,             null: false
       t.decimal :expected_std_dev,            null: false
       t.json    :weights,                     null: false, default: {}
-      t.json    :prettified_weights,          null: false, default: {}
 
       t.hstore  :data
 

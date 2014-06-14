@@ -91,14 +91,6 @@ describe Portfolio do
       expect(p.weights).to eql({"BWX" => 0.6, "EEM" => 0.4})
     end
 
-    it "prettifies weights on save" do
-      p = Portfolio.create! user_id: @u.id, weights: {"EEM" => 0.4444, "BWX" => 0.5556}
-      expect(p.prettified_weights).to eql({
-        @s1.asset_class => "55.6%",
-        @s2.asset_class => "44.4%"
-      })
-    end
-
     it "doesn't allow malformed weights" do
       p = Portfolio.new user_id: @u.id, weights: {"EEM" => "abc", "BWX" => 0.4}
       p.should_not be_valid

@@ -38,6 +38,8 @@ Rails.application.routes.draw do
 
     resources :questionnaires, only: [:index, :create, :show, :update]
 
+    resource :efficient_frontier, only: [:show]
+
     resources :securities, only: [:index, :show]
 
   end # v1

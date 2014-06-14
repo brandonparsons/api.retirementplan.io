@@ -59,12 +59,11 @@ ActiveRecord::Schema.define(version: 20140413042005) do
   add_index "expenses", ["user_id"], name: "index_expenses_on_user_id", using: :btree
 
   create_table "portfolios", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.decimal  "expected_return",                 null: false
-    t.decimal  "expected_std_dev",                null: false
-    t.json     "weights",            default: {}, null: false
-    t.json     "prettified_weights", default: {}, null: false
+    t.decimal  "expected_return",               null: false
+    t.decimal  "expected_std_dev",              null: false
+    t.json     "weights",          default: {}, null: false
     t.hstore   "data"
-    t.uuid     "user_id",                         null: false
+    t.uuid     "user_id",                       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

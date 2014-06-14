@@ -16,7 +16,7 @@ class CacheWarmer
     RetirementSimulation.warm_cache
     Security.warm_cache
     Finance::Quotes.warm_cache
-    Finance::PortfolioBuilder.warm_cache
+    EfficientFrontierCreator.warm_cache
     puts "[WORKER][CacheWarmer]: Done...."
   end
 end

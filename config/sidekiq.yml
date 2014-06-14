@@ -10,7 +10,7 @@
   - [mailer, 2]
   - [cache, 1]
 :limits:
-    cache: 25
+  cache: 25
 production:
   :concurrency: 50
 staging:

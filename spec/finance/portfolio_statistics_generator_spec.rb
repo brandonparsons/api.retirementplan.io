@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Finance::PortfolioBuilder do
+describe Finance::PortfolioStatisticsGenerator do
 
   it "Needs tests!" do
     pending

@@ -67,6 +67,7 @@ class Security < ActiveRecord::Base
     end
   end
 
+  # FIXME: Is this required after going to Ember?
   def self.asset_class_for_ticker(ticker)
     cache_key = "securities/asset_class_for/#{ticker}/#{last_updated_time}"
     Rails.cache.fetch cache_key, expires_in: 1.day do
