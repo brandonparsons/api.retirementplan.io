@@ -19,6 +19,13 @@ development:
   host:     localhost
   port:     5432
 
+profile:
+  <<: *COMMON
+  database: rp_development
+  username: brandon
+  host:     localhost
+  port:     5432
+
 staging:
   <<: *COMMON
   database: rp_staging

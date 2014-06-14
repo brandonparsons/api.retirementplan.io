@@ -49,7 +49,7 @@ group :production do
 end
 
 
-group :development, :test do
+group :development, :profile, :test do
   gem 'thin' # Puma doesn't die nicely in development
 
   gem 'spring'
@@ -83,7 +83,7 @@ group :development, :test do
 end
 
 
-group :development do
+group :development, :profile do
   gem 'capistrano', '2.15.5',     require: false
   gem 'capistrano-deploy-tagger', require: false
 
@@ -93,6 +93,10 @@ group :development do
   gem 'letter_opener'
 
   gem 'sinatra', require: false # For sidekiq web UI - see sidekiq.rake
+end
+
+group :profile do
+  gem 'ruby-prof'
 end
 
 

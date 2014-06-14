@@ -6,7 +6,7 @@ if Rails.env.test?
   redis_server  = ENV.fetch('REDIS_SERVER', 'localhost:6379')
   redis_url     = "redis://#{redis_server}/2"
 
-elsif Rails.env.development?
+elsif Rails.env.development? || Rails.env.profile?
   redis_server  = ENV.fetch('REDIS_SERVER', 'localhost:6379')
   redis_url     = "redis://#{redis_server}/1"
 

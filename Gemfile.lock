@@ -240,6 +240,7 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-ole (1.2.11.7)
+    ruby-prof (0.15.1)
     ruby2ruby (2.0.8)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
@@ -366,6 +367,7 @@ DEPENDENCIES
   rserve-client
   rspec-nc
   rspec-rails
+  ruby-prof
   sidekiq
   sidekiq-limit_fetch
   sidekiq-unique-jobs
