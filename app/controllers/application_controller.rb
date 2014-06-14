@@ -4,8 +4,6 @@ class ApplicationController < ActionController::API
   include ActionController::ImplicitRender
   include ActionController::StrongParameters
 
-  before_action :cors_set_access_control_headers
-
 
   ###################
   # GENERIC ACTIONS #
@@ -17,10 +15,6 @@ class ApplicationController < ActionController::API
 
   def health
     render text: "OK"
-  end
-
-  def CORS
-    render text: '', content_type: 'text/plain'
   end
 
 
@@ -84,30 +78,6 @@ class ApplicationController < ActionController::API
     auth_token  = request.headers['X-Auth-Token'] || params[:auth_token]
     logger.debug( (email.present? && auth_token.present?) ? "[AUTH_INFO]: #{email} || #{auth_token}" : "[AUTH INFO]: NONE" ) if Rails.env.development?
     User.authenticate_from_email_and_token(email, auth_token)
-  end
-
-  def cors_set_access_control_headers
-    headers['Access-Control-Allow-Origin']    = Rails.env.production? ? ENV['FRONTEND'] : '*'
-    headers['Access-Control-Request-Method']  = '*'
-    headers['Access-Control-Max-Age']         = "1728000"
-
-    headers['Access-Control-Allow-Methods']   = %w{
-      POST
-      PUT
-      PATCH
-      DELETE
-      GET
-      OPTIONS
-    }.join(', ')
-
-    headers['Access-Control-Allow-Headers']   = %w{
-      Origin
-      X-Requested-With
-      Content-Type
-      Accept
-      X-Auth-Email
-      X-Auth-Token
-    }.join(', ')
   end
 
   def access_denied(message = "Error with your login credentials")
