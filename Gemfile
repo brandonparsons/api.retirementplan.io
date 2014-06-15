@@ -25,6 +25,9 @@ gem 'recurrence'                                #, require: false # Calculates t
 
 gem 'foreman' # Used to export upstart in production
 gem 'figaro'
+
+
+gem 'faraday'
 gem 'oj'
 gem 'active_model_serializers'
 gem 'bcrypt'
@@ -49,19 +52,17 @@ end
 
 
 group :development, :profile, :test do
-  gem 'thin' # Puma doesn't die nicely in development
-
   gem 'spring'
 
-  gem 'faraday'
+  gem 'thin' # Puma doesn't die nicely in development
 
   gem 'pry-rails'
   gem 'hirb',           require: false
   gem 'awesome_print',  require: false
 
+  gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
   gem 'railroady' # Generates model relation graphs in doc/
 
-  gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
 
   #########
   # Brought all to dev/test as some are picky about location
