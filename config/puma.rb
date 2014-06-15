@@ -91,7 +91,7 @@ end
 # bind 'ssl://127.0.0.1:9292?key=path_to_key&cert=path_to_cert'
 
 if dev_environment
-  bind 'tcp://127.0.0.1:3000'
+  bind "tcp://127.0.0.1:#{ENV['PORT'] || 3000}"
 else
   bind 'unix:///tmp/app.sock'
 end
