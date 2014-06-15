@@ -56,10 +56,7 @@ group :development, :profile, :test do
 
   gem 'thin' # Puma doesn't die nicely in development
 
-  gem 'pry-rails'
-  gem 'hirb',           require: false
-  gem 'awesome_print',  require: false
-
+  gem 'jazz_hands' # Replaces pry-rails/hirb/awesome-print
   gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
   gem 'railroady' # Generates model relation graphs in doc/
 
