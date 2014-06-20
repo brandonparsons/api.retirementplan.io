@@ -4,6 +4,7 @@ module V1
 
     def create
       return missing_parameters unless params[:email].present?
+      return render json: {success: false, message: "That is an invalid email address"}, status: 422 unless /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i.match(params[:email])
       UserMailer.delay.reset_password_instructions(params[:email])
       render json: {success: true, message: "Email being sent to #{params[:email]}"}
     end
