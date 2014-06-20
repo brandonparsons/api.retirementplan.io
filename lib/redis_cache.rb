@@ -7,6 +7,11 @@ class RedisCache
     $redis
   end
 
+  def self.clear
+    own_keys = redis.keys("#{NAMESPACE}-*")
+    redis.del(own_keys) if own_keys.any?
+  end
+
   def self.read(key)
     if serialized = redis.get(namespaced key)
       unserialize(serialized)
