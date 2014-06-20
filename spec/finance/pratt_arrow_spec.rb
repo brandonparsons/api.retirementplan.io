@@ -12,15 +12,4 @@ describe Finance::PrattArrow do
     expect(pratt_arrow).to be_within(0.01).of(23.43749)
   end
 
-  specify "::calculate_portfolio_utility" do
-    pratt_arrow_risk_aversion = 1.3
-
-    portfolio_return = 0.12
-    portfolio_stddev = 0.05
-
-    utility = Finance::PrattArrow.calculate_portfolio_utility pratt_arrow_risk_aversion, portfolio_return, portfolio_stddev
-
-    expect(utility).to be_within(0.01).of(0.118375)
-  end
-
 end

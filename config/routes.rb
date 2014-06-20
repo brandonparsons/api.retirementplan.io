@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       collection do
         post  :create_password
         get   :preferences
-        put  '/preferences(/:id)', to: :set_preferences
+        put   '/preferences(/:id)', to: :set_preferences
         post  :accept_terms
       end
     end
@@ -38,9 +38,11 @@ Rails.application.routes.draw do
 
     resources :questionnaires, only: [:index, :create, :show, :update]
 
-    resource :efficient_frontier, only: [:show]
-
     resources :securities, only: [:index, :show]
+
+    resource  :efficient_frontier, only: [:show]
+
+    resource  :portfolio, only: [:create, :show]
 
   end # v1
 

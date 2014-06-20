@@ -9,10 +9,10 @@ module Finance
       expected_std_dev  = calculate_expected_std_dev_for(securities_hash)
 
       return {
-        expected_return:            expected_return,
-        expected_std_dev:           expected_std_dev,
-        annual_nominal_return_pct:  ( (1 + expected_return) ** 52 - 1 ) * 100 + 2.0,
-        annual_std_dev_pct:         expected_std_dev * Math.sqrt(52) * 100
+        expected_return:        expected_return,
+        expected_std_dev:       expected_std_dev,
+        annual_nominal_return:  ( (1 + expected_return) ** 52 - 1 ) + 0.02,
+        annual_std_dev:         expected_std_dev * Math.sqrt(52)
       }
     end
 

@@ -34,32 +34,6 @@ describe Portfolio do
     p.valid?.should be_true
   end
 
-  describe "::warnings_for" do
-    it "returns empty array if no warnings" do
-      warnings = Portfolio.warnings_for( {"EEM" => 0.2, "BWX" => 0.6, "NAESX" => 0.2} )
-      expect(warnings).to eql([])
-    end
-
-    it "warns on lots of small cap" do
-      warnings = Portfolio.warnings_for( {"EEM" => 0.1, "BWX" => 0.4, "NAESX" => 0.5} )
-      expect(warnings.length).to eql(1)
-      expect(warnings.first).to match /significant fraction of small cap/
-    end
-
-    it "warns on lots of emerging market" do
-      warnings = Portfolio.warnings_for( {"EEM" => 0.6, "BWX" => 0.2, "NAESX" => 0.2} )
-      expect(warnings.length).to eql(1)
-      expect(warnings.first).to match /significant fraction of emerging market/
-    end
-
-    it "warns on not diversified" do
-      warnings = Portfolio.warnings_for( {"EEM" => 0.1, "BWX" => 0.9} )
-      expect(warnings.length).to eql(1)
-      expect(warnings.first).to match /has greater than 90% weight/
-    end
-
-  end
-
   describe "statistics" do
     before(:each) do
       @s1 = create(:security, :vdmix,  returns: [0.08, -0.06, 0.10, 0.03, 0.10])

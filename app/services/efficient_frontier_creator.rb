@@ -50,16 +50,23 @@ class EfficientFrontierCreator
   def cull_portfolios(portfolios)
     # Only include the top-half of the frontier - i.e. portfolios with the
     # highest return for a given level of risk.
-    portfolios.sort! { |x, y| x[:statistics][:annual_std_dev_pct] <=> y[:statistics][:annual_std_dev_pct]  }
+    portfolios.sort! { |x, y| x[:statistics][:annual_std_dev] <=> y[:statistics][:annual_std_dev]  }
+
     last_return = 0.0
+    efficient_frontier = []
     portfolios.each_with_index do |portfolio, index|
       if index == 0
-        last_return = portfolio[:statistics][:annual_nominal_return_pct]
+        last_return = portfolio[:statistics][:annual_nominal_return]
+        efficient_frontier << portfolio
       else
-        portfolio[:statistics][:annual_nominal_return_pct] < last_return ? portfolios.delete(portfolio) : (last_return = portfolio[:statistics][:annual_nominal_return_pct])
+        if portfolio[:statistics][:annual_nominal_return] > last_return
+          last_return = portfolio[:statistics][:annual_nominal_return]
+          efficient_frontier << portfolio
+        end
       end
     end
-    portfolios
+
+    return efficient_frontier
   end
 
 end

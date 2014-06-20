@@ -19,15 +19,5 @@ module Finance
       return scaled.mean, scaled.sd
     end
 
-    # FIXME: Is this required after going to Ember?
-    def portfolio_monthly_return_for(investment, annual_return)
-      (investment * ( (1 + annual_return).to_f ** (1.0/12)  - 1 ))
-    end
-
-    # FIXME: Is this required after going to Ember?
-    def portfolio_daily_var_for(investment, annual_return, annual_std_dev)
-      (-1 * investment * ( annual_return/250 + (-1.65 * annual_std_dev/Math.sqrt(250)) ) ).round(2)
-    end
-
   end
 end

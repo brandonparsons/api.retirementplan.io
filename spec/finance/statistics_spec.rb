@@ -21,16 +21,4 @@ describe Finance::Statistics do
     expect(calculated_stdev).to be_within(0.0001).of(0.088994381845148)
   end
 
-  describe "::portfolio_monthly_return_for" do
-    it "needs tests!" do
-      pending
-    end
-  end
-
-  describe "::portfolio_daily_var_for" do
-    it "needs tests!" do
-      pending
-    end
-  end
-
 end

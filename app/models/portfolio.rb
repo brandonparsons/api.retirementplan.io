@@ -34,25 +34,6 @@ class Portfolio < ActiveRecord::Base
   # CLASS METHODS #
   #################
 
-  # FIXME: Is this required after going to Ember?
-  def self.warnings_for(allocation)
-    warning_messages = []
-
-    if large_fraction_small_cap(allocation)
-      warning_messages << "This portfolio contains a significant fraction of small cap stocks.  These can be quite volatile - ensure they are acceptable give your risk tolerance."
-    end
-
-    if large_fraction_emerging(allocation)
-      warning_messages << "This portfolio contains a significant fraction of emerging markets stocks.  These can be quite volatile - ensure they are acceptable give your risk tolerance."
-    end
-
-    if not_diversified(allocation)
-      warning_messages << "The portfolio you selected has greater than 90% weight in a single asset.  You may select this if you wish, but we suggest that you choose a portfolio with additional diversification."
-    end
-
-    return warning_messages
-  end
-
 
   ####################
   # INSTANCE METHODS #
@@ -152,21 +133,6 @@ class Portfolio < ActiveRecord::Base
 
   private
 
-  ## Class-level private ##
-
-  def self.large_fraction_small_cap(allocation)
-    allocation.keys.include?("NAESX") && allocation["NAESX"] >= 0.4
-  end
-
-  def self.large_fraction_emerging(allocation)
-    allocation.keys.include?("EEM") && allocation["EEM"] >= 0.4
-  end
-
-  def self.not_diversified(allocation)
-    allocation.values.any? {|x| x >= 0.90}
-  end
-
-
   ## Instance-level private ##
 
   def normalize_weights
@@ -177,8 +143,7 @@ class Portfolio < ActiveRecord::Base
     self.weights = normalized_weights
   end
 
-  # FIXME: Is this required after going to Ember? Or if moving all sim stuff
-  # to Go/
+  # FIXME: Is this required after going to Ember? Or if moving all sim stuff to Go...
   def set_statistics
     stats = Finance::PortfolioStatisticsGenerator.statistics_for_allocation(weights)
     self.expected_return  = stats[:expected_return]
