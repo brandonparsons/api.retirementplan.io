@@ -23,16 +23,22 @@ class SecuredController < ApplicationController
     end
   end
 
-  # def ensure_user_completed_questionnaire!
-  #   redirect_to new_questionnaire_path, alert: "You must complete the questionnaire first." unless current_user.has_completed_questionnaire?
-  # end
+  def ensure_user_completed_questionnaire!
+    if current_user && !current_user.has_completed_questionnaire?
+      render json: {success: false, message: "You must complete the questionnaire first.", reason: :questionnaire}, status: 403 and return
+    end
+  end
 
-  # def ensure_user_selected_portfolio!
-  #   redirect_to select_portfolio_path, alert: "You must select a portfolio first." unless current_user.has_selected_portfolio?
-  # end
+  def ensure_user_selected_portfolio!
+    if current_user && !current_user.has_selected_portfolio?
+      render json: {success: false, message: "You must select a portfolio first.", reason: :portfolio}, status: 403 and return
+    end
+  end
 
-  # def ensure_user_completed_simulation!
-  #   redirect_to simulate_retirement_simulation_path, alert: "You must complete a retirement simulation first." unless current_user.has_completed_simulation?
-  # end
+  def ensure_user_completed_simulation!
+    if current_user && !current_user.has_completed_simulation?
+      render json: {success: false, message: "You must complete a retirement simulation first.", reason: :simulation}, status: 403 and return
+    end
+  end
 
 end

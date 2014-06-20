@@ -1,7 +1,7 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :image, :has_password, :confirmed, :accepted_terms,
-    :has_completed_questionnaire, :has_selected_portfolio, :has_completed_simulation,
-    :has_tracked_portfolio
+  attributes :id, :name, :email, :image, :pratt_arrow_low, :pratt_arrow_high,
+    :has_password, :confirmed, :accepted_terms, :has_completed_questionnaire,
+    :has_selected_portfolio, :has_completed_simulation, :has_tracked_portfolio
 
   has_many  :authentications
   has_one   :questionnaire
@@ -10,6 +10,14 @@ class UserSerializer < ActiveModel::Serializer
 
   def image
     object.image_url
+  end
+
+  def pratt_arrow_low
+    object.questionnaire.present? ? object.questionnaire.pratt_arrow_low : nil
+  end
+
+  def pratt_arrow_high
+    object.questionnaire.present? ? object.questionnaire.pratt_arrow_high : nil
   end
 
   def has_password
