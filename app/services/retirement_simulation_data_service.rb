@@ -26,7 +26,7 @@ class RetirementSimulationDataService
     return {
       number_of_periods:          number_of_periods,
       selected_portfolio_weights: sorted_weights,
-      simulation_parameters:      simulation_parameters,
+      simulation_parameters:      simulation_input,
       expenses:                   expenses,
       time_steps:                 time_steps,
       real_estate: {
@@ -57,8 +57,8 @@ class RetirementSimulationDataService
     return sorted_weights
   end
 
-  def simulation_parameters
-    RetirementSimulationParametersSerializer.new(@user.retirement_simulation_parameters).as_json(root: false)
+  def simulation_input
+    SimulationInputSerializer.new(@user.simulation_input).as_json(root: false)
   end
 
   def expenses
@@ -68,8 +68,8 @@ class RetirementSimulationDataService
   def time_steps
     full_weekly_schedule, full_monthly_schedule, full_annual_schedule = build_schedules # defaults to 120 years
 
-    male_age   = @user.retirement_simulation_parameters.male_age || 0  # If nil, can't compare with other value
-    female_age = @user.retirement_simulation_parameters.female_age || 0 # If nil, can't compare with other value
+    male_age   = @user.simulation_input.male_age || 0  # If nil, can't compare with other value
+    female_age = @user.simulation_input.female_age || 0 # If nil, can't compare with other value
     number_of_years   = 120 - [male_age, female_age].min
     number_of_weeks   = number_of_years * 52
     number_of_months  = number_of_years * 12

@@ -308,18 +308,18 @@ describe User do
     end
   end
 
-  describe "#has_defined_simulation_parameters?" do
+  describe "#has_simulation_input?" do
     before(:each) do
       @u = create(:user)
     end
 
     it "returns false if no params" do
-      expect(@u.has_defined_simulation_parameters?).to be_false
+      expect(@u.has_simulation_input?).to be_false
     end
 
     it "returns true if params" do
-      p = create(:retirement_simulation_parameters, user: @u)
-      expect(@u.has_defined_simulation_parameters?).to be_true
+      p = create(:simulation_input, user: @u)
+      expect(@u.has_simulation_input?).to be_true
     end
   end
 
@@ -355,7 +355,7 @@ describe User do
   describe '#send_etf_purchase_instructions' do
     it "delivers an email" do
       ActionMailer::Base.deliveries = []
-      u = build_stubbed(:user)
+      u = create(:user)
       expect{u.send_etf_purchase_instructions(10000)}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
       Sidekiq::Extensions::DelayedMailer.drain
       expect(ActionMailer::Base.deliveries.length).to eql(1)
@@ -640,7 +640,7 @@ describe User do
     describe "send_out_of_balance_email" do
       it "creates a job" do
         ActionMailer::Base.deliveries = []
-        u = build_stubbed(:user)
+        u = create(:user)
         expect{u.send(:send_out_of_balance_email)}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
         Sidekiq::Extensions::DelayedMailer.drain
         expect(ActionMailer::Base.deliveries.length).to eql(1)
@@ -659,7 +659,7 @@ describe User do
     describe "send_min_rebalance_spacing_email" do
       it "creates a job" do
         ActionMailer::Base.deliveries = []
-        u = build_stubbed(:user)
+        u = create(:user)
         expect{u.send(:send_min_rebalance_spacing_email)}.to change{Sidekiq::Extensions::DelayedMailer.jobs.size}.by(1)
         Sidekiq::Extensions::DelayedMailer.drain
         expect(ActionMailer::Base.deliveries.length).to eql(1)

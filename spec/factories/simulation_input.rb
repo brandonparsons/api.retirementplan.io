@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :retirement_simulation_parameters do
+  factory :simulation_input do
     id { SecureRandom.uuid }
 
     user_is_male true

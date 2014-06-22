@@ -1,4 +1,4 @@
-class RetirementSimulationParameters < ActiveRecord::Base
+class SimulationInput < ActiveRecord::Base
 
   ################
   # ASSOCIATIONS #

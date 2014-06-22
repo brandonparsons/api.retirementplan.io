@@ -10,7 +10,7 @@ describe RetirementSimulationDataService do
       # Leave as should_receive instead of stub so you can be sure these are all
       # getting called (testing the private methods directly below).
       r.should_receive(:sorted_weights).and_return({})
-      r.should_receive(:simulation_parameters).and_return({})
+      r.should_receive(:simulation_input).and_return({})
       r.should_receive(:expenses).and_return([])
       r.should_receive(:time_steps).and_return([])
       r.should_receive(:asset_return_data).and_return({})
@@ -21,7 +21,7 @@ describe RetirementSimulationDataService do
     it "outputs data of the correct form" do
       expect(@results).to include(:number_of_periods)
       expect(@results).to include(:selected_portfolio_weights)
-      expect(@results).to include(:simulation_parameters)
+      expect(@results).to include(:simulation_parameters) # Not changing this to simulation_input as probably throwing this class awaw
       expect(@results).to include(:expenses)
       expect(@results).to include(:time_steps)
       expect(@results).to include(:real_estate)
@@ -52,12 +52,12 @@ describe RetirementSimulationDataService do
     end
   end
 
-  describe "simulation_parameters" do
+  describe "simulation_input" do
     it "returns serialized parameters" do
       u = create(:user)
-      p = create(:retirement_simulation_parameters, user: u)
+      p = create(:simulation_input, user: u)
 
-      results = RetirementSimulationDataService.new(u).send(:simulation_parameters)
+      results = RetirementSimulationDataService.new(u).send(:simulation_input)
 
       expect(results).to include(:married)
       expect(results).to include(:user_is_male)
@@ -81,7 +81,7 @@ describe RetirementSimulationDataService do
   describe "time_steps" do
     it "returns a full set of time steps, tailored to ages" do
       u = create(:user)
-      p = create(:retirement_simulation_parameters, user: u, male_age: 34, female_age: 36)
+      p = create(:simulation_input, user: u, male_age: 34, female_age: 36)
 
       results = RetirementSimulationDataService.new(u).send(:time_steps)
 

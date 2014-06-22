@@ -1,6 +1,6 @@
-class CreateRetirementSimulationParameters < ActiveRecord::Migration
+class CreateSimulationInputs < ActiveRecord::Migration
   def change
-    create_table :retirement_simulation_parameters, id: :uuid do |t|
+    create_table :simulation_inputs, id: :uuid do |t|
       # Some of these technically could use `null: false` constraints, but the
       # logic is fairly complex. Will enforce at the application level.
 
@@ -32,6 +32,6 @@ class CreateRetirementSimulationParameters < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :retirement_simulation_parameters, :user_id, unique: true
+    add_index :simulation_inputs, :user_id, unique: true
   end
 end

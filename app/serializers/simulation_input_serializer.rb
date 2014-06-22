@@ -1,5 +1,5 @@
-class RetirementSimulationParametersSerializer < ActiveModel::Serializer
-  attributes :user_is_male, :married, :male_age, :female_age, :user_retired,
+class SimulationInputSerializer < ActiveModel::Serializer
+  attributes :id, :user_is_male, :married, :male_age, :female_age, :user_retired,
     :retirement_age_male, :retirement_age_female, :assets, :expenses_inflation_index,
     :life_insurance, :income, :current_tax_rate, :salary_increase, :retirement_income,
     :retirement_expenses, :retirement_tax_rate, :income_inflation_index,

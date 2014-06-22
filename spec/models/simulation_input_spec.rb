@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe RetirementSimulationParameters do
+describe SimulationInput do
 
   before(:each) do
-    @prefs = build_stubbed(:retirement_simulation_parameters)
+    @prefs = build_stubbed(:simulation_input)
   end
 
   it "should be valid from the factory" do
@@ -17,13 +17,13 @@ describe RetirementSimulationParameters do
 
     it "is a new record" do
       q = create(:questionnaire, user: @u)
-      r = RetirementSimulationParameters.default_for_user(@u)
+      r = SimulationInput.default_for_user(@u)
       expect(r.new_record?).to be_true
     end
 
     it "sets all the standard values correctly" do
       q = create(:questionnaire, user: @u)
-      r = RetirementSimulationParameters.default_for_user(@u)
+      r = SimulationInput.default_for_user(@u)
 
       expect(r.expenses_inflation_index).to eql(100)
       expect(r.current_tax_rate).to eql(35)
@@ -37,7 +37,7 @@ describe RetirementSimulationParameters do
     context 'user is male' do
       before(:each) do
         @q = create(:questionnaire, user: @u, sex: 1, age: 55)
-        @r = RetirementSimulationParameters.default_for_user(@u)
+        @r = SimulationInput.default_for_user(@u)
       end
 
       it "sets user_is_male correctly" do
@@ -56,7 +56,7 @@ describe RetirementSimulationParameters do
     context 'user is female' do
       before(:each) do
         @q = create(:questionnaire, user: @u, sex: 0, age: 55)
-        @r = RetirementSimulationParameters.default_for_user(@u)
+        @r = SimulationInput.default_for_user(@u)
       end
 
       it "sets user_is_male correctly" do
@@ -74,13 +74,13 @@ describe RetirementSimulationParameters do
 
     it "sets married correctly if not married" do
       q = create(:questionnaire, user: @u, married: 0)
-      r = RetirementSimulationParameters.default_for_user(@u)
+      r = SimulationInput.default_for_user(@u)
       expect(r.married).to be_false
     end
 
     it "sets married correctly if married" do
       q = create(:questionnaire, user: @u, married: 1)
-      r = RetirementSimulationParameters.default_for_user(@u)
+      r = SimulationInput.default_for_user(@u)
       expect(r.married).to be_true
     end
   end

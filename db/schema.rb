@@ -101,7 +101,22 @@ ActiveRecord::Schema.define(version: 20140413042005) do
 
   add_index "questionnaires", ["user_id"], name: "index_questionnaires_on_user_id", unique: true, using: :btree
 
-  create_table "retirement_simulation_parameters", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
+  create_table "securities", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
+    t.string   "ticker",                      null: false
+    t.string   "asset_class",                 null: false
+    t.string   "asset_type",                  null: false
+    t.decimal  "mean_return",                 null: false
+    t.decimal  "std_dev",                     null: false
+    t.decimal  "implied_return",              null: false
+    t.decimal  "returns",        default: [], null: false, array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "securities", ["asset_class"], name: "index_securities_on_asset_class", using: :btree
+  add_index "securities", ["ticker"], name: "index_securities_on_ticker", unique: true, using: :btree
+
+  create_table "simulation_inputs", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.boolean  "user_is_male"
     t.boolean  "married"
     t.integer  "male_age"
@@ -130,22 +145,7 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.datetime "updated_at"
   end
 
-  add_index "retirement_simulation_parameters", ["user_id"], name: "index_retirement_simulation_parameters_on_user_id", unique: true, using: :btree
-
-  create_table "securities", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.string   "ticker",                      null: false
-    t.string   "asset_class",                 null: false
-    t.string   "asset_type",                  null: false
-    t.decimal  "mean_return",                 null: false
-    t.decimal  "std_dev",                     null: false
-    t.decimal  "implied_return",              null: false
-    t.decimal  "returns",        default: [], null: false, array: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "securities", ["asset_class"], name: "index_securities_on_asset_class", using: :btree
-  add_index "securities", ["ticker"], name: "index_securities_on_ticker", unique: true, using: :btree
+  add_index "simulation_inputs", ["user_id"], name: "index_simulation_inputs_on_user_id", unique: true, using: :btree
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.string   "name",                                 null: false
