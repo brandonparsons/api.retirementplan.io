@@ -29,30 +29,6 @@ describe Expense do
     end
   end
 
-  describe "::formatted_for_user(user_id)" do
-    it "creates default expenses if user doesnt have any" do
-      # This will break if you dramatically change the default_expenses
-      user_id = SecureRandom.uuid
-      results = Expense.formatted_for_user(user_id)
-      expect(results).not_to be_nil
-      expect(results[:available][:weekly].length).to be >= 1
-      expect(results[:added][:monthly].length).to be > 1
-    end
-
-    it "properly formats if already has expenses" do
-      user_id = SecureRandom.uuid
-      create(:expense, user_id: user_id)
-      create(:expense, :added, frequency: 'monthly', user_id: user_id)
-
-      results = Expense.formatted_for_user(user_id)
-      expect(results).not_to be_nil
-      expect(results[:available][:weekly].length).to eql(1)
-      expect(results[:available][:monthly].length).to eql(0)
-      expect(results[:added][:monthly].length).to eql(1)
-      expect(results[:added][:annual].length).to eql(0)
-    end
-  end
-
   describe "::create_default_expenses_for(user_id)" do
     it "creates a number of expenses, associated with a user" do
       user_id = SecureRandom.uuid

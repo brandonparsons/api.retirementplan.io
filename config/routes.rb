@@ -44,6 +44,12 @@ Rails.application.routes.draw do
 
     resource  :portfolio, only: [:create, :show]
 
+    resources :expenses, only: [:index, :create, :show, :update, :destroy] do
+      collection do
+        post :confirm
+      end
+    end
+
   end # v1
 
 end

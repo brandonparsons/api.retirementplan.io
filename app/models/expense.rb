@@ -10,6 +10,17 @@ class Expense < ActiveRecord::Base
   belongs_to :user, touch: true
 
 
+  #############
+  # CALLBACKS #
+  #############
+
+  before_validation do
+    # The client has a habit of sending both times if you've swapped one for the
+    # other. Enforce consistency here.
+    frequency == 'onetime' ? self.ends = nil : self.onetime_on = nil
+  end
+
+
   ###############
   # VALIDATIONS #
   ###############
@@ -26,31 +37,6 @@ class Expense < ActiveRecord::Base
   # CLASS METHODS #
   #################
 
-  # FIXME: Is this required after going to Ember?
-  def self.formatted_for_user(user_id)
-    user_expenses = where(user_id: user_id)
-    expenses      = user_expenses.any? ? user_expenses.to_a : self.create_default_expenses_for(user_id)
-
-    return {
-      available: {
-        onetime:  expenses.select { |el| !el.is_added && el.frequency == 'onetime' },
-        annual:   expenses.select { |el| !el.is_added && el.frequency == 'annual'  },
-        monthly:  expenses.select { |el| !el.is_added && el.frequency == 'monthly' },
-        weekly:   expenses.select { |el| !el.is_added && el.frequency == 'weekly'  }
-      },
-      added: {
-        onetime:  expenses.select { |el| el.is_added && el.frequency == 'onetime' },
-        annual:   expenses.select { |el| el.is_added && el.frequency == 'annual'  },
-        monthly:  expenses.select { |el| el.is_added && el.frequency == 'monthly' },
-        weekly:   expenses.select { |el| el.is_added && el.frequency == 'weekly'  }
-      }
-    }
-  end
-
-
-  private
-
-  # FIXME: Find a different place to do this, especially if removing ::formatted_for_user
   def self.create_default_expenses_for(user_id)
     expenses = []
     default_expenses.each do |expense_details|
@@ -59,6 +45,9 @@ class Expense < ActiveRecord::Base
     return expenses
   end
 
+
+  private
+
   def self.default_expenses
     return [
       # Weekly
@@ -66,7 +55,7 @@ class Expense < ActiveRecord::Base
         "description" => "Coffee",
         "amount" => 15,
         "frequency" => "weekly",
-        "ends" => Time.new(2020, 12, 31),
+        "ends" => Time.zone.now + 5.years,
         "is_added" => false
       },
       {
@@ -151,7 +140,7 @@ class Expense < ActiveRecord::Base
         "description" => "Sports Car",
         "amount" => 25000,
         "frequency" => "onetime",
-        "onetime_on" => Time.new(2016, 05, 01),
+        "onetime_on" => Time.zone.now + 1.year + 2.months,
         "is_added" => false
       }
     ]
