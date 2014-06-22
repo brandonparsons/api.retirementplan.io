@@ -18,11 +18,11 @@ class User < ActiveRecord::Base
   # ASSOCIATIONS #
   ################
 
-  has_one     :questionnaire,                     dependent: :destroy
-  has_one     :portfolio,                         dependent: :destroy
-  has_one     :retirement_simulation_parameters,  dependent: :destroy
-  has_many    :expenses,                          dependent: :destroy
-  has_many    :authentications,                   dependent: :destroy
+  has_one     :questionnaire,     dependent: :destroy
+  has_one     :portfolio,         dependent: :destroy
+  has_one     :simulation_input,  dependent: :destroy
+  has_many    :expenses,          dependent: :destroy
+  has_many    :authentications,   dependent: :destroy
 
 
   #############
@@ -120,8 +120,8 @@ class User < ActiveRecord::Base
     save!
   end
 
-  def has_defined_simulation_parameters?
-    !!retirement_simulation_parameters
+  def has_simulation_input?
+    simulation_input.present?
   end
 
   def has_completed_simulation!

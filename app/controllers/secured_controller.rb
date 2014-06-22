@@ -35,6 +35,12 @@ class SecuredController < ApplicationController
     end
   end
 
+  def ensure_user_selected_expenses!
+    if current_user && !current_user.has_selected_expenses?
+      render json: {success: false, message: "You must confirm the enabled expenses first.", reason: :expenses}, status: 403 and return
+    end
+  end
+
   def ensure_user_completed_simulation!
     if current_user && !current_user.has_completed_simulation?
       render json: {success: false, message: "You must complete a retirement simulation first.", reason: :simulation}, status: 403 and return

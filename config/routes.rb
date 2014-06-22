@@ -28,6 +28,8 @@ Rails.application.routes.draw do
       end
     end
 
+    # FIXME: `resource` as we aren't loading into ember data store. Perhaps change
+    # to make consistent with everything else.
     resource :session, only: [:create, :destroy] do
       collection do
         post :check_oauth
@@ -36,12 +38,17 @@ Rails.application.routes.draw do
 
     resources :authentications, only: [:index, :create, :show, :destroy]
 
+    # `resources` (rather than `resource` to make ember data happy)
     resources :questionnaires, only: [:index, :create, :show, :update]
 
     resources :securities, only: [:index, :show]
 
+    # FIXME: `resource` as we aren't loading into ember data store. Perhaps change
+    # to make consistent with everything else.
     resource  :efficient_frontier, only: [:show]
 
+    # FIXME: `resource` as we aren't loading into ember data store. Perhaps change
+    # to make consistent with everything else.
     resource  :portfolio, only: [:create, :show]
 
     resources :expenses, only: [:index, :create, :show, :update, :destroy] do
@@ -49,6 +56,9 @@ Rails.application.routes.draw do
         post :confirm
       end
     end
+
+    # `resources` (rather than `resource` to make ember data happy)
+    resources :simulation_inputs, only: [:index, :create, :show, :update]
 
   end # v1
 
