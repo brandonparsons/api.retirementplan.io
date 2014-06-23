@@ -47,7 +47,7 @@ module V1
 
     def confirm
       current_user.has_selected_expenses!
-      render json: current_user # Relying on this to be the current user in `parameters.js` route (beforeModel save pushPayload)
+      render json: nil, status: :ok
     end
 
 
