@@ -60,6 +60,8 @@ Rails.application.routes.draw do
     # `resources` (rather than `resource` to make ember data happy)
     resources :simulation_inputs, only: [:index, :create, :show, :update]
 
+    resource  :simulation, only: [:create, :show]
+
   end # v1
 
 end
