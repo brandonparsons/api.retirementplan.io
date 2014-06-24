@@ -37,7 +37,7 @@ module Finance
       # BSD-license applies
 
       # [BKP]: Someone in their brilliant wisdom decided to make Ruby matricies
-      # immutable. We're going to send to private methods open to allow m[i][j] = x
+      # immutable. We're going to send to private methods to allow m[i][j] = x
 
       # [BKP]: Expecting a matrix, not an array of arrays. If you got array,
       # convert it over.
