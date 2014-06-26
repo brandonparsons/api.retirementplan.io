@@ -45,6 +45,8 @@ class Portfolio < ActiveRecord::Base
 
   def current_allocation
     # Returns the portfolio allocation based on current prices
+    raise "Current shares have not been specified" unless current_shares.present?
+
     current_share_prices  = prices_for_current_shares
     market_value          = current_shares.inject(0) { |sum, (k,v)| sum + (current_share_prices[k] * v.to_f )}
 
