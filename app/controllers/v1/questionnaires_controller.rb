@@ -18,7 +18,8 @@ module V1
     end
 
     def show
-      render json: current_user.questionnaire
+      questionnaire = current_user.questionnaire
+      render json: questionnaire if stale?(questionnaire)
     end
 
     def create

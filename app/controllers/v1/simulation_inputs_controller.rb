@@ -21,7 +21,8 @@ module V1
     end
 
     def show
-      render json: current_user.simulation_input
+      simulation_input = current_user.simulation_input
+      render json: simulation_input if stale?(simulation_input)
     end
 
     def create
