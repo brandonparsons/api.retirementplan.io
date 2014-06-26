@@ -7,6 +7,7 @@ class UserSerializer < ActiveModel::Serializer
   has_many  :authentications
   has_one   :questionnaire
   has_one   :simulation_input
+  has_one   :portfolio
 
   embed :ids, include: true
 

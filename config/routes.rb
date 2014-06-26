@@ -47,9 +47,11 @@ Rails.application.routes.draw do
     # to make consistent with everything else.
     resource  :efficient_frontier, only: [:show]
 
-    # FIXME: `resource` as we aren't loading into ember data store. Perhaps change
-    # to make consistent with everything else.
-    resource  :portfolio, only: [:create, :show]
+    resources :portfolios, only: [:index, :create, :show] do
+      collection do
+        get :selected_for_frontier
+      end
+    end
 
     resources :expenses, only: [:index, :create, :show, :update, :destroy] do
       collection do
