@@ -2,6 +2,7 @@ module V1
 
   class PortfoliosController < SecuredController
     before_action :ensure_user_completed_questionnaire!
+    before_action :ensure_user_selected_portfolio!, :ensure_user_completed_simulation!, only: [:show]
 
     def index
       if params[:ids] && params[:ids].present?
