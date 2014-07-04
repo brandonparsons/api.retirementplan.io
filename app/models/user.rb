@@ -129,12 +129,16 @@ class User < ActiveRecord::Base
     save!
   end
 
+  def has_selected_etfs?
+    portfolio && portfolio.selected_etfs.present?
+  end
+
   def has_setup_tracked_portfolio?
     portfolio && portfolio.tracking?
   end
 
-  def send_etf_purchase_instructions(rebalance_amount)
-    UserMailer.delay.etf_purchase_instructions(id, rebalance_amount)
+  def send_etf_purchase_instructions(amount, rebalance_info_hash)
+    UserMailer.delay.etf_purchase_instructions(id, amount, rebalance_info_hash)
   end
 
   def check_portfolio_balance

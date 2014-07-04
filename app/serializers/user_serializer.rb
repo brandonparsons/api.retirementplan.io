@@ -2,7 +2,7 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id, :name, :email, :image, :pratt_arrow_low, :pratt_arrow_high,
     :has_password, :confirmed, :accepted_terms, :has_completed_questionnaire,
     :has_selected_portfolio, :has_selected_expenses, :has_simulation_input,
-    :has_completed_simulation, :has_tracked_portfolio
+    :has_completed_simulation, :has_selected_etfs, :has_tracked_portfolio
 
   has_many  :authentications
   has_one   :questionnaire
@@ -53,6 +53,10 @@ class UserSerializer < ActiveModel::Serializer
 
   def has_completed_simulation
     object.has_completed_simulation?
+  end
+
+  def has_selected_etfs
+    object.has_selected_etfs?
   end
 
   def has_tracked_portfolio

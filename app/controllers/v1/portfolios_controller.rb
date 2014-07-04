@@ -2,7 +2,13 @@ module V1
 
   class PortfoliosController < SecuredController
     before_action :ensure_user_completed_questionnaire!
-    before_action :ensure_user_selected_portfolio!, :ensure_user_completed_simulation!, only: [:show]
+    before_action :ensure_user_selected_portfolio!,   only: [:show]
+    before_action :ensure_user_completed_simulation!, only: [:show]
+
+
+    ##########################
+    # SELECT PORTFOLIO PHASE #
+    ##########################
 
     def index
       if params[:ids] && params[:ids].present?
@@ -19,12 +25,6 @@ module V1
       end
     end
 
-    # This is called by the Portfolio DS.Model,
-    def show
-      portfolio = current_user.portfolio
-      render json: portfolio if stale?(portfolio)
-    end
-
     # This is called by the FrontierPortfolio plain Ember Object / controller
     # to map the user's current portfolio to the select_portfolio charts.
     def selected_for_frontier
@@ -36,14 +36,33 @@ module V1
     # when the user picks a portfolio from select_portfolio.
     def create
       return missing_parameters unless params[:allocation]
-      portfolio = current_user.build_portfolio(weights: params[:allocation])
-      if portfolio.save
+
+      current_portfolio = current_user.portfolio
+      new_portfolio = current_user.build_portfolio(weights: params[:allocation])
+
+      # FIXME: This shouldn't be required once using Python-Securities
+      if current_portfolio
+        new_portfolio.current_shares = current_portfolio.current_shares
+        new_portfolio.selected_etfs = current_portfolio.selected_etfs
+      end
+
+      if new_portfolio.save
         render json: {success: true, message: "Saved your portfolio selection."}
       else
-        render json: portfolio.errors, status: :unprocessable_entity
+        render json: new_portfolio.errors, status: :unprocessable_entity
       end
     end
 
+
+    ###########################
+    # TRACKED PORTFOLIO PHASE #
+    ###########################
+
+    # This is called by the Portfolio DS.Model
+    def show
+      portfolio = current_user.portfolio
+      render json: portfolio if stale?(portfolio)
+    end
 
   end
 

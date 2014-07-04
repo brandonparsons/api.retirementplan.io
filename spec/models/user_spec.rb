@@ -332,6 +332,12 @@ describe User do
     end
   end
 
+  describe "#has_selected_etfs?" do
+    it "needs tests" do
+      pending
+    end
+  end
+
   describe "#has_setup_tracked_portfolio?" do
     it "returns false if no portfolio" do
       u = create(:user)

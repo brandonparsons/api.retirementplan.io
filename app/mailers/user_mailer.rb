@@ -1,12 +1,13 @@
 class UserMailer < ActionMailer::Base
 
-  def etf_purchase_instructions(user_id, rebalance_amount)
-    user                              = User.find user_id
-    @rebalance_info, @etf_info_lookup = rebalance_data(user, rebalance_amount)
-    @amount                           = rebalance_amount
+  def etf_purchase_instructions(user_id, rebalance_amount, rebalance_info_hash)
+    user            = User.find user_id
+    @rebalance_info = rebalance_info_hash
+    @amount         = rebalance_amount
+    @etfs           = Etf.includes(:security).where(ticker: rebalance_info_hash.keys).to_a
 
-    @new_funds_url = ""
-    @dashboard_url = ""
+    @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
+    @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
 
     mail(to: user.email, subject: 'ETF Purchasing Instructions') do |format|
       format.text

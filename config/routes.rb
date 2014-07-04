@@ -65,6 +65,14 @@ Rails.application.routes.draw do
 
     resource  :simulation, only: [:create, :show]
 
+    resources :tracked_portfolios, only: [:create] do
+      collection do
+        get   :quotes
+        post  :purchased_units
+        post  :email_instructions
+      end
+    end
+
   end # v1
 
 end

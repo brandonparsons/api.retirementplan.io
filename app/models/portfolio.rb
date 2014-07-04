@@ -1,3 +1,5 @@
+# FIXME: Once pulling portfolio data from python, can probably extract this into just a tracked portfolio
+
 class Portfolio < ActiveRecord::Base
 
   hstore_accessor :data,
@@ -27,7 +29,7 @@ class Portfolio < ActiveRecord::Base
 
   validates :user_id, presence: true
   validate  :weights_must_be_present, :all_weights_match_securities,
-    :weights_sum_to_one, :selected_etfs_appropriate
+    :weights_sum_to_one, :current_shares_appropriate, :selected_etfs_appropriate
 
 
   #################
@@ -58,7 +60,7 @@ class Portfolio < ActiveRecord::Base
       end
     else
       current_shares.inject({}) do |h, (ticker, number_of_shares)|
-        h[ticker] = number_of_shares * current_share_prices[ticker].to_f / market_value
+        h[ticker] = number_of_shares.to_f * current_share_prices[ticker].to_f / market_value
         h
       end
     end
@@ -104,6 +106,7 @@ class Portfolio < ActiveRecord::Base
 
     final_portfolio_value = current_market_value.to_f + amount_extra.to_f
 
+    # FIXME: Is this required after going to Ember?
     if final_portfolio_value == 0
       raise CustomExceptions::NoTrackedPortfolioValue, "You tried to rebalance your portfolio (with no additional funds) when you haven't yet provided us with the number of shares of each security that you hold.  Please complete your tracked portfolio setup."
     end
@@ -199,14 +202,39 @@ class Portfolio < ActiveRecord::Base
     sum > 0.995 && sum < 1.005
   end
 
+  def current_shares_appropriate
+    # If current shares not present, don't validate
+    return true unless current_shares.present?
+
+    # If so, check valid form
+    unless current_shares.is_a?(Hash)
+      errors.add(:current_shares, 'must be a hash')
+      return false
+    end
+
+    # Valid form - convert to floats
+    self.current_shares = current_shares.inject({}) do |result, row|
+      ticker = row[0]
+      shares = row[1]
+      result[ticker] = shares.to_f
+      result
+    end
+  end
+
   def selected_etfs_appropriate
-    # If selected ETFs present, check that all selected ETFs are represented in
-    # the selected portfolio.
-    if selected_etfs.present?
-      available_tickers = tickers
-      selected_etfs.each do |security_ticker, etf_ticker|
-        errors.add(:selected_etfs, "invalid key") unless available_tickers.include?(security_ticker)
-      end
+    # If selected ETFs not present, don't validate
+    return true unless selected_etfs.present?
+
+    # If so, check valid form
+    unless selected_etfs.is_a?(Hash)
+      errors.add(:selected_etfs, 'must be a hash')
+      return false
+    end
+
+    # Valid from - check that all selected ETFs are represented in the
+    # selected portfolio.
+    selected_etfs.each do |security_ticker, etf_ticker|
+      errors.add(:selected_etfs, "invalid key") unless tickers.include?(security_ticker)
     end
   end
 
