@@ -1,5 +1,5 @@
 source  'https://rubygems.org'
-ruby    '2.0.0'
+ruby    '2.1.2'
 
 gem 'rails', '4.1.1'
 gem 'rails-api'
@@ -56,7 +56,14 @@ group :development, :profile, :test do
 
   gem 'thin' # Puma doesn't die nicely in development
 
-  gem 'jazz_hands' # Replaces pry-rails/hirb/awesome-print
+  gem 'hirb'
+  gem 'awesome_print'
+  gem 'pry'
+  gem 'pry-rails'
+  gem 'pry-remote'
+  gem 'pry-stack_explorer'
+  gem 'pry-byebug'
+
   gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
   gem 'railroady' # Generates model relation graphs in doc/
 
