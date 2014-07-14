@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-
+  root            to: 'application#home'
   get  'health',  to: 'application#health'
   post 'error',   to: 'application#error'
 

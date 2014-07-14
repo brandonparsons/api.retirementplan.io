@@ -9,6 +9,10 @@ class ApplicationController < ActionController::API
   # GENERIC ACTIONS #
   ###################
 
+  def home
+    render text: "RP.io API Server"
+  end
+
   def error
     raise "Test error"
   end
