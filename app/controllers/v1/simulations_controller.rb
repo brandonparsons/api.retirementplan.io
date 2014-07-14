@@ -8,7 +8,7 @@ module V1
 
     def show
       return missing_parameters unless params[:number_of_simulation_trials]
-      render json: RetirementSimulator.new(current_user.simulation_input, params[:number_of_simulation_trials]).call
+      render json: RetirementSimulator.new(current_user.portfolio, current_user.simulation_input, params[:number_of_simulation_trials]).call
     end
 
     def create

@@ -1,6 +1,7 @@
 class RetirementSimulator
 
-  def initialize(simulation_inputs, number_of_trials)
+  def initialize(portfolio, simulation_inputs, number_of_trials)
+    @portfolio        = portfolio
     @inputs           = simulation_inputs
     @number_of_trials = number_of_trials
   end

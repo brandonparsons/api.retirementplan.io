@@ -84,9 +84,9 @@ Rails.application.configure do
 
   ###############
 
-  raise "Missing MANDRILL_USERNAME" unless ENV['MANDRILL_USERNAME']
-  raise "Missing MANDRILL_API_KEY"  unless ENV['MANDRILL_API_KEY']
-  raise "Missing MAILER_HOST"       unless ENV['MAILER_HOST']
+  # raise "Missing MANDRILL_USERNAME" unless ENV['MANDRILL_USERNAME']
+  # raise "Missing MANDRILL_API_KEY"  unless ENV['MANDRILL_API_KEY']
+  # raise "Missing MAILER_HOST"       unless ENV['MAILER_HOST']
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              "smtp.mandrillapp.com",
@@ -98,7 +98,7 @@ Rails.application.configure do
     domain:               ENV['MAILER_HOST'],           # your domain to identify your server when connecting
   }
 
-  raise "Missing MEMCACHE_SERVERS" unless ENV['MEMCACHE_SERVERS']
+  # raise "Missing MEMCACHE_SERVERS" unless ENV['MEMCACHE_SERVERS']
   dalli_client = Dalli::Client.new(
     ENV['MEMCACHE_SERVERS'].split(","),
     {
