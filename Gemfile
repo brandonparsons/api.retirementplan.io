@@ -58,7 +58,7 @@ group :development, :profile, :test do
   gem 'pry-stack_explorer'
   gem 'pry-byebug'
 
-  gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
+  # gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
 
 
   #########

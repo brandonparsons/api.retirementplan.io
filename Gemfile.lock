@@ -311,7 +311,6 @@ DEPENDENCIES
   rails (= 4.1.4)
   rails-api
   rails_12factor
-  rb-fsevent
   redcarpet
   redis
   redis-namespace
