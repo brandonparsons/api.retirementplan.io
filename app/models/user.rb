@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 
   include TokenAuthenticatable
 
-  hstore_accessor :data,
+  hstore_accessor :hstore_data,
     has_selected_expenses:    :boolean,
     has_completed_simulation: :boolean,
     min_rebalance_spacing:    :integer,

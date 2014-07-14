@@ -13,13 +13,13 @@ class CreateUsers < ActiveRecord::Migration
       t.datetime  :accepted_terms
       t.datetime  :confirmed_at
 
-      t.hstore    :data
+      t.hstore    :hstore_data
 
       t.timestamps
     end
 
     add_index :users, :email,                 unique: true
     add_index :users, :authentication_token,  unique: true
-    add_index :users, :data,                  using: :gin
+    add_index :users, :hstore_data,           using: :gin
   end
 end

@@ -26,6 +26,7 @@ $redis    = Redis::Namespace.new('rp', redis: raw_redis)
 SIDEKIQ_NAMESPACE = 'rp-sidekiq'
 
 server_redis_config = {
+  size:       2,
   namespace:  SIDEKIQ_NAMESPACE,
   url:        redis_url
 }
@@ -38,7 +39,6 @@ client_redis_config = {
 
 Sidekiq.configure_server do |config|
   config.redis          = server_redis_config
-  # config.poll_interval  = 5 # Running a side job every 5 seconds, remove this if not doing that
 end
 
 Sidekiq.configure_client do |config|

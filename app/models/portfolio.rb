@@ -1,8 +1,9 @@
-# FIXME: Once pulling portfolio data from python, can probably extract this into just a tracked portfolio
+# FIXME: Once pulling portfolio data from python, can probably extract this into just a tracked portfolio?
 
 class Portfolio < ActiveRecord::Base
 
-  hstore_accessor :data,
+  hstore_accessor :hstore_data,
+    weights:                  :hash,
     selected_etfs:            :hash,
     current_shares:           :hash,
     tracking:                 :boolean
@@ -20,7 +21,6 @@ class Portfolio < ActiveRecord::Base
   #############
 
   before_validation :normalize_weights
-  before_save       :set_statistics
 
 
   ###############
@@ -28,7 +28,7 @@ class Portfolio < ActiveRecord::Base
   ###############
 
   validates :user_id, presence: true
-  validate  :weights_must_be_present, :all_weights_match_securities,
+  validate  :weights_must_be_present, :all_weights_match_an_asset,
     :weights_sum_to_one, :current_shares_appropriate, :selected_etfs_appropriate
 
 
@@ -40,10 +40,6 @@ class Portfolio < ActiveRecord::Base
   ####################
   # INSTANCE METHODS #
   ####################
-
-  def tickers
-    weights.keys
-  end
 
   def current_allocation
     # Returns the portfolio allocation based on current prices
@@ -99,21 +95,19 @@ class Portfolio < ActiveRecord::Base
   end
 
   def rebalance(amount_extra=0.0)
-    # Returns number of shares of each security to buy, e.g.
-    # { "IMO.TO" => 18, "XOM" => -15, "DVN" => 2   }
+    # Returns number of shares of each etf to buy, e.g.
+    # { "VDMIX" => 18, "GSG" => -15, "XRE.TO" => 2   }
     # Can specify an additional amount you want to invest along with the rebalance
     # If no additional value specified, defaults to 0 (i.e. simple rebalance)
 
     final_portfolio_value = current_market_value.to_f + amount_extra.to_f
 
     # FIXME: Is this required after going to Ember?
-    if final_portfolio_value == 0
-      raise CustomExceptions::NoTrackedPortfolioValue, "You tried to rebalance your portfolio (with no additional funds) when you haven't yet provided us with the number of shares of each security that you hold.  Please complete your tracked portfolio setup."
-    end
+    raise CustomExceptions::NoTrackedPortfolioValue if final_portfolio_value == 0
 
     tickers_to_check = (current_shares.keys).concat(target_etf_weights.keys).uniq
 
-    shares_to_buy = Finance::Quotes.for_etfs(tickers_to_check).inject({}) do |h, (ticker, price)|
+    shares_to_buy = QuotesService.for_etfs(tickers_to_check).inject({}) do |h, (ticker, price)|
       desired_allocation_of_ticker  = target_etf_weights[ticker].to_f || 0.0
       shares_of_ticker              = current_shares[ticker].to_f || 0.0
       required_end_dollars          = desired_allocation_of_ticker * final_portfolio_value
@@ -148,17 +142,10 @@ class Portfolio < ActiveRecord::Base
     self.weights = normalized_weights
   end
 
-  # FIXME: Is this required after going to Ember? Or if moving all sim stuff to Go...
-  def set_statistics
-    stats = Finance::PortfolioStatisticsGenerator.statistics_for_allocation(weights)
-    self.expected_return  = stats[:expected_return]
-    self.expected_std_dev = stats[:expected_std_dev]
-  end
-
   def target_etf_weights
-    # Returns target weights for each ETF - not the overlying security.
-    weights.inject({}) do |h, (security_ticker, weight)|
-      etf_ticker = selected_etfs[security_ticker]
+    # Returns target weights for each ETF - not the overlying asset.
+    weights.inject({}) do |h, (asset_id, weight)|
+      etf_ticker = selected_etfs[asset_id]
       h[etf_ticker] = weight
       h
     end
@@ -171,7 +158,7 @@ class Portfolio < ActiveRecord::Base
   end
 
   def prices_for_current_shares
-    Finance::Quotes.for_etfs(current_shares.keys)
+    QuotesService.for_etfs(current_shares.keys)
   end
 
   def weights_must_be_present
@@ -179,10 +166,13 @@ class Portfolio < ActiveRecord::Base
     errors.add(:weights, "must be present and contain a valid hash.") unless valid_form
   end
 
-  def all_weights_match_securities
-    weights.keys.each do |ticker|
-      security_exists = Security.where(ticker: ticker).any?
-      errors.add(:weights, "#{ticker} does not match a valid security.") unless security_exists
+  def all_weights_match_an_asset
+    # TODO: Does hitting the AssetsService on every portfolio save cause
+    # slowdowns? This is hitting the finance service each time. Could consider
+    # caching asset list somehow....
+    weights.keys.each do |asset_id|
+      asset_exists = AssetsService.get_as_objects.any?{|asset| asset.id == asset_id }
+      errors.add(:weights, "#{asset_id} does not match a valid asset.") unless asset_exists
     end
   end
 
@@ -233,8 +223,8 @@ class Portfolio < ActiveRecord::Base
 
     # Valid from - check that all selected ETFs are represented in the
     # selected portfolio.
-    selected_etfs.each do |security_ticker, etf_ticker|
-      errors.add(:selected_etfs, "invalid key") unless tickers.include?(security_ticker)
+    selected_etfs.each do |asset_id, etf_ticker|
+      errors.add(:selected_etfs, "invalid key") unless weights.keys.include?(asset_id)
     end
   end
 

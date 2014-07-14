@@ -1,72 +1,73 @@
+require 'base64'
+
 class EfficientFrontierCreator
 
-  def self.warm_cache
-    # Build all 1,2 and 3 asset efficient frontiers in cache.
-    tickers = Security.all_tickers
-    tickers.each { |ticker| new([ticker]).call }
-    tickers.combination(2).to_a.each { |combo| new(combo).call } # Doubles
-    tickers.combination(3).to_a.each { |combo| new(combo).call } # Triples
-  end
+  def initialize(asset_ids)
+    raise "Asset ID's must be an array" unless asset_ids.is_a?(Array)
 
-  def initialize(tickers_array)
-    # So that our cache keys are consistent, and we treat the tickers array like
-    # other classes in the program.
-    raise "Tickers must be an array" unless tickers_array.is_a?(Array)
-    @tickers = tickers_array.map(&:upcase).sort
+    # Upcase/sort so that cache keys (if using) are always consistent.
+    @asset_ids = asset_ids.map(&:upcase).sort
   end
 
   def call
-    RedisCache.fetch(results_cache_key_for(@tickers), 2.weeks) do
-      build_portfolios_for(@tickers)
-    end
+    # This is where you'd do a cache call (with expiry < expected python data
+    # updates) if you want to cache this values inside the rails-API boundaries
+    build_portfolios_for(@asset_ids)
   end
 
 
   private
 
-  def results_cache_key_for(tickers)
-    ["portfolios_for", tickers.join('-'), Security.last_updated_time].join("/")
+  def build_portfolios_for(asset_ids)
+    response = get_data_from_remote(asset_ids)
+
+    # Rails is deserializing longer decimal values as BigDecimals, which
+    # then get dumped to strings on the way out. Need to fix this every time.
+    # FIXME: Is there a better way?
+    return sanitize_portfolios_and_add_ids(response.portfolios)
   end
 
-  def build_portfolios_for(tickers)
-    portfolios = []
-    Finance::REfficientFrontier.build(@tickers).each do |allocation|
-      id    = encode_allocation(allocation)
-      stats = Finance::PortfolioStatisticsGenerator.statistics_for_allocation(allocation)
-      portfolios << {
-        id: id,
-        allocation: allocation,
-        statistics: stats
-      }
-    end
+  def get_data_from_remote(asset_ids)
+    conn = Faraday.new(url: ENV['FINANCE_APP'])
+    payload = { asset_ids: asset_ids }
 
-    cull_portfolios(portfolios)
+    response = Hashie::Mash.new(JSON.parse(conn.get do |req|
+      req.url '/efficient_frontier'
+      req.headers['Content-Type']   = 'application/json'
+      req.headers['Authorization']  = ENV['AUTH_TOKEN']
+      req.body                      = payload.to_json
+    end.body))
+
+    return response
   end
 
   def encode_allocation(allocation)
     Base64.urlsafe_encode64(allocation.to_json)
   end
 
-  def cull_portfolios(portfolios)
-    # Only include the top-half of the frontier - i.e. portfolios with the
-    # highest return for a given level of risk.
-    portfolios.sort! { |x, y| x[:statistics][:annual_std_dev] <=> y[:statistics][:annual_std_dev]  }
+  def sanitize_portfolios_and_add_ids(portfolios)
+    return portfolios.reduce([]) do |memo, portfolio|
+      memo << sanitize_portfolio(portfolio)
+      memo
+    end
+  end
 
-    last_return = 0.0
-    efficient_frontier = []
-    portfolios.each_with_index do |portfolio, index|
-      if index == 0
-        last_return = portfolio[:statistics][:annual_nominal_return]
-        efficient_frontier << portfolio
-      else
-        if portfolio[:statistics][:annual_nominal_return] > last_return
-          last_return = portfolio[:statistics][:annual_nominal_return]
-          efficient_frontier << portfolio
-        end
-      end
+  def sanitize_portfolio(portfolio)
+    sanitized_allocation = portfolio.allocation.reduce({}) do |memo, (asset, weight)|
+      memo[asset] = weight.to_f
+      memo
     end
 
-    return efficient_frontier
+    sanitized_statistics = portfolio.statistics.reduce({}) do |memo, (stat, value)|
+      memo[stat] = value.to_f
+      memo
+    end
+
+    return {
+      "id"          => encode_allocation(sanitized_allocation),
+      "allocation"  => sanitized_allocation,
+      "statistics"  => sanitized_statistics,
+    }
   end
 
 end

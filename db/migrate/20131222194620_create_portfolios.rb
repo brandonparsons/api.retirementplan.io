@@ -1,17 +1,13 @@
 class CreatePortfolios < ActiveRecord::Migration
   def change
     create_table :portfolios, id: :uuid do |t|
-      t.decimal :expected_return,             null: false
-      t.decimal :expected_std_dev,            null: false
-      t.json    :weights,                     null: false, default: {}
+      t.hstore  :hstore_data
 
-      t.hstore  :data
-
-      t.uuid    :user_id,                     null: false
+      t.uuid    :user_id, null: false
       t.timestamps
     end
 
-    add_index :portfolios, :user_id,  unique: true
-    add_index :portfolios, :data,     using: :gin
+    add_index :portfolios, :user_id,      unique: true
+    add_index :portfolios, :hstore_data,  using: :gin
   end
 end

@@ -41,7 +41,7 @@ Rails.application.routes.draw do
     # `resources` (rather than `resource` to make ember data happy)
     resources :questionnaires, only: [:index, :create, :show, :update]
 
-    resources :securities, only: [:index, :show]
+    resources :assets, only: [:index, :show]
     resources :etfs, only: [:index, :show]
 
     # FIXME: `resource` as we aren't loading into ember data store. Perhaps change

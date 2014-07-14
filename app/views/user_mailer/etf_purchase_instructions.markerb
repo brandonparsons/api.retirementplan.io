@@ -3,14 +3,13 @@ ETF Purchasing Instructions
 
 As requested, here are your ETF purchasing instructions to properly balance your portfolio (and invest a total of $<%= @amount %>).
 
-<% @rebalance_info.each do |etf_ticker, number_of_shares| %>
-  <% etf = @etfs.find{|etf| etf.ticker == etf_ticker} %>
+<% @rebalance_info.each do |etf_ticker, etf_info| %>
+  *<%= etf_info["asset_class"] %>:*
 
-  *<%= etf.security.asset_class %>:*
-
-  - ETF: <%= etf.description %>
+  - ETF: <%= etf_info["description"] %>
   - Ticker: <%= etf_ticker %>
-  - Shares to Purchase: <%= number_of_shares %>
+  - Current Units (provided by you): <%= etf_info["current_shares"] %>
+  - Units to Purchase: <%= etf_info["shares_to_buy"] %>
 
 <% end %>
 

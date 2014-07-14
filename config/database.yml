@@ -26,21 +26,21 @@ profile:
   host:     localhost
   port:     5432
 
-staging:
-  <<: *COMMON
-  database: rp_staging
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASS'] %>
-  host:     <%= ENV['DB_HOST'] %>
-  port:     <%= ENV['DB_PORT'] %>
+# staging:
+#   <<: *COMMON
+#   database: rp_staging
+#   username: <%= ENV['DB_USER'] %>
+#   password: <%= ENV['DB_PASS'] %>
+#   host:     <%= ENV['DB_HOST'] %>
+#   port:     <%= ENV['DB_PORT'] %>
 
-production:
-  <<: *COMMON
-  database: rp_production
-  username: <%= ENV['DB_USER'] %>
-  password: <%= ENV['DB_PASS'] %>
-  host:     <%= ENV['DB_HOST'] %>
-  port:     <%= ENV['DB_PORT'] %>
+# production:
+#   <<: *COMMON
+#   database: rp_production
+#   username: <%= ENV['DB_USER'] %>
+#   password: <%= ENV['DB_PASS'] %>
+#   host:     <%= ENV['DB_HOST'] %>
+#   port:     <%= ENV['DB_PORT'] %>
 
 
 # production:

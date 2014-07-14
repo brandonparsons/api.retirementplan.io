@@ -4,7 +4,6 @@ class UserMailer < ActionMailer::Base
     user            = User.find user_id
     @rebalance_info = rebalance_info_hash
     @amount         = rebalance_amount
-    @etfs           = Etf.includes(:security).where(ticker: rebalance_info_hash.keys).to_a
 
     @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
     @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"

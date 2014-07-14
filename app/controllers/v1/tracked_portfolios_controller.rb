@@ -6,7 +6,7 @@ module V1
 
     def quotes
       tickers = current_user.portfolio.current_shares.try(:keys) || []
-      render json: Finance::Quotes.for_etfs(tickers)
+      render json: QuotesService.for_etfs(tickers)
     end
 
     def create
@@ -45,8 +45,8 @@ module V1
     end
 
     def email_instructions
-      return missing_parameters unless params[:purchased_units] && params[:amount]
-      current_user.send_etf_purchase_instructions(params[:amount], params[:purchased_units])
+      return missing_parameters unless params[:email_information] && params[:amount]
+      current_user.send_etf_purchase_instructions(params[:amount], params[:email_information])
       render json: {success: true, message: 'Email is being sent.'}
     end
 

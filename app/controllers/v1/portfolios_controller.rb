@@ -1,3 +1,5 @@
+require 'base64'
+
 module V1
 
   class PortfoliosController < SecuredController
@@ -28,8 +30,16 @@ module V1
     # This is called by the FrontierPortfolio plain Ember Object / controller
     # to map the user's current portfolio to the select_portfolio charts.
     def selected_for_frontier
-      portfolio = current_user.portfolio
-      render json: { id: Base64.urlsafe_encode64(portfolio.weights.to_json) }
+      response = {}
+      if portfolio = current_user.portfolio
+        # Need to keep rails from encoding as strings b/c of BigDecimals....
+        json = portfolio.weights.reduce({}) do |memo, (assetId, weight)|
+          memo[assetId] = weight.to_f
+          memo
+        end.to_json
+        response[:id] = Base64.urlsafe_encode64(json)
+      end
+      render json: response
     end
 
     # This is called from the FrontierPortfolio/select_portfolio object/routes

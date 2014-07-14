@@ -84,8 +84,6 @@ Rails.application.configure do
 
   ###############
 
-  config.assets.initialize_on_precompile = false
-
   raise "Missing MANDRILL_USERNAME" unless ENV['MANDRILL_USERNAME']
   raise "Missing MANDRILL_API_KEY"  unless ENV['MANDRILL_API_KEY']
   raise "Missing MAILER_HOST"       unless ENV['MAILER_HOST']

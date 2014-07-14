@@ -84,8 +84,6 @@ Rails.application.configure do
 
   ###############
 
-  config.assets.initialize_on_precompile = false
-
   raise "Missing MAILTRAP_USERNAME" unless ENV['MAILTRAP_USERNAME']
   raise "Missing MAILTRAP_PASSWORD" unless ENV['MAILTRAP_PASSWORD']
   config.action_mailer.delivery_method = :smtp

@@ -1,3 +1,1 @@
-web:    bin/server
-worker: bin/worker
-rserve: bin/rserve
+web: bin/unicorn -p $PORT -E $RACK_ENV -c ./config/unicorn.rb

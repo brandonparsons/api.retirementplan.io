@@ -1,0 +1,1 @@
+gem 'rserve-client', require: 'rserve'          #, require: false

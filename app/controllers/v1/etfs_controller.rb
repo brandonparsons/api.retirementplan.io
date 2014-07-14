@@ -3,20 +3,17 @@ module V1
   class EtfsController < SecuredController
 
     def index
-      if params[:ids] && params[:ids].present?
-        # Ember data will apparently hit index action with ids array
-        etfs = Etf.where(id: params[:ids])
-        render json: etfs if stale?(etag: etfs)
-      else # Standard index action (no IDS array parameter)
-        last_modified = Etf.maximum(:updated_at)
-        render json: Etf.all if stale?(etag: last_modified, last_modified: last_modified)
-      end
+      json = EtfsService.get_as_json
+      render json: json if stale?(etag: json)
     end
 
     def show
-      # expires_in 3.minutes, public: true
-      etf = Etf.find(params[:id])
-      render json: etf if stale?(etf)
+      etfs = EtfsService.get_as_objects
+
+      etf       = etfs.find{|etf| etf.id == params[:id]}
+      etf_json  = Oj.dump({"etf" => etf.as_json})
+
+      render json: etf_json if stale?(etf_json)
     end
 
   end

@@ -1,60 +1,54 @@
 source  'https://rubygems.org'
 ruby    '2.1.2'
 
-gem 'rails', '4.1.1'
+gem 'rails', '4.1.4'
+
 gem 'rails-api'
+gem 'active_model_serializers'
 
-
-gem 'pg'
 gem 'hstore_accessor'
+gem 'pg'
+
 gem 'redis'
 gem 'redis-namespace'
 
-
 gem 'sidekiq'
-gem 'sidekiq-limit_fetch'
 gem 'sidetiq', require: false # Manually required so you have ability to turn it off
 
-
-gem 'rserve-client', require: 'rserve'          #, require: false
-gem 'statsample'                                #, require: false
-gem 'statistics2'                               #, require: false # It kept telling me to install this (probably statsample)
-gem 'yahoo-finance', require: 'yahoo_finance'   #, require: false
-gem 'recurrence'                                #, require: false # Calculates timelines/schedules
-
-
-gem 'foreman' # Used to export upstart in production
-gem 'figaro'
-
-
-gem 'faraday'
 gem 'oj'
-gem 'active_model_serializers'
+gem 'oj_mimic_json'
+
+gem 'hashie'
+gem 'faraday'
 gem 'bcrypt'
-gem 'airbrake' # Only really using in production, but referencing in a class (causes errors if not required)
+
 gem 'markerb'
 gem 'redcarpet' # for markerb
 
+gem 'figaro'
+
 
 group :production, :staging do
-  gem 'puma'
+  gem 'unicorn'
   gem 'kgio' # Speeds up dalli
   gem 'dalli'
   gem 'rack-cache'
+  gem 'rails_12factor' # gem 'rails_stdout_logging'
+  gem 'rollbar', require: 'rollbar/rails'
 end
 
 
 group :production do
   gem 'mandrill-rails'
-  gem 'rails_stdout_logging'
   gem 'newrelic_rpm'
 end
 
 
 group :development, :profile, :test do
-  gem 'spring'
-
   gem 'thin' # Puma doesn't die nicely in development
+
+  gem 'spring'
+  gem 'foreman'
 
   gem 'hirb'
   gem 'awesome_print'
@@ -65,7 +59,6 @@ group :development, :profile, :test do
   gem 'pry-byebug'
 
   gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
-  gem 'railroady' # Generates model relation graphs in doc/
 
 
   #########
@@ -88,15 +81,10 @@ end
 
 
 group :development, :profile do
-  gem 'capistrano', '2.15.5',     require: false
-  gem 'capistrano-deploy-tagger', require: false
-
-  gem 'google_drive',             require: false # In dev - don't load new data from prod.
-  gem 'brakeman',                 require: false
-
   gem 'letter_opener'
 
-  gem 'sinatra', require: false # For sidekiq web UI - see sidekiq.rake
+  gem 'brakeman', require: false
+  gem 'sinatra',  require: false # For sidekiq web UI - see sidekiq.rake
 end
 
 group :profile do
@@ -107,6 +95,7 @@ end
 ## Other/Old Gems ##
 
 # gem 'sidekiq-unique-jobs'
+# gem 'sidekiq-limit-fetch'
 # gem 'roadie'
 # gem 'gibberish'
 # gem 'bullet'
@@ -114,3 +103,5 @@ end
 # gem 'rack-rewrite'
 # gem 'attrio'
 # gem 'whenever', require: false
+
+# gem 'railroady' # Generates model relation graphs in doc/

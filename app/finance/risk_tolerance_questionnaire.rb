@@ -8,8 +8,8 @@ module Finance
 
       stock_ratio_low, stock_ratio_high = calculate_optimal_bucket(validated_answers)
 
-      pratt_arrow_high = Finance::PrattArrow.calculate_pratt_arrow_risk_aversion(STUDY_FULLSTOCK_RETURN, STUDY_NOSTOCK_RETURN, stock_ratio_low, STUDY_FULLSTOCK_STDDEV)
-      pratt_arrow_low = Finance::PrattArrow.calculate_pratt_arrow_risk_aversion(STUDY_FULLSTOCK_RETURN, STUDY_NOSTOCK_RETURN, stock_ratio_high, STUDY_FULLSTOCK_STDDEV)
+      pratt_arrow_high = calculate_pratt_arrow_risk_aversion(STUDY_FULLSTOCK_RETURN, STUDY_NOSTOCK_RETURN, stock_ratio_low, STUDY_FULLSTOCK_STDDEV)
+      pratt_arrow_low = calculate_pratt_arrow_risk_aversion(STUDY_FULLSTOCK_RETURN, STUDY_NOSTOCK_RETURN, stock_ratio_high, STUDY_FULLSTOCK_STDDEV)
 
       return pratt_arrow_low, pratt_arrow_high
     end
@@ -20,6 +20,11 @@ module Finance
 
 
     protected
+
+    def calculate_pratt_arrow_risk_aversion(market_return, risk_free_return, stock_ratio, market_std_dev)
+      pratt_arrow_risk_aversion = ( market_return - risk_free_return ) / stock_ratio  / ( market_std_dev ** 2 )
+      return pratt_arrow_risk_aversion
+    end
 
     def check_supplied_answers(answers)
       # - Only allow answers that have keys matching the 'questions' hash

@@ -31,17 +31,6 @@ ActiveRecord::Schema.define(version: 20140413042005) do
   add_index "authentications", ["provider", "uid"], name: "index_authentications_on_provider_and_uid", using: :btree
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
 
-  create_table "etfs", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.string   "ticker",      null: false
-    t.text     "description", null: false
-    t.uuid     "security_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "etfs", ["security_id"], name: "index_etfs_on_security_id", using: :btree
-  add_index "etfs", ["ticker"], name: "index_etfs_on_ticker", unique: true, using: :btree
-
   create_table "expenses", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.string   "description",                 null: false
     t.decimal  "amount",                      null: false
@@ -59,16 +48,13 @@ ActiveRecord::Schema.define(version: 20140413042005) do
   add_index "expenses", ["user_id"], name: "index_expenses_on_user_id", using: :btree
 
   create_table "portfolios", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.decimal  "expected_return",               null: false
-    t.decimal  "expected_std_dev",              null: false
-    t.json     "weights",          default: {}, null: false
-    t.hstore   "data"
-    t.uuid     "user_id",                       null: false
+    t.hstore   "hstore_data"
+    t.uuid     "user_id",     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "portfolios", ["data"], name: "index_portfolios_on_data", using: :gin
+  add_index "portfolios", ["hstore_data"], name: "index_portfolios_on_hstore_data", using: :gin
   add_index "portfolios", ["user_id"], name: "index_portfolios_on_user_id", unique: true, using: :btree
 
   create_table "questionnaires", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
@@ -100,21 +86,6 @@ ActiveRecord::Schema.define(version: 20140413042005) do
   end
 
   add_index "questionnaires", ["user_id"], name: "index_questionnaires_on_user_id", unique: true, using: :btree
-
-  create_table "securities", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.string   "ticker",                      null: false
-    t.string   "asset_class",                 null: false
-    t.string   "asset_type",                  null: false
-    t.decimal  "mean_return",                 null: false
-    t.decimal  "std_dev",                     null: false
-    t.decimal  "implied_return",              null: false
-    t.decimal  "returns",        default: [], null: false, array: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "securities", ["asset_class"], name: "index_securities_on_asset_class", using: :btree
-  add_index "securities", ["ticker"], name: "index_securities_on_ticker", unique: true, using: :btree
 
   create_table "simulation_inputs", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.boolean  "user_is_male"
@@ -159,13 +130,13 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.datetime "last_sign_in_at"
     t.datetime "accepted_terms"
     t.datetime "confirmed_at"
-    t.hstore   "data"
+    t.hstore   "hstore_data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
-  add_index "users", ["data"], name: "index_users_on_data", using: :gin
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["hstore_data"], name: "index_users_on_hstore_data", using: :gin
 
 end

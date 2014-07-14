@@ -29,6 +29,4 @@ if Rails.env.development?
   })
 end
 
-Rake::Task["load_data"].invoke
-
 $redis.set $SIMULATION_COUNT_KEY, 0
