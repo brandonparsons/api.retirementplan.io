@@ -99,9 +99,15 @@ Rails.application.configure do
   }
 
   # raise "Missing MEMCACHE_SERVERS" unless ENV['MEMCACHE_SERVERS']
+  memcache_servers  = (ENV["MEMCACHEDCLOUD_SERVERS"] || "").split(',')
+  memcache_username = ENV["MEMCACHEDCLOUD_USERNAME"]
+  memcache_password = ENV["MEMCACHEDCLOUD_PASSWORD"]
+
   dalli_client = Dalli::Client.new(
-    (ENV['MEMCACHE_SERVERS'] || "").split(","),
+    memcache_servers,
     {
+      username: memcache_username,
+      password: memcache_password,
       namespace: 'retirementplan',
       failover: true,
       socket_timeout: 1.5,
