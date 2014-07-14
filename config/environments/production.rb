@@ -100,7 +100,7 @@ Rails.application.configure do
 
   # raise "Missing MEMCACHE_SERVERS" unless ENV['MEMCACHE_SERVERS']
   dalli_client = Dalli::Client.new(
-    ENV['MEMCACHE_SERVERS'].split(","),
+    (ENV['MEMCACHE_SERVERS'] || "").split(","),
     {
       namespace: 'retirementplan',
       failover: true,

@@ -6,7 +6,10 @@ class RetirementSimulator
     @number_of_trials = number_of_trials
   end
 
-  def call
+
+
+
+  def old_call
     return {
       bar_data: [
         {
