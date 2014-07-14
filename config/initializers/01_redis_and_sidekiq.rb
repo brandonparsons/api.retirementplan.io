@@ -11,7 +11,7 @@ elsif Rails.env.development? || Rails.env.profile?
   redis_url     = "redis://#{redis_server}/1"
 
 else # production / staging
-  raise "MISSING REDIS_SERVER" unless ENV['REDIS_SERVER'].present?
+  # raise "MISSING REDIS_SERVER" unless ENV['REDIS_SERVER'].present?
   redis_url     = "redis://#{ENV['REDIS_SERVER']}/0"
 end
 
