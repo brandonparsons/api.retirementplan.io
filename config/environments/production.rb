@@ -99,20 +99,21 @@ Rails.application.configure do
   }
 
   # raise "Missing MEMCACHE_SERVERS" unless ENV['MEMCACHE_SERVERS']
-  dalli_client = Dalli::Client.new(
-    ENV["MEMCACHEDCLOUD_SERVERS"],
-    username: ENV["MEMCACHEDCLOUD_USERNAME"],
-    password: ENV["MEMCACHEDCLOUD_PASSWORD"],
-    namespace: 'retirementplan',
-    failover: true,
-    socket_timeout: 1.5,
-    socket_failure_delay: 0.2,
-    expires_in: 1.day,
-    value_max_bytes: 62914560,
-    compress: true)
-
-  config.cache_store = :dalli_store, dalli_client # :redis_store
-  config.static_cache_control = "public, max-age=2592000"
+  # dalli_client = Dalli::Client.new(
+  #   ENV["MEMCACHEDCLOUD_SERVERS"],
+  #   username: ENV["MEMCACHEDCLOUD_USERNAME"],
+  #   password: ENV["MEMCACHEDCLOUD_PASSWORD"],
+  #   namespace: 'retirementplan',
+  #   failover: true,
+  #   socket_timeout: 1.5,
+  #   socket_failure_delay: 0.2,
+  #   expires_in: 1.day,
+  #   value_max_bytes: 62914560,
+  #   compress: true)
+  # config.cache_store = :dalli_store, dalli_client # :redis_store
+  config.cache_store = :dalli_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { :username => ENV["MEMCACHEDCLOUD_USERNAME"], :password => ENV["MEMCACHEDCLOUD_PASSWORD"] }
 
   config.action_dispatch.rack_cache = true
+  config.static_cache_control = "public, max-age=2592000"
+
 end
