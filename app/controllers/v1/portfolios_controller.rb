@@ -33,10 +33,7 @@ module V1
       response = {}
       if portfolio = current_user.portfolio
         # Need to keep rails from encoding as strings b/c of BigDecimals....
-        json = portfolio.weights.reduce({}) do |memo, (assetId, weight)|
-          memo[assetId] = weight.to_f
-          memo
-        end.to_json
+        json = FloatMapper.call(portfolio.weights).to_json
         response[:id] = Base64.urlsafe_encode64(json)
       end
       render json: response

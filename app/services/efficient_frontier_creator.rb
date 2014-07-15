@@ -53,15 +53,8 @@ class EfficientFrontierCreator
   end
 
   def sanitize_portfolio(portfolio)
-    sanitized_allocation = portfolio.allocation.reduce({}) do |memo, (asset, weight)|
-      memo[asset] = weight.to_f
-      memo
-    end
-
-    sanitized_statistics = portfolio.statistics.reduce({}) do |memo, (stat, value)|
-      memo[stat] = value.to_f
-      memo
-    end
+    sanitized_allocation = FloatMapper.call(portfolio.allocation)
+    sanitized_statistics = FloatMapper.call(portfolio.statistics)
 
     return {
       "id"          => encode_allocation(sanitized_allocation),
