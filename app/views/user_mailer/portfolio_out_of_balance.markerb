@@ -4,19 +4,19 @@ Portfolio out of Balance
 We have been tracking your portfolio, and it has gone out of balance!  Here's what you need to do to regain a balanced portfolio (and not spend any additional funds):
 
 <% @rebalance_info.each do |etf_ticker, number_of_shares| %>
+  *<%= @etf_info_lookup[etf_ticker][:asset_class] %>:*
 
-  ***
-
-  - Asset Class: <%= @etf_info_lookup[etf_ticker][:asset_class] %>
   - ETF: <%= @etf_info_lookup[etf_ticker][:description] %>
   - Ticker: <%= etf_ticker %>
   - Shares to Purchase: <%= number_of_shares %>
 
 <% end %>
 
-***
+---
 
 If you'd rather invest additional funds at the same time, [we can show you how to do that](<%= @new_funds_url %>)
+
+---
 
 ### How do I purchase ETF's? ###
 
@@ -27,3 +27,5 @@ ETF's are traded on the open market, just like regular stocks.  Therefore you ha
 ### Contact Frequency ###
 
 Don't want to be contacted as often about your portfolio balance? [Edit your profile](<%= @edit_account_url %>)
+
+---

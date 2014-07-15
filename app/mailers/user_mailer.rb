@@ -2,8 +2,12 @@ class UserMailer < ActionMailer::Base
 
   def etf_purchase_instructions(user_id, rebalance_amount, rebalance_info_hash)
     user            = User.find user_id
-    @rebalance_info = rebalance_info_hash
     @amount         = rebalance_amount
+
+    # You could probably generate this hash similar to `etf_info_lookup` below
+    # in `rebalance_data`, if you do, make sure to check if sending less data
+    # from ember would be smart.
+    @rebalance_info = rebalance_info_hash
 
     @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
     @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
@@ -19,9 +23,9 @@ class UserMailer < ActionMailer::Base
     user                              = User.find user_id
     @rebalance_info, @etf_info_lookup = rebalance_data(user, 0)
 
-    @new_funds_url = ""
-    @dashboard_url = ""
-    @edit_account_url = ""
+    @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
+    @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
+    @edit_account_url = "#{ENV['FRONTEND']}/user/preferences"
 
     mail(to: user.email, subject: 'Portfolio out of Balance') do |format|
       format.text
@@ -33,10 +37,10 @@ class UserMailer < ActionMailer::Base
   def min_rebalance_spacing(user_id)
     user = User.find user_id
 
-    @tracked_portfolio_url = ""
-    @dashboard_url = ""
-    @new_funds_url = ""
-    @edit_account_url = ""
+    @tracked_portfolio_url = "#{ENV['FRONTEND']}/tracked_portfolio"
+    @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
+    @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
+    @edit_account_url = "#{ENV['FRONTEND']}/user/preferences"
 
     mail(to: user.email, subject: 'Portfolio Check-in') do |format|
       format.text
@@ -86,7 +90,18 @@ class UserMailer < ActionMailer::Base
 
   def rebalance_data(user, rebalance_amount)
     rebalance_info  = user.portfolio.rebalance(rebalance_amount)
-    etf_info_lookup = Etf.info_lookup_table(rebalance_info.keys.concat(user.portfolio.current_shares.keys).uniq)
+    # --> {"EDV"=>-2693, "ICF"=>0, "IFGL"=>0, "IVV"=>1426}
+    assets  = AssetsService.get_as_objects
+    etfs    = EtfsService.get_as_objects
+    etf_info_lookup = rebalance_info.reduce({}) do |memo, (etf_ticker, shares)|
+      etf   = etfs.find{|etf| etf.ticker == etf_ticker}
+      asset = assets.find{|asset| asset.id == etf.asset_id }
+      memo[etf_ticker] = {
+        asset_class: asset.asset_class,
+        description: etf.description,
+      }
+      memo
+    end
     return rebalance_info, etf_info_lookup
   end
 
