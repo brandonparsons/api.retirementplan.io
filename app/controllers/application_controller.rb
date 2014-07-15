@@ -78,8 +78,8 @@ class ApplicationController < ActionController::API
   end
 
   def get_user
-    email       = request.headers['X-Auth-Email'] || params[:auth_email]
-    auth_token  = request.headers['X-Auth-Token'] || params[:auth_token]
+    email       = request.headers['X-Auth-Email'] || request.headers['HTTP-X-Auth-Email'] || params[:auth_email]
+    auth_token  = request.headers['X-Auth-Token'] || request.headers['HTTP-X-Auth-Token'] || params[:auth_token]
     logger.debug( (email.present? && auth_token.present?) ? "[AUTH_INFO]: #{email} || #{auth_token}" : "[AUTH INFO]: NONE" ) if Rails.env.development?
     User.authenticate_from_email_and_token(email, auth_token)
   end
