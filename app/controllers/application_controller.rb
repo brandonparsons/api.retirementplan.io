@@ -14,6 +14,7 @@ class ApplicationController < ActionController::API
   # Generic fallback - this has to be FIRST
   rescue_from(Exception) do |exception|
     logger.warn "[500 ERROR]: #{exception.message}"
+    Rollbar.report_exception(exception, rollbar_request_data, rollbar_person_data)
     render json: {success: false, message: "Sorry - something went wrong."}, status: 500
   end
 
