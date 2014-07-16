@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
 
-  root            to: 'application#home'
-  get  'health',  to: 'application#health'
-  post 'error',   to: 'application#error'
+  match '*path',  to: 'misc#CORS', via: [:options]
+  root            to: 'misc#home'
+  get  'health',  to: 'misc#health'
+  post 'error',   to: 'misc#error'
 
   scope 'api', module: :v1, constraints: ApiConstraints.new(version: 1, default: :true), defaults: { format: 'json' } do
 

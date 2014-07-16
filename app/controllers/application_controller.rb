@@ -4,22 +4,7 @@ class ApplicationController < ActionController::API
   include ActionController::ImplicitRender
   include ActionController::StrongParameters
 
-
-  ###################
-  # GENERIC ACTIONS #
-  ###################
-
-  def home
-    render text: "RP.io API Server"
-  end
-
-  def error
-    raise "Test error"
-  end
-
-  def health
-    render text: "OK"
-  end
+  before_action :cors_set_access_control_headers
 
 
   ###################
@@ -102,6 +87,30 @@ class ApplicationController < ActionController::API
 
   def oauth_login_error(message)
     render json: { success: false, message: message, sticky: 10000 }, status: 422
+  end
+
+  def cors_set_access_control_headers
+    headers['Access-Control-Allow-Origin']    = Rails.env.production? ? ENV['FRONTEND'] : '*'
+    headers['Access-Control-Request-Method']  = '*'
+    headers['Access-Control-Max-Age']         = "1728000"
+
+    headers['Access-Control-Allow-Methods']   = %w{
+      POST
+      PUT
+      PATCH
+      DELETE
+      GET
+      OPTIONS
+    }.join(', ')
+
+    headers['Access-Control-Allow-Headers']   = %w{
+      Origin
+      X-Requested-With
+      Content-Type
+      Accept
+      X-Auth-Email
+      X-Auth-Token
+    }.join(', ')
   end
 
 end

@@ -9,8 +9,8 @@ class UserMailer < ActionMailer::Base
     # from ember would be smart.
     @rebalance_info = rebalance_info_hash
 
-    @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
-    @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
+    @new_funds_url = "#{ENV['FRONTEND']}/app/tracked_portfolio/rebalance"
+    @dashboard_url = "#{ENV['FRONTEND']}/app/user/dashboard"
 
     mail(to: user.email, subject: 'ETF Purchasing Instructions') do |format|
       format.text
@@ -23,9 +23,9 @@ class UserMailer < ActionMailer::Base
     user                              = User.find user_id
     @rebalance_info, @etf_info_lookup = rebalance_data(user, 0)
 
-    @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
-    @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
-    @edit_account_url = "#{ENV['FRONTEND']}/user/preferences"
+    @new_funds_url = "#{ENV['FRONTEND']}/app/tracked_portfolio/rebalance"
+    @dashboard_url = "#{ENV['FRONTEND']}/app/user/dashboard"
+    @edit_account_url = "#{ENV['FRONTEND']}/app/user/preferences"
 
     mail(to: user.email, subject: 'Portfolio out of Balance') do |format|
       format.text
@@ -37,10 +37,10 @@ class UserMailer < ActionMailer::Base
   def min_rebalance_spacing(user_id)
     user = User.find user_id
 
-    @tracked_portfolio_url = "#{ENV['FRONTEND']}/tracked_portfolio"
-    @dashboard_url = "#{ENV['FRONTEND']}/user/dashboard"
-    @new_funds_url = "#{ENV['FRONTEND']}/tracked_portfolio/rebalance"
-    @edit_account_url = "#{ENV['FRONTEND']}/user/preferences"
+    @tracked_portfolio_url = "#{ENV['FRONTEND']}/app/tracked_portfolio"
+    @dashboard_url = "#{ENV['FRONTEND']}/app/user/dashboard"
+    @new_funds_url = "#{ENV['FRONTEND']}/app/tracked_portfolio/rebalance"
+    @edit_account_url = "#{ENV['FRONTEND']}/app/user/preferences"
 
     mail(to: user.email, subject: 'Portfolio Check-in') do |format|
       format.text
@@ -57,7 +57,7 @@ class UserMailer < ActionMailer::Base
 
     if user.present?
       token = CGI.escape(user.password_reset_token)
-      @url  = "#{ENV['FRONTEND']}/password_reset/reset/#{token}"
+      @url  = "#{ENV['FRONTEND']}/app/password_reset/reset/#{token}"
       mail(to: email, subject: subject) do |format|
         format.text
         format.html
@@ -77,7 +77,7 @@ class UserMailer < ActionMailer::Base
 
     if user.present?
       token = CGI.escape(user.confirm_email_token for_email: email)
-      @url  = "#{ENV['FRONTEND']}/email_confirmation/confirm/#{token}"
+      @url  = "#{ENV['FRONTEND']}/app/email_confirmation/confirm/#{token}"
       mail(to: email, subject: 'Email Confirmation Instructions') do |format|
         format.text
         format.html
