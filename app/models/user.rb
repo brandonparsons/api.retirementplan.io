@@ -209,7 +209,7 @@ class User < ActiveRecord::Base
 
   def set_image(image_url)
     if image_url.present?
-      self.image_url = image_url
+      self.image_url = 'https' + image_url.match(/^(https|http)(.*)$/)[2]
     else
       email_hash = Digest::MD5.hexdigest(email.strip.downcase)
       self.image_url = "https://www.gravatar.com/avatar/#{email_hash}?d=identicon"
