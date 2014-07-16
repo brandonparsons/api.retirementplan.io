@@ -1,1 +1,1 @@
-$SIMULATION_COUNT_KEY = 'simulations-counter'
+$SIMULATION_COUNT_KEY = 'simulation_count'
