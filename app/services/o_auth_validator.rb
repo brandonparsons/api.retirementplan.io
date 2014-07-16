@@ -39,7 +39,7 @@ class OAuthValidator
       req.params['access_token']  = [ENV['FACEBOOK_KEY'], ENV['FACEBOOK_SECRET']].join('|')
     end.body)
     raise CustomExceptions::InvalidOauthCredentials, "Returned not valid" unless facebook_response['data']['is_valid'].present? && facebook_response['data']['is_valid']
-    raise CustomExceptions::InvalidOauthCredentials, "Wrong App ID"       unless facebook_response['data']['app_id']  == ENV['FACEBOOK_KEY']
+    raise CustomExceptions::InvalidOauthCredentials, "Wrong App ID"       unless facebook_response['data']['app_id'].to_s  == ENV['FACEBOOK_KEY']
 
     # Validate passed user details
     user_validation_url = "https://graph.facebook.com/me"
