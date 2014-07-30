@@ -16,6 +16,7 @@ module V1
       inputs    = current_user.simulation_input
       expenses  = current_user.expenses.where(is_added: true)
 
+      current_user.ran_simulations!(number_of_trials)
       $redis.incrby $SIMULATION_COUNT_KEY, number_of_trials
 
       render json: RetirementSimulationService.new(number_of_trials, portfolio, inputs, expenses).call
