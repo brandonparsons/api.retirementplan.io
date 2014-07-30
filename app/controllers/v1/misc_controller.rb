@@ -12,7 +12,7 @@ module V1
       message = params[:message]
 
       if defined?(Rollbar)
-        Rollbar.report_message("[JS Error]: #{message}", "error",
+        Rollbar.report_message("[JS Error - Blocked Tracker]: #{message}", "error",
           rollbar_person_data, {
           stack: stack,
           json: json,
