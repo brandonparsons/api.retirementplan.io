@@ -5,8 +5,10 @@ module V1
       :ensure_user_selected_portfolio!, :ensure_user_completed_simulation!
 
     def quotes
-      tickers = current_user.portfolio.current_shares.try(:keys) || []
-      render json: QuotesService.for_etfs(tickers)
+      # Need to return quotes for all relevant securities - rebalancing calc on
+      # client side needs both current shares (even if not in current target
+      # allocation), and all target ETFs.
+      render json: QuotesService.for_etfs(current_user.portfolio.tickers_for_quotes)
     end
 
     def create

@@ -428,4 +428,10 @@ describe Portfolio do
     end
   end
 
+  describe "#tickers_for_quotes" do
+    it "needs tests" do
+      pending
+    end
+  end
+
 end

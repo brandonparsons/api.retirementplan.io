@@ -129,6 +129,13 @@ class Portfolio < ActiveRecord::Base
     self.current_shares = current_shares.merge(shares)
   end
 
+  def tickers_for_quotes
+    tickers_in_current_portfolio           = current_shares.try(:keys)      || []
+    tickers_that_are_required_in_portfolio = target_etf_weights.try(:keys)  || []
+    relevant_tickers = (tickers_in_current_portfolio + tickers_that_are_required_in_portfolio).uniq
+    return relevant_tickers
+  end
+
 
   private
 
@@ -144,6 +151,7 @@ class Portfolio < ActiveRecord::Base
 
   def target_etf_weights
     # Returns target weights for each ETF - not the overlying asset.
+    return {} unless selected_etfs
     weights.inject({}) do |h, (asset_id, weight)|
       etf_ticker = selected_etfs[asset_id]
       h[etf_ticker] = weight
@@ -221,11 +229,17 @@ class Portfolio < ActiveRecord::Base
       return false
     end
 
-    # Valid from - check that all selected ETFs are represented in the
-    # selected portfolio.
-    selected_etfs.each do |asset_id, etf_ticker|
-      errors.add(:selected_etfs, "invalid key") unless weights.keys.include?(asset_id)
-    end
+    ## REMOVED
+    ## Need to be able to save portfolio changes, and then have the user go over
+    ## to the etf select page. Will enforce that transition on the client side.
+    ## Means that selected_etfs can be temporarily out of sync on the server...
+    ## Consider checking in a worker (and email the user), or just assume missing
+    ## keys have zero shares.
+    # # Valid form - check that all selected ETFs are represented in the
+    # # selected portfolio.
+    # selected_etfs.each do |asset_id, etf_ticker|
+    #   errors.add(:selected_etfs, "invalid key") unless weights.keys.include?(asset_id)
+    # end
   end
 
 end
