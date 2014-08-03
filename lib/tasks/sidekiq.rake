@@ -7,7 +7,7 @@ task :sidekiq do
     config.redis = {
       size:       1,
       namespace:  'rp-sidekiq',
-      url:        "redis://localhost:6379/3"
+      url:        ENV['REDIS_URL'] || "redis://localhost:6379/3"
     }
   end
 
