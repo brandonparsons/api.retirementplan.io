@@ -1,6 +1,7 @@
 module V1
 
   class EfficientFrontiersController < SecuredController
+    before_action :ensure_user_completed_questionnaire!
 
     def show
       return missing_parameters unless params[:asset_ids].present?
