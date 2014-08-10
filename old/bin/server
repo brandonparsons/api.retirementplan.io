@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARENTDIR="$(dirname "$DIR")"
+
+if [ -z "${RAILS_ENV}" ]; then
+  if [ -z "${RACK_ENV}" ]; then
+    RAILS_ENVIRONMENT='development'
+  else
+    RAILS_ENVIRONMENT=${RACK_ENV}
+  fi
+else
+  RAILS_ENVIRONMENT=${RAILS_ENV}
+fi
+
+echo Booting Puma in $RAILS_ENVIRONMENT
+
+RAILS_ENV=$RAILS_ENVIRONMENT $DIR/puma -C $PARENTDIR/config/puma.rb

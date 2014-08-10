@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Called from deploy scripts, and permitted passwordless sudo by deploy user
+
+echo Executing phased puma restart.....
+
+# SIGUSR1
+kill -s USR1 $(cat /tmp/puma.pid)
+
+# on OS X the equivalent pid-finding command is `ps | grep '/puma' | head -n 1 | awk {'print $1'}`
+# run "(kill -s SIGUSR1 $(ps -C ruby -F | grep '/puma' | awk {'print $2'})) || #{try_sudo} service #{application} restart"
