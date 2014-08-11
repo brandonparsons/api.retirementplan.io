@@ -1,4 +1,4 @@
-task :sidekiq do
+task sidekiq: :environment do
   require 'sidekiq/web'
 
   # optional: Process.daemon (and take care of Process.pid to kill process later on)
@@ -7,7 +7,7 @@ task :sidekiq do
     config.redis = {
       size:       1,
       namespace:  'rp-sidekiq',
-      url:        ENV['REDIS_URL'] || "redis://localhost:6379/3"
+      url:        ENV['REDIS_URL'] || "redis://localhost:6379/1"
     }
   end
 
