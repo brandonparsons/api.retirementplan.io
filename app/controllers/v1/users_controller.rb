@@ -4,11 +4,10 @@ module V1
     before_action :authenticate_user!, except: [:create]
 
     def create
-      logger.warn "Google client ID: #{params[:ga_client_id]}"
-
       @user = RegularUser.new(user_create_params)
       if @user.save
         @user.sign_in!
+        logger.warn "Will be calling AnalyticsTracker with client ID: #{params[:ga_client_id]} and user id : #{@user.id}"
         ::UserCreator.new(@user, params[:ga_client_id]).call
         render json: UserSerializer.new(@user).as_json, status: 201
       else

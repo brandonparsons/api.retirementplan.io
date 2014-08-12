@@ -24,8 +24,6 @@ module V1
     end
 
     def check_oauth
-      logger.warn "Google client ID: #{params[:ga_client_id]}"
-
       # After logging in via OAuth (hello.js), this route is used to confirm
       # user identity before giving them an access token (i.e. their OAuth
       # access token is real).
