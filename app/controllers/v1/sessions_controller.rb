@@ -37,7 +37,7 @@ module V1
       user.sign_in!(image_url: oauth_user_data[:image])
 
       # This was a new user. Treat same as if signed up with email/password
-      ::UserCreator.new(user, params[:ga_client_id]).call if user_was_created
+      UserCreator.perform_async(user.id, user.email, params[:ga_client_id]) if user_was_created
 
       render json: user.session_data
     end

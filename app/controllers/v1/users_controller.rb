@@ -7,8 +7,8 @@ module V1
       @user = RegularUser.new(user_create_params)
       if @user.save
         @user.sign_in!
-        logger.warn "Will be calling AnalyticsTracker with client ID: #{params[:ga_client_id]} and user id : #{@user.id}"
-        ::UserCreator.new(@user, params[:ga_client_id]).call
+        logger.warn "Will be calling AnalyticsTracker with client ID: #{params[:ga_client_id] || "NO CLIENT ID"} and user id : #{@user.id}"
+        UserCreator.perform_async(@user.id, @user.email, params[:ga_client_id])
         render json: UserSerializer.new(@user).as_json, status: 201
       else
         render json: @user.errors, status: :unprocessable_entity
