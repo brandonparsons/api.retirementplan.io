@@ -4,6 +4,7 @@ module V1
     before_action :authenticate_user!, except: [:create]
 
     def create
+      logger.warn "GA Client ID: #{params[:ga_client_id]}"
       @user = RegularUser.new(user_create_params)
       if @user.save
         @user.sign_in!
