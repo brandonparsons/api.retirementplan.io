@@ -32,10 +32,13 @@ module V1
       return missing_parameters unless oauth_user_data[:name].present?
       return missing_parameters unless oauth_user_data[:image].present?
 
+      # This method will login, but will also create the user if necessary
       user, user_was_created  = validate_oauth_and_login(oauth_user_data)
-
       user.sign_in!(image_url: oauth_user_data[:image])
-      ::UserCreator.new(user).call if user_was_created
+
+      # This was a new user. Treat same as if signed up with email/password
+      ::UserCreator.new(user, params[:ga_client_id]).call if user_was_created
+
       render json: user.session_data
     end
 

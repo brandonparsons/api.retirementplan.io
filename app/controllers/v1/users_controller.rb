@@ -7,7 +7,7 @@ module V1
       @user = RegularUser.new(user_create_params)
       if @user.save
         @user.sign_in!
-        ::UserCreator.new(@user).call
+        ::UserCreator.new(@user, params[:ga_client_id]).call
         render json: UserSerializer.new(@user).as_json, status: 201
       else
         render json: @user.errors, status: :unprocessable_entity
