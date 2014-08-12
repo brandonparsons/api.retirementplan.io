@@ -7,7 +7,12 @@ class AnalyticsTracker
   end
 
   def track_user_sign_up(user_id)
+    # We are no longer doing redirect/location.href trickery on the marketing
+    # site to ensure conversions are marked for user sign ups. Post to the www
+    # site's google analytics to register a conversion from the server. This is
+    # arguably better as we know for sure a user was created.
     return false unless tracking_enabled?
+
     post_event({
       uid:  user_id,
       t:    'event',

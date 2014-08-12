@@ -2,7 +2,7 @@ class UserCreator
   include Sidekiq::Worker
 
   def perform(user_id, user_email, ga_client_id=nil)
-    puts "[UserCreator]: user_id: #{user_id} | user_email: #{user_email} | ga_cid: #{ga_client_id || "NO CLIENT ID!"}"
+    puts "[UserCreator]: Running tasks for #{user_email}."
     AdminMailer.user_sign_up(user_id)
     UserMailer.confirm_email_instructions(email: user_email)
     Expense.create_default_expenses_for(user_id)
