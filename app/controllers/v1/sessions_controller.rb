@@ -16,6 +16,11 @@ module V1
       user = RegularUser.find_by(email: params[:email])
 
       if user && user.authenticate(params[:password])
+        if cookies.present?
+          logger.warn cookies.inspect
+        else
+          logger.warn "No cookies present...."
+        end
         user.sign_in!
         render json: user.session_data, status: 201
       else
