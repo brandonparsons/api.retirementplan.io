@@ -13,7 +13,7 @@ class AnalyticsTracker
     # arguably better as we know for sure a user was created.
     return false unless tracking_enabled?
 
-    post_event({
+    post_event_to_marketing_property({
       uid:  user_id,
       t:    'event',
       ec:   'conversion',
@@ -29,7 +29,17 @@ class AnalyticsTracker
     Rails.env.production?
   end
 
-  def post_event(data_hash)
+  ## Not using this yet.
+  # def post_event_to_app_property(data_hash)
+  #   base_data = {
+  #     v:    1,
+  #     tid:  ENV['GA_TRACKING_CODE'],
+  #     cid:  @client_id
+  #   }
+  #   http_conn.post '/collect', base_data.merge(data_hash)
+  # end
+
+  def post_event_to_marketing_property(data_hash)
     base_data = {
       v:    1,
       tid:  ENV['GA_TRACKING_CODE_MARKETING_SITE'],
