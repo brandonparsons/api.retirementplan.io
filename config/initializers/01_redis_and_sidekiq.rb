@@ -25,7 +25,7 @@ $redis    = Redis::Namespace.new('rp', redis: raw_redis)
 # Configure Sidekiq #
 #####################
 
-SIDEKIQ_NAMESPACE = 'rp-sidekiq'
+SIDEKIQ_NAMESPACE = 'rp-sidekiq' # If you change this, need to change in www app too (if still using that for web monitor)
 
 server_redis_config = {
   size:       2,
