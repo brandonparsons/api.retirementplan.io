@@ -39,7 +39,9 @@ module V1
       # This was a new user. Treat same as if signed up with email/password
       UserCreator.perform_async(user.id, user.email, params[:ga_client_id]) if user_was_created
 
-      render json: user.session_data
+      # Noting whether or not the user was new, mostly for use in the sign-up
+      # modal logic so we can complete A/B tests when appropriate.
+      render json: user.session_data.merge({is_new_user: user_was_created})
     end
 
 
