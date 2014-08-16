@@ -116,8 +116,6 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mandrill-rails (1.0.2)
-      activesupport (>= 3.0.3)
     markerb (1.0.2)
       redcarpet (>= 2.0)
     method_source (0.8.2)
@@ -296,7 +294,6 @@ DEPENDENCIES
   hstore_accessor
   kgio
   letter_opener
-  mandrill-rails
   markerb
   newrelic_rpm
   oj

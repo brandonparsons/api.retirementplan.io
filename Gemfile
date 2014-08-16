@@ -2,8 +2,8 @@ source  'https://rubygems.org'
 ruby    '2.1.2'
 
 gem 'rails', '4.1.4'
-
 gem 'rails-api'
+
 gem 'active_model_serializers'
 
 gem 'hstore_accessor'
@@ -15,15 +15,15 @@ gem 'redis-namespace'
 gem 'sidekiq'
 gem 'sidetiq', require: false # Manually required so you have ability to turn it off
 
-gem 'oj'
-gem 'oj_mimic_json'
-
 gem 'hashie'
 gem 'faraday'
-gem 'bcrypt'
 
 gem 'markerb'
 gem 'redcarpet' # for markerb
+
+gem 'oj'
+gem 'oj_mimic_json'
+gem 'bcrypt'
 
 gem 'figaro'
 
@@ -33,13 +33,12 @@ group :production, :staging do
   gem 'kgio' # Speeds up dalli
   gem 'dalli'
   gem 'rack-cache'
-  gem 'rails_12factor' # gem 'rails_stdout_logging'
+  gem 'rails_12factor'
   gem 'rollbar', require: 'rollbar/rails'
 end
 
 
 group :production do
-  gem 'mandrill-rails'
   gem 'newrelic_rpm'
 end
 
@@ -59,7 +58,6 @@ group :development, :profile, :test do
   gem 'pry-byebug'
 
   # gem 'rb-fsevent' if RbConfig::CONFIG['target_os'] =~  /darwin/i
-
 
   #########
   # Brought all to dev/test as some are picky about location
@@ -82,7 +80,6 @@ end
 
 group :development, :profile do
   gem 'letter_opener'
-
   gem 'brakeman', require: false
   gem 'sinatra',  require: false # For sidekiq web UI - see sidekiq.rake
 end
@@ -103,5 +100,5 @@ end
 # gem 'rack-rewrite'
 # gem 'attrio'
 # gem 'whenever', require: false
-
+# gem 'mandrill-rails' # For mandrill webhooks
 # gem 'railroady' # Generates model relation graphs in doc/

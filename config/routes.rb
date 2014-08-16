@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   scope 'api', module: :v1, constraints: ApiConstraints.new(version: 1, default: :true), defaults: { format: 'json' } do
 
-    get 'simulation_count',   to: 'misc#simulation_count'
+    get  'simulation_count',  to: 'misc#simulation_count'
     post 'js_error',          to: 'misc#js_error'
 
     resources :users, only: [:create, :show, :update] do
