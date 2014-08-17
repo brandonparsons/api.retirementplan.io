@@ -37,7 +37,7 @@ module V1
       user.sign_in!(image_url: oauth_user_data[:image])
 
       # This was a new user. Treat same as if signed up with email/password
-      UserCreator.new(user.id, user.email, params[:ga_client_id]).call if user_was_created
+      UserCreator.new(user.id, user.email).call if user_was_created
 
       # Noting whether or not the user was new, mostly for use in the sign-up
       # modal logic so we can complete A/B tests when appropriate.
