@@ -1,21 +1,20 @@
 require 'securerandom'
 
-class AnalyticsTracker
+module AnalyticsTracker
 
-  def initialize(analytics_client_id=SecureRandom.uuid)
-    @analytics_client_id = analytics_client_id
-  end
+  extend self
 
-  def track_user_sign_up(user_id)
+  def track_user_sign_up(user_id: , analytics_client_id: SecureRandom.uuid)
     # We are no longer doing redirect/location.href trickery on the marketing
     # site to ensure conversions are marked for user sign ups. Post to the www
     # site's google analytics to register a conversion from the server. This is
     # arguably better as we know for sure a user was created.
+
+    # Don't post anything in test/dev....
     return false unless tracking_enabled?
 
-    puts "Posting to analytics for user creation. UserID: #{user_id} || ClientID: #{@analytics_client_id}"
-
-    post_event_to_marketing_property({
+    puts "Posting to analytics for user creation. UserID: #{user_id} || ClientID: #{analytics_client_id}"
+    post_action_to_marketing_property(analytics_client_id, {
       uid:  user_id,
       t:    'event',
       ec:   'conversion',
@@ -31,21 +30,14 @@ class AnalyticsTracker
     Rails.env.production?
   end
 
-  ## Not using this yet.
-  # def post_event_to_app_property(data_hash)
-  #   base_data = {
-  #     v:    1,
-  #     tid:  ENV['GA_TRACKING_CODE'],
-  #     cid:  @analytics_client_id
-  #   }
-  #   http_conn.post '/collect', base_data.merge(data_hash)
-  # end
+  def post_action_to_marketing_property(analytics_client_id, data_hash)
+    # If you wanted to post to the "app" analytics property, you would just use
+    # ENV['GA_TRACKING_CODE']
 
-  def post_event_to_marketing_property(data_hash)
     base_data = {
       v:    1,
       tid:  ENV['GA_TRACKING_CODE_MARKETING_SITE'],
-      cid:  @analytics_client_id
+      cid:  analytics_client_id
     }
     http_conn.post '/collect', base_data.merge(data_hash)
   end
