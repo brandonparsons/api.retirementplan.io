@@ -2,8 +2,8 @@ require 'securerandom'
 
 class AnalyticsTracker
 
-  def initialize(client_id=SecureRandom.uuid)
-    @client_id = client_id
+  def initialize(analytics_client_id=SecureRandom.uuid)
+    @analytics_client_id = analytics_client_id
   end
 
   def track_user_sign_up(user_id)
@@ -13,7 +13,7 @@ class AnalyticsTracker
     # arguably better as we know for sure a user was created.
     return false unless tracking_enabled?
 
-    puts "Posting to analytics for user creation. UserID: #{user_id} || ClientID: #{client_id}"
+    puts "Posting to analytics for user creation. UserID: #{user_id} || ClientID: #{@analytics_client_id}"
 
     post_event_to_marketing_property({
       uid:  user_id,
@@ -36,7 +36,7 @@ class AnalyticsTracker
   #   base_data = {
   #     v:    1,
   #     tid:  ENV['GA_TRACKING_CODE'],
-  #     cid:  @client_id
+  #     cid:  @analytics_client_id
   #   }
   #   http_conn.post '/collect', base_data.merge(data_hash)
   # end
@@ -45,7 +45,7 @@ class AnalyticsTracker
     base_data = {
       v:    1,
       tid:  ENV['GA_TRACKING_CODE_MARKETING_SITE'],
-      cid:  @client_id
+      cid:  @analytics_client_id
     }
     http_conn.post '/collect', base_data.merge(data_hash)
   end
