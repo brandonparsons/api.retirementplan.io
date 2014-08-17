@@ -13,6 +13,8 @@ class AnalyticsTracker
     # arguably better as we know for sure a user was created.
     return false unless tracking_enabled?
 
+    puts "Posting to analytics for user creation. UserID: #{user_id} || ClientID: #{client_id}"
+
     post_event_to_marketing_property({
       uid:  user_id,
       t:    'event',
