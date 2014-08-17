@@ -23,6 +23,14 @@ module AnalyticsTracker
     return true
   end
 
+  def test_analytics_event
+    post_action_to_marketing_property(SecureRandom.uuid, {
+      t:    'event',
+      ec:   'testing',
+      ea:   'test-serverside-collection'
+    })
+  end
+
 
   private
 
