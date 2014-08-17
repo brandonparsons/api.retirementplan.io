@@ -28,7 +28,7 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   def confirmed
-    object.confirmed?
+    object.is_confirmed_or_temporarily_allowed?
   end
 
   def accepted_terms
