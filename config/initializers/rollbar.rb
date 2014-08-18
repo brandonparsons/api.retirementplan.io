@@ -1,4 +1,4 @@
-if defined?(Rollbar) # Probably only production/staging
+if defined?(Rollbar) # Probably only production
 
   Rollbar.configure do |config|
     # Without configuration, Rollbar is enabled in all environments.

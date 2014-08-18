@@ -25,29 +25,3 @@ profile:
   username: brandon
   host:     localhost
   port:     5432
-
-# staging:
-#   <<: *COMMON
-#   database: rp_staging
-#   username: <%= ENV['DB_USER'] %>
-#   password: <%= ENV['DB_PASS'] %>
-#   host:     <%= ENV['DB_HOST'] %>
-#   port:     <%= ENV['DB_PORT'] %>
-
-# production:
-#   <<: *COMMON
-#   database: rp_production
-#   username: <%= ENV['DB_USER'] %>
-#   password: <%= ENV['DB_PASS'] %>
-#   host:     <%= ENV['DB_HOST'] %>
-#   port:     <%= ENV['DB_PORT'] %>
-
-
-# production:
-#   <<: *COMMON
-#   database: <%=ENV['OPENSHIFT_APP_NAME']%>
-#   username: <%=ENV['OPENSHIFT_POSTGRESQL_DB_USERNAME']%>
-#   password: <%=ENV['OPENSHIFT_POSTGRESQL_DB_PASSWORD']%>
-#   host:     <%=ENV['OPENSHIFT_POSTGRESQL_DB_HOST']%>
-#   port:     <%=ENV['OPENSHIFT_POSTGRESQL_DB_PORT']%>
-#   socket:   <%=ENV['OPENSHIFT_POSTGRESQL_DB_SOCKET']%>

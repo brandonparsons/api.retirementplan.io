@@ -1,5 +1,5 @@
-# Options here can still be overridden by cmd line args.
-#   sidekiq -C config.yml
+# Options here can still be overridden by cmd line args -- sidekiq -C config.yml
+# Production concurrency limited to - on free redis plan at the moment
 ---
 :verbose: false
 :timeout: 30
@@ -9,10 +9,7 @@
   - [default, 5]
   - [mailer, 2]
 production:
-  :concurrency: 50
-staging:
-  :concurrency: 50
-  :verbose: true
+  :concurrency: 2
 development:
   :verbose: true
 test:

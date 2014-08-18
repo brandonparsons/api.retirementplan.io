@@ -28,7 +28,7 @@ gem 'bcrypt'
 gem 'figaro'
 
 
-group :production, :staging do
+group :production do
   gem 'unicorn'
   gem 'kgio' # Speeds up dalli
   gem 'dalli'
