@@ -25,7 +25,8 @@ class ApplicationController < ActionController::API
   # it was invalid.
   rescue_from ActiveRecord::StatementInvalid, with: :record_not_found
 
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordNotFound,   with: :record_not_found
+  rescue_from ActionController::RoutingError, with: :record_not_found
 
   rescue_from ActionController::ParameterMissing, with: :missing_parameters
 
