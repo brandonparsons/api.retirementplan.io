@@ -1,6 +1,6 @@
 module Admin
-  class SessionsController < ApplicationController
-    before_action :authenticate_user!, only: [:destroy]
+  class SessionsController < AdminController
+    skip_before_action :authenticate_user!, only: [:create]
 
     def destroy
       # LOGOUT - requires authenticated user
