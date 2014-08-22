@@ -1,5 +1,6 @@
-class AdminPortfolioSerializer < PortfolioSerializer
-  attributes :market_value, :in_balance
+class AdminPortfolioSerializer < ActiveModel::Serializer
+
+  attributes :id, :user_id, :market_value, :in_balance, :created_at
 
   def market_value
     # Report no value if they haven't set up yet.....

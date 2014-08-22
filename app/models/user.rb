@@ -184,6 +184,8 @@ class User < ActiveRecord::Base
   end
 
   def session_data
+    # This return data format is depended on in both the main application (ember.)
+    # and the admin app (admin.)
     {
       user_id:      id,
       user_token:   authentication_token,
