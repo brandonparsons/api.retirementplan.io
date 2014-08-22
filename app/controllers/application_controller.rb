@@ -92,22 +92,18 @@ class ApplicationController < ActionController::API
   end
 
   def cors_set_access_control_headers
-    if Rails.env.production?
-      origin_header = request.headers["HTTP_ORIGIN"]
-      if origin_header
-        if origin_header == ENV['ADMIN_APP']
-        allow_origin = ENV['ADMIN_APP']
-      else
-        allow_origin = ENV['FRONTEND']
-      end
+
+    origin_header = request.headers["HTTP_ORIGIN"]
+    if Rails.env.deveopment?
+      headers['Access-Control-Allow-Origin'] = '*'
+    elsif origin_header.present? && ( origin_header == ENV['ADMIN_APP'] || origin_header == ENV['FRONTEND'] )
+      headers['Access-Control-Allow-Origin'] = origin_header
     else
-      allow_origin = "*"
+      headers['Access-Control-Allow-Origin'] = ENV['FRONTEND']
     end
 
-    headers['Access-Control-Allow-Origin']    = allow_origin
     headers['Access-Control-Request-Method']  = '*'
     headers['Access-Control-Max-Age']         = "1728000"
-
     headers['Access-Control-Allow-Methods']   = %w{
       POST
       PUT
@@ -116,14 +112,16 @@ class ApplicationController < ActionController::API
       GET
       OPTIONS
     }.join(', ')
-
-    headers['Access-Control-Allow-Headers']   = %w{
+    headers['Access-Control-Allow-Headers'] = %w{
+      *
       Origin
       X-Requested-With
       Content-Type
       Accept
       X-Auth-Email
       X-Auth-Token
+      If-Modified-Since
+      If-None-Match
     }.join(', ')
   end
 
