@@ -6,10 +6,11 @@ module Admin
     protected
 
     def must_be_admin!
-      if user_signed_in? && current_user.admin?
+      if current_user.admin?
         true
       else
         access_denied
+        false
       end
     end
   end
