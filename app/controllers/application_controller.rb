@@ -54,7 +54,12 @@ class ApplicationController < ActionController::API
   protected
 
   def authenticate_user!
-    user_signed_in? ? true : access_denied
+    if user_signed_in?
+      true
+    else
+      access_denied
+      false
+    end
   end
 
   def current_user
