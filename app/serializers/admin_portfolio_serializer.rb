@@ -1,4 +1,4 @@
-class PortfolioSerializer < ActiveModel::Serializer
+class AdminPortfolioSerializer < PortfolioSerializer
   attributes :market_value, :in_balance
 
   def market_value
