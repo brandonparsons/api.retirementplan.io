@@ -84,8 +84,9 @@ Rails.application.routes.draw do
         delete '/', to: 'sessions#destroy'
       end
     end
-    resources :questionnaires, only: [:index]
-    resources :portfolios, only: [:index]
+    resources :users,           only: [:index]
+    resources :questionnaires,  only: [:index]
+    resources :portfolios,      only: [:index]
   end
 
 end
