@@ -78,4 +78,14 @@ Rails.application.routes.draw do
 
   end # v1
 
+  namespace 'admin', defaults: { format: 'json' } do
+    resources :sessions, only: [:create] do
+      collection do
+        delete '/', to: 'sessions#destroy'
+      end
+    end
+    resources :questionnaires, only: [:index]
+    resources :portfolios, only: [:index]
+  end
+
 end

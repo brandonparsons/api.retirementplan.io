@@ -46,7 +46,7 @@ class Portfolio < ActiveRecord::Base
     raise "Current shares have not been specified" unless current_shares.present?
 
     current_share_prices  = prices_for_current_shares
-    market_value          = current_shares.inject(0) { |sum, (k,v)| sum + (current_share_prices[k] * v.to_f )}
+    market_value          = current_market_value
 
     if market_value == 0.0
       # Returns NaN on divisions - manually force to zero.
