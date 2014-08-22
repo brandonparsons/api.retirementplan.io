@@ -92,7 +92,19 @@ class ApplicationController < ActionController::API
   end
 
   def cors_set_access_control_headers
-    headers['Access-Control-Allow-Origin']    = Rails.env.production? ? ENV['FRONTEND'] : '*'
+    if Rails.env.production?
+      origin_header = request.headers["HTTP_ORIGIN"]
+      if origin_header
+        if origin_header == ENV['ADMIN_APP']
+        allow_origin = ENV['ADMIN_APP']
+      else
+        allow_origin = ENV['FRONTEND']
+      end
+    else
+      allow_origin = "*"
+    end
+
+    headers['Access-Control-Allow-Origin']    = allow_origin
     headers['Access-Control-Request-Method']  = '*'
     headers['Access-Control-Max-Age']         = "1728000"
 
