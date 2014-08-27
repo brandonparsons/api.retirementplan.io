@@ -1,7 +1,7 @@
 require 'digest/md5'
 
 class User < ActiveRecord::Base
-
+  include HideDeleted
   include TokenAuthenticatable
 
   hstore_accessor :hstore_data,

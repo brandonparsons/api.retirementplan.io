@@ -1,4 +1,6 @@
 class Questionnaire < ActiveRecord::Base
+  include HideDeleted
+
 
   ################
   # ASSOCIATIONS #

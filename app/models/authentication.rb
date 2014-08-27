@@ -1,5 +1,5 @@
-class Authentication < ActiveRecord::Base
-  # Contains OAuth data from third parties: Facebook, Google, etc.
+class Authentication < ActiveRecord::Base # OAuth data from providers -Facebook, Google, etc.
+  include HideDeleted
 
   belongs_to :user, touch: true
 
