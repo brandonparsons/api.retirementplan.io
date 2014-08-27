@@ -8,6 +8,7 @@ gem 'active_model_serializers'
 
 gem 'hstore_accessor'
 gem 'pg'
+gem 'permanent_records'
 
 gem 'redis'
 gem 'redis-namespace'

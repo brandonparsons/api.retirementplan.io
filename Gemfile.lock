@@ -126,6 +126,8 @@ GEM
     newrelic_rpm (3.9.1.236)
     oj (2.10.0)
     oj_mimic_json (1.0.1)
+    permanent_records (3.1.6)
+      activerecord (>= 3.0.0)
     pg (0.17.1)
     polyglot (0.3.5)
     pry (0.10.0)
@@ -298,6 +300,7 @@ DEPENDENCIES
   newrelic_rpm
   oj
   oj_mimic_json
+  permanent_records
   pg
   pry
   pry-byebug

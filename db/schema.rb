@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140413042005) do
+ActiveRecord::Schema.define(version: 20140827005235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,8 +26,10 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.uuid     "user_id",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "authentications", ["deleted_at"], name: "index_authentications_on_deleted_at", using: :btree
   add_index "authentications", ["provider", "uid"], name: "index_authentications_on_provider_and_uid", using: :btree
   add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
 
@@ -42,8 +44,10 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.uuid     "user_id",                     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "expenses", ["deleted_at"], name: "index_expenses_on_deleted_at", using: :btree
   add_index "expenses", ["is_added"], name: "index_expenses_on_is_added", using: :btree
   add_index "expenses", ["user_id"], name: "index_expenses_on_user_id", using: :btree
 
@@ -52,8 +56,10 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.uuid     "user_id",     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "portfolios", ["deleted_at"], name: "index_portfolios_on_deleted_at", using: :btree
   add_index "portfolios", ["hstore_data"], name: "index_portfolios_on_hstore_data", using: :gin
   add_index "portfolios", ["user_id"], name: "index_portfolios_on_user_id", unique: true, using: :btree
 
@@ -83,8 +89,10 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.uuid     "user_id",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "questionnaires", ["deleted_at"], name: "index_questionnaires_on_deleted_at", using: :btree
   add_index "questionnaires", ["user_id"], name: "index_questionnaires_on_user_id", unique: true, using: :btree
 
   create_table "simulation_inputs", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
@@ -114,8 +122,10 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.uuid     "user_id",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
+  add_index "simulation_inputs", ["deleted_at"], name: "index_simulation_inputs_on_deleted_at", using: :btree
   add_index "simulation_inputs", ["user_id"], name: "index_simulation_inputs_on_user_id", unique: true, using: :btree
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
@@ -133,9 +143,11 @@ ActiveRecord::Schema.define(version: 20140413042005) do
     t.hstore   "hstore_data"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
+  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["hstore_data"], name: "index_users_on_hstore_data", using: :gin
 
