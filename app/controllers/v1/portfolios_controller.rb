@@ -44,19 +44,13 @@ module V1
     def create
       return missing_parameters unless params[:allocation]
 
-      current_portfolio = current_user.portfolio
-      new_portfolio = current_user.build_portfolio(weights: params[:allocation])
+      portfolio         = current_user.portfolio || current_user.build_portfolio
+      portfolio.weights = params[:allocation]
 
-      # FIXME: This shouldn't be required once using Python-Securities
-      if current_portfolio
-        new_portfolio.current_shares = current_portfolio.current_shares
-        new_portfolio.selected_etfs = current_portfolio.selected_etfs
-      end
-
-      if new_portfolio.save
+      if portfolio.save
         render json: {success: true, message: "Saved your portfolio selection."}
       else
-        render json: new_portfolio.errors, status: :unprocessable_entity
+        render json: portfolio.errors, status: :unprocessable_entity
       end
     end
 
