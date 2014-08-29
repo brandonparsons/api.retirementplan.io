@@ -35,7 +35,7 @@ module V1
       # If the email has changed, kick off 'reconfirmable' flow
       if params[:user][:email].present? && (params[:user][:email] != user.email)
         unconfirmed_email = params[:user][:email]
-        UserMailer.delay.confirm_email_instructions(email: unconfirmed_email, user_id: current_user.id)
+        ConfirmEmailInstructionsSender.new.async.perform(unconfirmed_email, current_user.id)
         params[:user].delete(:email) # Remove because we are not updating at this time
       end
 
@@ -51,7 +51,7 @@ module V1
 
     def create_password
       email = current_user.email
-      UserMailer.delay.reset_password_instructions(email, set_password_request: true)
+      ResetPasswordInstructionsSender.new.async.perform(email, true)
       render json: {success: true, message: "Email being sent to #{email} with instructions on how to set a password."}
     end
 

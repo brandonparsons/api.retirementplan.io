@@ -13,8 +13,7 @@ gem 'permanent_records'
 gem 'redis'
 gem 'redis-namespace'
 
-gem 'sidekiq'
-gem 'sidetiq', require: false # Manually required so you have ability to turn it off
+gem 'sucker_punch'
 
 gem 'hashie'
 gem 'faraday'
@@ -82,7 +81,6 @@ end
 group :development, :profile do
   gem 'letter_opener'
   gem 'brakeman', require: false
-  gem 'sinatra',  require: false # For sidekiq web UI - see sidekiq.rake
 end
 
 group :profile do
@@ -92,6 +90,9 @@ end
 
 ## Other/Old Gems ##
 
+# gem 'sidekiq'
+# gem 'sidetiq'
+# gem 'sinatra',  require: false # For sidekiq web UI - see sidekiq.rake
 # gem 'sidekiq-unique-jobs'
 # gem 'sidekiq-limit-fetch'
 # gem 'roadie'

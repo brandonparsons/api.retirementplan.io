@@ -1,5 +1,0 @@
-User Sign Up
-=============
-
-* Name: <%= @user.name %>
-* Email: <%= @user.email %>

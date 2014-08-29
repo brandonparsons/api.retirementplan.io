@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   end
 
   def send_etf_purchase_instructions(amount, rebalance_info_hash)
-    UserMailer.delay.etf_purchase_instructions(id, amount, rebalance_info_hash)
+    EtfPurchaseInstructionsSender.new.async.perform(id, amount, rebalance_info_hash)
   end
 
   def check_portfolio_balance
@@ -242,12 +242,12 @@ class User < ActiveRecord::Base
 
   def send_out_of_balance_email
     contact!
-    UserMailer.delay.portfolio_out_of_balance(id)
+    PortfolioOutOfBalanceSender.new.async.perform(id)
   end
 
   def send_min_rebalance_spacing_email
     contact!
-    UserMailer.delay.min_rebalance_spacing(id)
+    MinimumRebalanceSpacingSender.new.async.perform(id)
   end
 
 end

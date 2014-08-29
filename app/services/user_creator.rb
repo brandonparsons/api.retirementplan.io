@@ -9,9 +9,9 @@ class UserCreator
     # Doing these as individual backgrounded steps. Had whole thing as a worker
     # before, but then any failure would cause emails to be delivered multiple
     # times.
-    AdminMailer.delay.user_sign_up(@user_id)
-    UserMailer.delay.confirm_email_instructions(email: @user_email)
-    Expense.delay.create_default_expenses_for(@user_id)
+    AdminNotifier.new.async.perform("new_user", @user_id)
+    ConfirmEmailInstructionsSender.new.async.perform(@user_email, nil)
+    DefaultExpensesCreator.new.async.perform(@user_id)
   end
 
 end

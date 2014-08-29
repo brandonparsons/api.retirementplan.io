@@ -9,7 +9,6 @@ Services/Dependencies
 - Ruby installed on dev machine/server
 - Postgresql
 - Redis
-- Sidekiq
 - Memcached
 - Mandrill (via API key)
 
@@ -41,5 +40,4 @@ For getting up and running on Mac OS X
 
 ### To Launch ###
 
-- `bin/sidekiq`
 - `bin/rails server`

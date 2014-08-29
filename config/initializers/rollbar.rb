@@ -43,12 +43,12 @@ if defined?(Rollbar) # Probably only production
     # }
 
     # Enable asynchronous reporting (using sucker_punch)
-    # config.use_sucker_punch
+    config.use_sucker_punch
 
     # Enable delayed reporting (using Sidekiq)
     # config.use_sidekiq
     # You can supply custom Sidekiq options:
-    config.use_sidekiq 'queue' => 'default'
+    # config.use_sidekiq 'queue' => 'default'
 
   end
 
