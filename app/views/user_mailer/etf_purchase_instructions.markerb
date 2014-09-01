@@ -1,7 +1,7 @@
 ETF Purchasing Instructions
 ---------------------------
 
-As requested, here are your ETF purchasing instructions to properly balance your portfolio (and invest a total of $<%= @amount %>).
+As requested, here are your ETF purchasing instructions to properly balance your portfolio (and invest a total of <%= number_to_currency @amount %>).
 
 <% @rebalance_info.each do |etf_ticker, etf_info| %>
   *<%= etf_info["asset_class"] %>:*
