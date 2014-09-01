@@ -583,6 +583,12 @@ describe User do
       end
     end
 
+    describe "email tests" do
+      it "should test the actual content of emails, not just that they were enqueued (not just in user model)" do
+        pending
+      end
+    end
+
     describe "#portfolio_out_of_balance?" do
       # This is quite a bit of repetition from tracked_portfolio_spec, but was
       # having some issues with the method so want to make sure working 100%
