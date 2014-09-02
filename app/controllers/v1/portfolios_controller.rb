@@ -47,6 +47,10 @@ module V1
       portfolio         = current_user.portfolio || current_user.build_portfolio
       portfolio.weights = params[:allocation]
 
+      # If they are selecting a new portfolio, and already have one, we need to
+      # reset the `tracking?` status as it will no longer be complete.
+      portfolio.tracking = false unless portfolio.new_record?
+
       if portfolio.save
         render json: {success: true, message: "Saved your portfolio selection."}
       else
