@@ -18,13 +18,6 @@ class RegularUser < User
   # CLASS METHODS #
   #################
 
-  def self.deleted
-    # The default scope here is getting blown away when using the `deleted` class
-    # method from HideDeleted concern from `User` (it uses unscoped). Therefore we
-    # need a custom implementation of that method in this class.
-    self.unscoped.where.not(password_digest: nil).where.not(deleted_at: nil)
-  end
-
   def self.find_from_all_users_with_email(email)
     # Unscoped as default scope searches for users *with* a password digest.
     # If a person from OAuth wants to reset/set a password, allow them (therefore

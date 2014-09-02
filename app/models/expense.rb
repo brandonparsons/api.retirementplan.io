@@ -1,5 +1,4 @@
 class Expense < ActiveRecord::Base
-  include HideDeleted
 
   ALLOWABLE_FREQUENCIES = %w{ weekly monthly annual onetime }
 

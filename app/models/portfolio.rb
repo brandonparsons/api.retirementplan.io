@@ -1,7 +1,6 @@
 # FIXME: Once pulling portfolio data from python, can probably extract this into just a tracked portfolio?
 
 class Portfolio < ActiveRecord::Base
-  include HideDeleted
 
   hstore_accessor :hstore_data,
     weights:                  :hash,

@@ -1,6 +1,4 @@
 class SimulationInput < ActiveRecord::Base
-  include HideDeleted
-
 
   ################
   # ASSOCIATIONS #
