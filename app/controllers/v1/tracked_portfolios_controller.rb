@@ -1,8 +1,9 @@
 module V1
 
   class TrackedPortfoliosController < SecuredController
-    before_action :ensure_user_completed_questionnaire!,
-      :ensure_user_selected_portfolio!, :ensure_user_completed_simulation!
+    before_action :ensure_user_completed_questionnaire!
+    before_action :ensure_user_selected_portfolio!
+    before_action :ensure_user_completed_simulation!
 
     def quotes
       # Need to return quotes for all relevant securities - rebalancing calc on

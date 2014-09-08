@@ -15,8 +15,8 @@ module V1
       return missing_parameters unless params[:password_confirmation].present?
 
       ###
-      ## For some reason, this can't be pulled into the model.... it fails
-      ## every time
+      ## FIXME: For some reason, this can't be pulled into the model.... it fails every time
+      ##
       begin
         # This raises an exception if the message is modified
         user_id, timestamp = RegularUser.verifier_for('password-reset').verify(CGI.unescape(params[:password_reset_token]))

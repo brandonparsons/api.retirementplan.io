@@ -13,8 +13,8 @@ module V1
       return missing_parameters unless params[:email_confirmation_token].present?
 
       ###
-      ## For some reason, this can't be pulled into the model.... it fails
-      ## every time
+      ## FIXME: For some reason, this can't be pulled into the model.... it fails every time
+      ##
       begin
         # This raises an exception if the message is modified
         user_id, for_email, timestamp = User.verifier_for('email-confirmation').verify(CGI.unescape(params[:email_confirmation_token]))
