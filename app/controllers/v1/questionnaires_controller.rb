@@ -5,8 +5,8 @@ module V1
     def index
       if params[:ids] && params[:ids].present?
         # Purposefully getting an array, rather than current_user.questionnaire
-        @questionnaires = Questionnaire.where(id: params[:ids], user_id: current_user.id)
-        render json: @questionnaires if stale?(etag: @questionnaires)
+        questionnaires = Questionnaire.where(id: params[:ids], user_id: current_user.id)
+        render json: questionnaires if stale?(etag: questionnaires)
       else # Standard index action (no IDS array parameter)
         if last_modified = current_user.questionnaire.try(:updated_at)
           # Purposefully getting an array, rather than current_user.questionnaire

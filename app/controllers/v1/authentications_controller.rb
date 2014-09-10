@@ -33,8 +33,8 @@ module V1
 
     def index
       if params[:ids] && params[:ids].present?
-        @authentications = current_user.authentications.where(id: params[:ids])
-        render json: @authentications if stale?(etag: @authentications)
+        authentications = current_user.authentications.where(id: params[:ids])
+        render json: authentications if stale?(etag: authentications)
       else # Standard index action (no IDS array parameter)
         last_modified = current_user.authentications.maximum(:updated_at)
         render json: current_user.authentications.all if stale?(etag: last_modified, last_modified: last_modified)

@@ -4,13 +4,13 @@ module V1
     before_action :authenticate_user!, except: [:create]
 
     def create
-      @user = RegularUser.new(user_create_params)
-      if @user.save
-        @user.sign_in!
-        UserCreator.new(@user.id, @user.email).call
-        render json: UserSerializer.new(@user).as_json, status: 201
+      user = RegularUser.new(user_create_params)
+      if user.save
+        user.sign_in!
+        UserCreator.new(user.id, user.email).call
+        render json: UserSerializer.new(user).as_json, status: 201
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: user.errors, status: :unprocessable_entity
       end
     end
 

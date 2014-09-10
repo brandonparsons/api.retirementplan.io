@@ -8,8 +8,8 @@ module V1
       current_user_expenses = current_user.expenses
 
       if params[:ids] && params[:ids].present? # Ember data will apparently hit index action with ids array
-        @expenses = current_user_expenses.where(id: params[:ids])
-        render json: @expenses if stale?(etag: @expenses)
+        expenses = current_user_expenses.where(id: params[:ids])
+        render json: expenses if stale?(etag: expenses)
       else # Standard index action (no IDS array parameter)
         last_modified = current_user_expenses.maximum(:updated_at)
         render json: current_user_expenses if stale?(etag: last_modified, last_modified: last_modified)
