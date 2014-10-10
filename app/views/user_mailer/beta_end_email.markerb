@@ -1,0 +1,26 @@
+# Public Beta Wrap-up #
+
+Hi there! This is Brandon - Founder and President of RetirementPlan.io. Thank you *very much* for your participation in our Public Beta program, I hope you found the software useful. We have been careful to note everyone's suggestions for improvement.
+
+The progress/status of your account is listed at the bottom of this email.
+
+If you could **please** take 30 seconds to answer the following two questions, it would make my day.  Just reply to this email.
+
+1. Would you be upset/discouraged if we are unable to offer this software to you on a go-forward basis?
+2. Would you be willing to pay for this service on a monthly basis? (If so, feel free to let me know how much you think it is worth.)
+
+---
+
+## Your Account Status ##
+
+- <%= @user_info.created %>
+- <%= @user_info.sign_ins %>
+- <%= @user_info.progress %>
+- <%= @user_info.simulations %>
+
+---
+
+Again - I would **really** appreciate it if you could answer the two questions above.
+
+Cheers,
+Brandon

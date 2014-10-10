@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
     max_contact_frequency:    :integer,
     last_contact:             :integer,
     allowable_drift:          :integer,
-    simulations_ran:          :integer
+    simulations_ran:          :integer,
+    sent_beta_end_email:      :boolean
 
 
   ################

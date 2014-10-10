@@ -85,6 +85,16 @@ class UserMailer < ActionMailer::Base
     end
   end
 
+  def beta_end_email(user_id)
+    user = User.find user_id
+    @user_info = UserInfo.new(user)
+
+    mail(to: user.email, subject: "RetirementPlan.io - End of Public Beta") do |format|
+      format.text
+      format.html
+    end
+  end
+
 
   private
 

@@ -14,7 +14,7 @@ test:
 
 development:
   <<: *COMMON
-  database: rp_development
+  database: heroku_pulled
   username: brandon
   host:     localhost
   port:     5432
