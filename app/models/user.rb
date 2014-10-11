@@ -12,7 +12,8 @@ class User < ActiveRecord::Base
     last_contact:             :integer,
     allowable_drift:          :integer,
     simulations_ran:          :integer,
-    sent_beta_end_email:      :boolean
+    sent_beta_end_email:      :boolean,
+    send_marketing_emails:    :boolean
 
 
   ################
